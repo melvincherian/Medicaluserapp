@@ -1025,7 +1025,6 @@
 
 
 
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:medical_user_app/models/user_model.dart';
@@ -1088,13 +1087,12 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
     _speechToText = SpeechToText();
     _speechEnabled = await _speechToText.initialize(
       onError: (errorNotification) {
-
         final errorMsg = errorNotification.errorMsg;
-      if (errorMsg != 'error_no_match' && 
-          errorMsg != 'error_network_timeout' &&
-          errorMsg != 'error_network') {
-        print('Speech recognition error: $errorMsg');
-          }
+        if (errorMsg != 'error_no_match' &&
+            errorMsg != 'error_network_timeout' &&
+            errorMsg != 'error_network') {
+          print('Speech recognition error: $errorMsg');
+        }
         // _showErrorSnackBar(
         //     'Speech recognition error: ${errorNotification.errorMsg}');
         _stopListening();
@@ -1254,12 +1252,14 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
                           backgroundImage: profileProvider.hasProfileImage()
                               ? NetworkImage(
                                   profileProvider.getProfileImageUrl()!)
-                              : const AssetImage('')
-                                  as ImageProvider,
+                              : null, // No background image if there's no profile
                           child: profileProvider.hasProfileImage()
                               ? null
-                              : Image.asset('',
-                                  fit: BoxFit.cover),
+                              : const Icon(
+                                  Icons.person,
+                                  size: 30,
+                                  color: Colors.grey,
+                                ),
                         ),
                       );
                     },
@@ -1337,9 +1337,10 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
 
                       return Column(
                         children: [
-                         const Icon(Icons.location_on,
+                          const Icon(Icons.location_on,
                               size: 24, color: Colors.black54),
-                          Text(locationText, style:const TextStyle(fontSize: 10)),
+                          Text(locationText,
+                              style: const TextStyle(fontSize: 10)),
                         ],
                       );
                     },
@@ -1424,50 +1425,49 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
                           ),
                         ),
                         filled: true,
-                        fillColor: const Color(0xFFEFF3F7)
-,
+                        fillColor: const Color(0xFFEFF3F7),
                       ),
                     ),
                   ),
                   const SizedBox(width: 12),
 
                   // Voice Search Button with Animation
-                  GestureDetector(
-                    onTap: _speechEnabled ? _toggleListening : null,
-                    child: AnimatedBuilder(
-                      animation: _pulseAnimation,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _isListening ? _pulseAnimation.value : 1.0,
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: _isListening
-                                  ? Colors.red
-                                  : (_speechEnabled
-                                      ? const Color(0xFF5931DD)
-                                      : Colors.grey),
-                              shape: BoxShape.circle,
-                              boxShadow: _isListening
-                                  ? [
-                                      BoxShadow(
-                                        color: Colors.red.withOpacity(0.3),
-                                        spreadRadius: 2,
-                                        blurRadius: 8,
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                            child: Icon(
-                              _isListening ? Icons.mic : Icons.mic_none,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: _speechEnabled ? _toggleListening : null,
+                  //   child: AnimatedBuilder(
+                  //     animation: _pulseAnimation,
+                  //     builder: (context, child) {
+                  //       return Transform.scale(
+                  //         scale: _isListening ? _pulseAnimation.value : 1.0,
+                  //         child: Container(
+                  //           padding: const EdgeInsets.all(12),
+                  //           decoration: BoxDecoration(
+                  //             color: _isListening
+                  //                 ? Colors.red
+                  //                 : (_speechEnabled
+                  //                     ? const Color(0xFF5931DD)
+                  //                     : Colors.grey),
+                  //             shape: BoxShape.circle,
+                  //             boxShadow: _isListening
+                  //                 ? [
+                  //                     BoxShadow(
+                  //                       color: Colors.red.withOpacity(0.3),
+                  //                       spreadRadius: 2,
+                  //                       blurRadius: 8,
+                  //                     ),
+                  //                   ]
+                  //                 : null,
+                  //           ),
+                  //           child: Icon(
+                  //             _isListening ? Icons.mic : Icons.mic_none,
+                  //             color: Colors.white,
+                  //             size: 24,
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
 
@@ -1600,91 +1600,90 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
   // }
 
   Widget _buildPharmacyItem(BuildContext context, Pharmacy pharmacy) {
-  return Container(
-    height: 99,
-    margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-    padding: const EdgeInsets.symmetric(horizontal: 12),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(width: 1, color: Colors.grey[300]!),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          blurRadius: 4,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    ),
-    child: InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PharmacyScreen(pharmacyId: pharmacy.id),
-            settings: RouteSettings(arguments: pharmacy),
+    return Container(
+      height: 99,
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(width: 1, color: Colors.grey[300]!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
-        );
-      },
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Pharmacy Image
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: (pharmacy.image.isNotEmpty)
-                ? Image.network(
-                    pharmacy.image,
-                    width: 60,
-                    height: 60,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.local_pharmacy, size: 40);
-                    },
-                  )
-                : const Icon(Icons.local_pharmacy, size: 40),
-          ),
-          const SizedBox(width: 12),
-
-          // Pharmacy Name + Address
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  pharmacy.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  pharmacy.address,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-
-          // Right Arrow
-          const Icon(Icons.chevron_right, color: Colors.grey),
         ],
       ),
-    ),
-  );
-}
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PharmacyScreen(pharmacyId: pharmacy.id),
+              settings: RouteSettings(arguments: pharmacy),
+            ),
+          );
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Pharmacy Image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: (pharmacy.image.isNotEmpty)
+                  ? Image.network(
+                      pharmacy.image,
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.local_pharmacy, size: 40);
+                      },
+                    )
+                  : const Icon(Icons.local_pharmacy, size: 40),
+            ),
+            const SizedBox(width: 12),
 
+            // Pharmacy Name + Address
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    pharmacy.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    pharmacy.address,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+
+            // Right Arrow
+            const Icon(Icons.chevron_right, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _buildLoadingState() => const Center(
         child: Padding(
@@ -1696,8 +1695,9 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
   Widget _buildErrorState(String error) => Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child:
-              Text("Error: $error", style: TextStyle(color: Colors.red[700])),
+          child: Text('No pharmacies found'),
+          // child:
+          //     Text("Error: $error", style: TextStyle(color: Colors.red[700])),
         ),
       );
 

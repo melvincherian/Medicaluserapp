@@ -7,17 +7,17 @@ import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationProvider extends ChangeNotifier {
-  String _address = 'Fetching location...';
+  String _address = 'Fetching location...'; 
   List<double>? _coordinates;
   bool _isLoading = true;
   bool _hasError = false;
   String _errorMessage = '';
-
+ 
   // Getters
   String get address => _address;
   List<double>? get coordinates => _coordinates;
   bool get isLoading => _isLoading;
-  bool get hasError => _hasError;
+  bool get hasError => _hasError; 
   String get errorMessage => _errorMessage;
   bool get hasLocation => _coordinates != null && _coordinates!.length >= 2;
 

@@ -1289,7 +1289,7 @@ class _PrescriptionScreenState extends State<PrescriptionScreen>
             ElevatedButton.icon(
               onPressed: () => _tabController.animateTo(1), // Switch to upload tab
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF3B82F6),
+                backgroundColor: Color(0xFF5931DD),
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -2022,7 +2022,7 @@ class _PrescriptionScreenState extends State<PrescriptionScreen>
       child: ElevatedButton(
         onPressed: canSubmit ? () => _submitPrescription(provider) : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF3B82F6),
+          backgroundColor: Color(0xFF5931DD),
           disabledBackgroundColor: Color(0xFF94A3B8),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(

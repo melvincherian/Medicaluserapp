@@ -23,6 +23,7 @@ import 'package:medical_user_app/view/search/user_location_screen.dart';
 import 'package:medical_user_app/widgets/all_medicines.dart';
 import 'package:medical_user_app/widgets/bottom_navigation.dart';
 import 'package:medical_user_app/widgets/courosel_widget.dart';
+import 'package:medical_user_app/widgets/desclaimer_dialog_widget.dart';
 import 'package:medical_user_app/widgets/order_widget.dart';
 import 'package:medical_user_app/widgets/periodic_plans.dart' hide Pharmacy;
 import 'package:medical_user_app/widgets/previous_order.dart';
@@ -71,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Use addPostFrameCallback to access Provider after the widget tree is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      DisclaimerDialog.showIfNeeded(context);
       final langCode = Provider.of<LanguageProvider>(context, listen: false)
           .locale
           .languageCode;
@@ -96,13 +98,13 @@ class _HomeScreenState extends State<HomeScreen> {
       await _refreshAllData();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Page refreshed successfully'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Page refreshed successfully'),
+        //     backgroundColor: Colors.green,
+        //     duration: Duration(seconds: 2),
+        //   ),
+        // );
       }
     } catch (e) {
       if (mounted) {
@@ -390,8 +392,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String? _selectedCategory;
   void _onCategorySelected(String categoryName) {
-
-     setState(() {
+    setState(() {
       _selectedCategory = categoryName;
     });
     final medicineProvider =
@@ -456,42 +457,82 @@ class _HomeScreenState extends State<HomeScreen> {
                       //   },
                       // ),
 
+                      // Consumer<ProfileProvider>(
+                      //   builder: (context, profileProvider, child) {
+                      //     return GestureDetector(
+                      //       onTap: () {
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) =>
+                      //                     const ProfileScreen()));
+                      //       },
+                      //       child: CircleAvatar(
+                      //         radius: 24,
+                      //         backgroundColor: Colors.grey[300],
+                      //         backgroundImage: profileProvider.hasProfileImage()
+                      //             ? NetworkImage(
+                      //                 profileProvider.getProfileImageUrl()!)
+                      //             : null,
+                      //         onBackgroundImageError:
+                      //             profileProvider.hasProfileImage()
+                      //                 ? (exception, stackTrace) {
+                      //                     // This will cause the CircleAvatar to fall back to showing backgroundColor
+                      //                   }
+                      //                 : null,
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+
                       Consumer<ProfileProvider>(
                         builder: (context, profileProvider, child) {
+                          final hasImage = profileProvider.hasProfileImage();
+                          final imageUrl = profileProvider.getProfileImageUrl();
+
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ProfileScreen()));
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ProfileScreen()),
+                              );
                             },
                             child: CircleAvatar(
                               radius: 24,
                               backgroundColor: Colors.grey[300],
-                              backgroundImage: profileProvider.hasProfileImage()
-                                  ? NetworkImage(
-                                      profileProvider.getProfileImageUrl()!)
+                              backgroundImage:
+                                  hasImage ? NetworkImage(imageUrl!) : null,
+                              onBackgroundImageError: hasImage
+                                  ? (exception, stackTrace) {
+                                      // fallback happens automatically
+                                    }
                                   : null,
-                              onBackgroundImageError:
-                                  profileProvider.hasProfileImage()
-                                      ? (exception, stackTrace) {
-                                          // This will cause the CircleAvatar to fall back to showing backgroundColor
-                                        }
-                                      : null,
+                              child: !hasImage
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 28,
+                                      color: Colors.grey[700],
+                                    )
+                                  : null,
                             ),
                           );
                         },
                       ),
+
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            AppText('wish',
+                               AppText('Hello 👋',
                                 style: TextStyle(
                                     fontSize: 16, color: Colors.grey[600])),
+                            // AppText('wish',
+                            //     style: TextStyle(
+                            //         fontSize: 16, color: Colors.grey[600])),
                             Row(
                               children: [
                                 // User name section
@@ -701,80 +742,80 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.black12),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                              context: context,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(20)),
-                              ),
-                              builder: (BuildContext context) {
-                                return Consumer<LanguageProvider>(
-                                  builder: (context, languageProvider, child) {
-                                    return Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          // Header
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                'Select Language',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () =>
-                                                    Navigator.pop(context),
-                                                icon: const Icon(Icons.close),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 16),
-                                          _buildLanguageOption(
-                                            context: context,
-                                            languageCode: 'te',
-                                            languageName: 'తెలుగు (Telugu)',
-                                            languageProvider: languageProvider,
-                                          ),
-                                          _buildLanguageOption(
-                                            context: context,
-                                            languageCode: 'en',
-                                            languageName: 'English',
-                                            languageProvider: languageProvider,
-                                          ),
-                                          _buildLanguageOption(
-                                            context: context,
-                                            languageCode: 'hi',
-                                            languageName: 'हिंदी (Hindi)',
-                                            languageProvider: languageProvider,
-                                          ),
-                                          const SizedBox(height: 20),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                          child: const Icon(Icons.translate, size: 24),
-                        ),
-                      ),
+                      // Container(
+                      //   padding: const EdgeInsets.all(8),
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(12),
+                      //     border: Border.all(color: Colors.black12),
+                      //   ),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       showModalBottomSheet(
+                      //         context: context,
+                      //         shape: const RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.vertical(
+                      //               top: Radius.circular(20)),
+                      //         ),
+                      //         builder: (BuildContext context) {
+                      //           return Consumer<LanguageProvider>(
+                      //             builder: (context, languageProvider, child) {
+                      //               return Padding(
+                      //                 padding: const EdgeInsets.all(16.0),
+                      //                 child: Column(
+                      //                   mainAxisSize: MainAxisSize.min,
+                      //                   crossAxisAlignment:
+                      //                       CrossAxisAlignment.start,
+                      //                   children: [
+                      //                     // Header
+                      //                     Row(
+                      //                       mainAxisAlignment:
+                      //                           MainAxisAlignment.spaceBetween,
+                      //                       children: [
+                      //                         const Text(
+                      //                           'Select Language',
+                      //                           style: TextStyle(
+                      //                             fontSize: 20,
+                      //                             fontWeight: FontWeight.bold,
+                      //                           ),
+                      //                         ),
+                      //                         IconButton(
+                      //                           onPressed: () =>
+                      //                               Navigator.pop(context),
+                      //                           icon: const Icon(Icons.close),
+                      //                         ),
+                      //                       ],
+                      //                     ),
+                      //                     const SizedBox(height: 16),
+                      //                     // _buildLanguageOption(
+                      //                     //   context: context,
+                      //                     //   languageCode: 'te',
+                      //                     //   languageName: 'తెలుగు (Telugu)',
+                      //                     //   languageProvider: languageProvider,
+                      //                     // ),
+                      //                     // _buildLanguageOption(
+                      //                     //   context: context,
+                      //                     //   languageCode: 'en',
+                      //                     //   languageName: 'English',
+                      //                     //   languageProvider: languageProvider,
+                      //                     // ),
+                      //                     // _buildLanguageOption(
+                      //                     //   context: context,
+                      //                     //   languageCode: 'hi',
+                      //                     //   languageName: 'हिंदी (Hindi)',
+                      //                     //   languageProvider: languageProvider,
+                      //                     // ),
+                      //                     const SizedBox(height: 20),
+                      //                   ],
+                      //                 ),
+                      //               );
+                      //             },
+                      //           );
+                      //         },
+                      //       );
+                      //     },
+                      //     child: const Icon(Icons.translate, size: 24),
+                      //   ),
+                      // ),
                       const SizedBox(width: 12),
                       // SizedBox(
                       //   width: 40,
@@ -1109,6 +1150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: InputDecoration(
                             hintText:
                                 AppText.translate(context, 'search_medicine'),
+                            hintStyle: const TextStyle(color: Colors.grey),
                             prefixIcon:
                                 const Icon(Icons.search, color: Colors.grey),
                             contentPadding:
@@ -1119,15 +1161,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
-                              borderSide:const BorderSide(
-                                  color: Color.fromARGB(255, 255, 255, 255), width: 2),
+                              borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  width: 2),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30),
                               borderSide: BorderSide(color: Colors.grey[300]!),
                             ),
-                            fillColor: const Color(0xFFEFF3F7)
-,
+                            fillColor: const Color(0xFFEFF3F7),
                             filled: true,
                           ),
                         ),
@@ -1403,7 +1445,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else if (snapshot.hasError || snapshot.data == null) {
                         return Container(
                           // Error or no user state
-                          child:const Text('No active orders'),
+                          child: const Text('No active orders'),
                         );
                       } else {
                         // User exists, show order status
@@ -1557,48 +1599,60 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image section
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
-            ),
-            child: Stack(
-              children: [
-                imagePath.isNotEmpty
-                    ? Image.network(
-                        imagePath,
-                        height:
-                            90, // Fixed the height from 78 to 120 to match the else case
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        height: 120,
-                        width: double.infinity,
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.image_not_supported),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ScannedMedicineScreen(
+                            medicineId: medicine.medicineId,
+                            address: medicine.pharmacy.address,
+                            mrp: medicine.mrp,
+                          )));
+            },
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+              child: Stack(
+                children: [
+                  imagePath.isNotEmpty
+                      ? Image.network(
+                          imagePath,
+                          height:
+                              90, // Fixed the height from 78 to 120 to match the else case
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          height: 120,
+                          width: double.infinity,
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.image_not_supported),
+                        ),
+                  Positioned(
+                    bottom: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(4),
                       ),
-                Positioned(
-                  bottom: 8,
-                  left: 8,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      price,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                      child: Text(
+                        price,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
@@ -1669,8 +1723,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )));
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF5931DD)
-,
+                        backgroundColor: const Color(0xFF5931DD),
                         foregroundColor: Colors.white,
                         elevation: 1,
                         shape: RoundedRectangleBorder(
@@ -1696,63 +1749,63 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildLanguageOption({
-    required BuildContext context,
-    required String languageCode,
-    required String languageName,
-    required LanguageProvider languageProvider,
-  }) {
-    final isSelected = languageProvider.locale.languageCode == languageCode;
+  // Widget _buildLanguageOption({
+  //   required BuildContext context,
+  //   required String languageCode,
+  //   required String languageName,
+  //   required LanguageProvider languageProvider,
+  // }) {
+  //   final isSelected = languageProvider.locale.languageCode == languageCode;
 
-    return ListTile(
-      leading: Icon(
-        Icons.language,
-        color: isSelected ? Colors.blue : Colors.grey,
-      ),
-      title: Text(
-        languageName,
-        style: TextStyle(
-          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected ? Colors.blue : Colors.black,
-        ),
-      ),
-      trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
-      onTap: () async {
-        try {
-          // Change the language using your provider
-          await languageProvider.setLocale(Locale(languageCode));
+  //   return ListTile(
+  //     leading: Icon(
+  //       Icons.language,
+  //       color: isSelected ? Colors.blue : Colors.grey,
+  //     ),
+  //     title: Text(
+  //       languageName,
+  //       style: TextStyle(
+  //         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+  //         color: isSelected ? Colors.blue : Colors.black,
+  //       ),
+  //     ),
+  //     trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
+  //     onTap: () async {
+  //       try {
+  //         // Change the language using your provider
+  //         await languageProvider.setLocale(Locale(languageCode));
 
-          // Close the modal
-          if (context.mounted) {
-            Navigator.pop(context);
+  //         // Close the modal
+  //         if (context.mounted) {
+  //           Navigator.pop(context);
 
-            // Show confirmation with translated message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                backgroundColor: Colors.green,
-                content: Text(
-                  LocalizationService.translate(
-                      'language_switched', languageCode),
-                ),
-                duration: const Duration(seconds: 2),
-              ),
-            );
-          }
-        } catch (e) {
-          print('Error changing language: $e');
-          if (context.mounted) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Failed to change language'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          }
-        }
-      },
-    );
-  }
+  //           // Show confirmation with translated message
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             SnackBar(
+  //               backgroundColor: Colors.green,
+  //               content: Text(
+  //                 LocalizationService.translate(
+  //                     'language_switched', languageCode),
+  //               ),
+  //               duration: const Duration(seconds: 2),
+  //             ),
+  //           );
+  //         }
+  //       } catch (e) {
+  //         print('Error changing language: $e');
+  //         if (context.mounted) {
+  //           Navigator.pop(context);
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             const SnackBar(
+  //               content: Text('Failed to change language'),
+  //               duration: Duration(seconds: 2),
+  //             ),
+  //           );
+  //         }
+  //       }
+  //     },
+  //   );
+  // }
 }
 
 // Helper methods for building UI components
@@ -1813,7 +1866,9 @@ Widget _buildCategoryItem({
           : Colors.white,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(
-        color: actuallySelected ? const Color(0xFF5931DD) : const Color(0xFF5931DD),
+        color: actuallySelected
+            ? const Color(0xFF5931DD)
+            : const Color(0xFF5931DD),
         width: 2,
       ),
     ),
@@ -1834,8 +1889,7 @@ Widget _buildCategoryItem({
               label,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight:
-                    isSelected ? FontWeight.bold : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: actuallySelected
                     ? const Color(0xFF5931DD)
                     : Colors.grey[600],
@@ -1898,7 +1952,7 @@ Widget _buildServicesItem({
     onTap: () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => NearPharmacyScreen()),
+        MaterialPageRoute(builder: (context) => const NearPharmacyScreen()),
       );
     },
     child: Container(
@@ -1908,7 +1962,7 @@ Widget _buildServicesItem({
         color: Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color:const Color(0xFF5931DD), // Purple border
+          color: const Color(0xFF5931DD), // Purple border
           width: 1,
         ),
       ),
@@ -1918,7 +1972,7 @@ Widget _buildServicesItem({
           Container(
             width: 58,
             height: 58,
-            decoration:const BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
             ),
             child: Padding(

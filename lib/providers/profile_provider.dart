@@ -741,6 +741,9 @@ class ProfileProvider with ChangeNotifier {
           id: updatedUser.id.isNotEmpty ? updatedUser.id : _user!.id,
           name: updatedUser.name.isNotEmpty ? updatedUser.name : inputName,
           mobile: updatedUser.mobile.isNotEmpty ? updatedUser.mobile : inputMobile,
+                    email: updatedUser.email.isNotEmpty ? updatedUser.email : inputMobile,
+
+          
           code: updatedUser.code.isNotEmpty ? updatedUser.code : _user!.code,
           profileImage: updatedUser.profileImage ?? _user!.profileImage,
           createdAt: updatedUser.createdAt ?? _user!.createdAt,
@@ -852,6 +855,7 @@ class ProfileProvider with ChangeNotifier {
           id: updatedUser.id.isNotEmpty ? updatedUser.id : _user!.id,
           name: updatedUser.name.isNotEmpty ? updatedUser.name : inputName,
           mobile: updatedUser.mobile.isNotEmpty ? updatedUser.mobile : inputMobile,
+          email: updatedUser.email.isNotEmpty?updatedUser.email:_user!.email,
           code: updatedUser.code.isNotEmpty ? updatedUser.code : _user!.code,
           profileImage: updatedUser.profileImage ?? _user!.profileImage,
           createdAt: updatedUser.createdAt ?? _user!.createdAt,
@@ -892,6 +896,7 @@ class ProfileProvider with ChangeNotifier {
       id: newUser.id.isNotEmpty ? newUser.id : existingUser.id,
       name: newUser.name.isNotEmpty ? newUser.name : existingUser.name,
       mobile: newUser.mobile.isNotEmpty ? newUser.mobile : existingUser.mobile,
+            email: newUser.email.isNotEmpty ? newUser.email : existingUser.email,
       code: newUser.code.isNotEmpty ? newUser.code : existingUser.code,
       profileImage: newUser.profileImage ?? existingUser.profileImage,
       createdAt: newUser.createdAt ?? existingUser.createdAt,
@@ -903,6 +908,7 @@ class ProfileProvider with ChangeNotifier {
   void updateUserLocally({
     String? name,
     String? mobile,
+    String?email,
     String? profileImage,
   }) {
     if (_user != null) {
@@ -910,6 +916,7 @@ class ProfileProvider with ChangeNotifier {
         id: _user!.id,
         name: name ?? _user!.name,
         mobile: mobile ?? _user!.mobile,
+        email: email?? _user!.email,
         code: _user!.code,
         profileImage: profileImage ?? _user!.profileImage,
         createdAt: _user!.createdAt,
@@ -996,4 +1003,17 @@ class ProfileProvider with ChangeNotifier {
     final imageUrl = _user?.profileImage;
     return imageUrl != null && imageUrl.isNotEmpty;
   }
+
+  void clearUser() async {
+  _user = null;
+  _errorMessage = null;
+  _isLoading = false;
+  _isUpdating = false;
+
+  // Also remove saved user data from SharedPreferences
+  await SharedPreferencesHelper.clearAuthData();
+
+  notifyListeners();
+}
+  
 }

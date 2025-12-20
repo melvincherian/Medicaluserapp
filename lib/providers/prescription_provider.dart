@@ -384,6 +384,19 @@ class PrescriptionProvider extends ChangeNotifier {
         notes: _notes.isNotEmpty ? _notes : null,
       );
 
+
+      print('useeeeeeeeeeeeeeeeeeeeeid ${_currentUser!.id}');
+            print('pharmacyiddddddddddddddd ${selectedPharmacy!.id}');
+
+      print('prescriptionfileeeeeeeeeeeeeeeeeee ${_prescriptionFile}');
+
+      print('notesssssssssssssssssssssssss ${_notes}');
+
+
+
+      
+     
+       
       if (result['success']) {
         _setSuccess(result['message'] ?? 'Prescription sent successfully');
         _resetPrescriptionForm();

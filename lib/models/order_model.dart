@@ -1181,7 +1181,8 @@ class OrderModel {
       'out_for_delivery',
       'rider assigned',
       'accepted',
-      'pickedup', // Add this line
+      'pickedup',
+      'cancelled' // Add this line
     ];
     return ongoingStatuses.contains(status.toLowerCase());
   }

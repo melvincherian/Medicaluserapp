@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:medical_user_app/view/signup_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:medical_user_app/view/otp_screen.dart';
 import 'package:medical_user_app/providers/auth_provider.dart';
@@ -71,11 +72,11 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
       _showSuccessSnackBar('OTP sent successfully!');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const OtpScreen()),
+        MaterialPageRoute(builder: (context) =>  OtpScreen(phoneNumber: mobileController.text,)),
       );
     } else if (authProvider.status == AuthStatus.error) {
       _showErrorSnackBar(
-        'Login Failed Please Register'
+        'Login Failed Please SignUp'
       );
       // _showErrorSnackBar(
       //   authProvider.errorMessage?.isNotEmpty == true
@@ -318,33 +319,37 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
 
               const SizedBox(height: 20),
 
+              TextButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupScreen()));
+              }, child: Text('Sign Up')),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: Colors.grey.withOpacity(0.3),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      'Or',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 1,
-                      color: Colors.grey.withOpacity(0.3),
-                    ),
-                  ),
-                ],
-              ),
+
+              // Row(
+              //   children: [
+              //     Expanded(
+              //       child: Container(
+              //         height: 1,
+              //         color: Colors.grey.withOpacity(0.3),
+              //       ),
+              //     ),
+              //     const Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 16.0),
+              //       child: Text(
+              //         'Or',
+              //         style: TextStyle(
+              //           color: Colors.grey,
+              //           fontSize: 14,
+              //         ),
+              //       ),
+              //     ),
+              //     Expanded(
+              //       child: Container(
+              //         height: 1,
+              //         color: Colors.grey.withOpacity(0.3),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
               const SizedBox(height: 30),
 
@@ -356,23 +361,23 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _socialLoginButton(
-                        'assets/icons/google.png', 
-                        isLoading ? null : () => _showComingSoonDialog('Google Login'),
-                        isLoading,
-                      ),
-                      const SizedBox(width: 24),
-                      _socialLoginButton(
-                        'assets/icons/facebook.png', 
-                        isLoading ? null : () => _showComingSoonDialog('Facebook Login'),
-                        isLoading,
-                      ),
-                      const SizedBox(width: 24),
-                      _socialLoginButton(
-                        'assets/icons/x.png', 
-                        isLoading ? null : () => _showComingSoonDialog('X Login'),
-                        isLoading,
-                      ),
+                      // _socialLoginButton(
+                      //   'assets/icons/google.png', 
+                      //   isLoading ? null : () => _showComingSoonDialog('Google Login'),
+                      //   isLoading,
+                      // ),
+                      // const SizedBox(width: 24),
+                      // _socialLoginButton(
+                      //   'assets/icons/facebook.png', 
+                      //   isLoading ? null : () => _showComingSoonDialog('Facebook Login'),
+                      //   isLoading,
+                      // ),
+                      // const SizedBox(width: 24),
+                      // _socialLoginButton(
+                      //   'assets/icons/x.png', 
+                      //   isLoading ? null : () => _showComingSoonDialog('X Login'),
+                      //   isLoading,
+                      // ),
                     ],
                   );
                 },

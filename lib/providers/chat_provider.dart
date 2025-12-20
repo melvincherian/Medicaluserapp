@@ -231,52 +231,108 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
+  // Future<bool> sendMessage({
+  //   required String userId,
+  //   required String riderId,
+  //   required String message,
+  //   required String senderType,
+  // }) async {
+  //   if (message.trim().isEmpty) return false;
+
+  //   _isSending = true;
+  //   _error = '';
+  //   notifyListeners();
+
+  //   try {
+  //     final success = await _chatService.sendMessage(
+  //       userId: userId,
+  //       riderId: riderId,
+  //       message: message.trim(),
+  //       senderType: senderType,
+  //     );
+
+  //     if (!success) {
+  //       _error = 'Failed to send message';
+  //     } else if (!_chatService.isConnected) {
+  //       final localMessage = ChatMessage(
+  //         id: DateTime.now().millisecondsSinceEpoch.toString(),
+  //         riderId: riderId,
+  //         userId: userId,
+  //         message: message.trim(),
+  //         senderType: senderType,
+  //         timestamp: DateTime.now(),
+  //         createdAt: DateTime.now(),
+  //         updatedAt: DateTime.now(),
+  //       );
+  //       _addMessage(localMessage);
+
+
+  //     }
+
+  //     return success;
+  //   } catch (e) {
+  //     _error = 'Error sending message: $e';
+  //     print('❌ Error sending message: $e');
+  //     return false;
+  //   } finally {
+  //     _isSending = false;
+  //     notifyListeners();
+  //   }
+  // }
+
+
+
   Future<bool> sendMessage({
-    required String userId,
-    required String riderId,
-    required String message,
-    required String senderType,
-  }) async {
-    if (message.trim().isEmpty) return false;
+  required String userId,
+  required String riderId,
+  required String message,
+  required String senderType,
+}) async {
+  if (message.trim().isEmpty) return false;
 
-    _isSending = true;
-    _error = '';
-    notifyListeners();
+  _isSending = true;
+  _error = '';
+  notifyListeners();
 
-    try {
-      final success = await _chatService.sendMessage(
-        userId: userId,
-        riderId: riderId,
-        message: message.trim(),
-        senderType: senderType,
-      );
+  // 👇 Create the message locally first
+  final localMessage = ChatMessage(
+    id: DateTime.now().millisecondsSinceEpoch.toString(),
+    riderId: riderId,
+    userId: userId,
+    message: message.trim(),
+    senderType: senderType,
+    timestamp: DateTime.now(),
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
 
-      if (!success) {
-        _error = 'Failed to send message';
-      } else if (!_chatService.isConnected) {
-        final localMessage = ChatMessage(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          riderId: riderId,
-          userId: userId,
-          message: message.trim(),
-          senderType: senderType,
-          timestamp: DateTime.now(),
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-        _addMessage(localMessage);
-      }
+  // 👇 Add it to the list immediately so UI updates
+  _addMessage(localMessage);
 
-      return success;
-    } catch (e) {
-      _error = 'Error sending message: $e';
-      print('❌ Error sending message: $e');
-      return false;
-    } finally {
-      _isSending = false;
-      notifyListeners();
+  try {
+    final success = await _chatService.sendMessage(
+      userId: userId,
+      riderId: riderId,
+      message: message.trim(),
+      senderType: senderType,
+    );
+
+    if (!success) {
+      _error = 'Failed to send message';
+      // (Optional) mark it as unsent
     }
+
+    return success;
+  } catch (e) {
+    _error = 'Error sending message: $e';
+    print('❌ Error sending message: $e');
+    return false;
+  } finally {
+    _isSending = false;
+    notifyListeners();
   }
+}
+
 
   void _addMessage(ChatMessage message) {
     final exists = _messages.any((m) =>

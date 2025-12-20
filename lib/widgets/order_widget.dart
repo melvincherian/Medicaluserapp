@@ -441,8 +441,370 @@ import 'package:medical_user_app/widgets/progress_bar.dart';
 //   }
 // }
 
+// class OrderStatusWidget extends StatefulWidget {
+//   final String userId;
 
+//   const OrderStatusWidget({
+//     Key? key,
+//     required this.userId,
+//   }) : super(key: key);
 
+//   @override
+//   State<OrderStatusWidget> createState() => _OrderStatusWidgetState();
+// }
+
+// class _OrderStatusWidgetState extends State<OrderStatusWidget> {
+//   OrderStatusResponse? orderData;
+//   bool isLoading = true;
+//   String? error;
+//   Timer? _timer;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadOrderStatus();
+
+//     // Poll API every 8 seconds
+//     _timer = Timer.periodic(const Duration(seconds: 8), (timer) {
+//       if (mounted) {
+//         if (_isDelivered()) {
+//           timer.cancel(); // Stop polling once delivered
+//         } else {
+//           _loadOrderStatus();
+//         }
+//       }
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     _timer?.cancel();
+//     super.dispose();
+//   }
+
+//   Future<void> _loadOrderStatus() async {
+//     try {
+//       final data = await OrderStatusService.getOrderStatus(widget.userId);
+//       setState(() {
+//         orderData = data;
+//         isLoading = false;
+//         if (data == null) {
+//           error = 'Failed to load order status';
+//         }
+//       });
+
+//       // Show snackbar when delivered
+//       if (_isDelivered()) {
+//         if (mounted) {
+//           // ScaffoldMessenger.of(context).showSnackBar(
+//           //   const SnackBar(
+//           //     content: Text("Your order has been delivered! 🎉"),
+//           //     backgroundColor: Colors.green,
+//           //   ),
+//           // );
+//         }
+//       }
+//     } catch (e) {
+//       setState(() {
+//         error = 'Error: $e';
+//         isLoading = false;
+//       });
+//     }
+//   }
+
+//   bool _isDelivered() {
+//     if (orderData == null) return false;
+//     final statuses =
+//         orderData!.statusTimeline.map((s) => s.status.toLowerCase());
+//     return statuses
+//         .any((s) => s.contains('delivered') || s.contains('completed'));
+//   }
+
+//   int get currentStep {
+//     if (orderData?.statusTimeline.isEmpty ?? true) return 1;
+
+//     // Keep list for accurate length
+//     final allStatuses =
+//         orderData!.statusTimeline.map((s) => s.status.toLowerCase()).toList();
+
+//     final allmsg =
+//         orderData!.statusTimeline.map((s) => s.message.toLowerCase()).toList();
+
+//     // Step 5: Delivered
+//     if (allStatuses.any((status) =>
+//         status.contains('delivered') || status.contains('completed'))) {
+//       return 5;
+//     }
+
+//     // Step 4: Out for Delivery
+//     if (allStatuses.any((status) =>
+//         status.contains('out for delivery') ||
+//         status.contains('pickedup') ||
+//         status.contains('picked up'))) {
+//       return 4;
+//     }
+
+//     // Step 3: Rider Accepted
+//     if (allStatuses.any((status) => status.contains('accepted')) &&
+//         allStatuses.length == 4) {
+//       // also print the matched message
+//       final acceptedMsg = allmsg.firstWhere(
+//         (msg) => msg.contains('rider updated status to accepted'),
+//         orElse: () => 'No rider accepted message found',
+//       );
+//       print("Matched Rider Accepted Message: $acceptedMsg");
+//       return 3;
+//     }
+
+//     // Step 2: Vendor Accepted
+//     if (allStatuses.any((status) =>
+//         status.contains('vendor accepted') || status.contains('accepted'))) {
+//       return 2;
+//     }
+
+//     // Step 1: Order Placed
+//     if (allStatuses.any((status) =>
+//         status.contains('pending') ||
+//         status.contains('placed') ||
+//         status.contains('rider assigned') ||
+//         status.contains('assigned'))) {
+//       return 1;
+//     }
+
+//     return 1; // Default to first step
+//   }
+
+//   String get currentStatusLabel {
+//     if (orderData?.statusTimeline.isEmpty ?? true) return 'Order Placed';
+
+//     final latestStatus = orderData!.statusTimeline.last.status.toLowerCase();
+
+//     if (latestStatus.contains('delivered') ||
+//         latestStatus.contains('completed')) {
+//       return 'Delivered';
+//     } else if (latestStatus.contains('out for delivery') ||
+//         latestStatus.contains('pickedup') ||
+//         latestStatus.contains('picked up')) {
+//       return 'Out for Delivery';
+//     } else if (latestStatus.contains('rider accepted')) {
+//       return 'Rider Accepted';
+//     } else if (latestStatus.contains('vendor accepted') ||
+//         latestStatus.contains('accepted')) {
+//       return 'Vendor Accepted';
+//     } else if (latestStatus.contains('rider assigned') ||
+//         latestStatus.contains('assigned') ||
+//         latestStatus.contains('pending') ||
+//         latestStatus.contains('placed')) {
+//       return 'Order Placed';
+//     }
+
+//     return 'Order Placed';
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     // Hide widget completely when order is delivered
+//     if (_isDelivered()) {
+//       return const SizedBox.shrink();
+//     }
+
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(12),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.1),
+//             spreadRadius: 1,
+//             blurRadius: 4,
+//             offset: const Offset(0, 1),
+//           ),
+//         ],
+//       ),
+//       child: isLoading
+//           ? const Center(child: CircularProgressIndicator())
+//           : error != null
+//               ? const Column(
+//                   children: [
+//                     SizedBox(height: 8),
+//                     Text('No orders found'),
+//                     SizedBox(height: 8),
+//                   ],
+//                 )
+//               : Stack(
+//                   children: [
+//                     Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Row(
+//                           children: [
+//                             Container(
+//                               width: 60,
+//                               height: 60,
+//                               decoration: BoxDecoration(
+//                                 color: Colors.blue[50],
+//                                 borderRadius: BorderRadius.circular(12),
+//                               ),
+//                               child: ClipRRect(
+//                                 borderRadius: BorderRadius.circular(12),
+//                                 child: orderData!.medicines.isNotEmpty &&
+//                                         orderData!
+//                                             .medicines.first.images.isNotEmpty
+//                                     ? Image.network(
+//                                         orderData!.medicines.first.images.first,
+//                                         fit: BoxFit.cover,
+//                                         errorBuilder:
+//                                             (context, error, stackTrace) =>
+//                                                 Icon(Icons.local_pharmacy,
+//                                                     color: Colors.blue[600],
+//                                                     size: 30),
+//                                       )
+//                                     : Icon(Icons.local_pharmacy,
+//                                         color: Colors.blue[600], size: 30),
+//                               ),
+//                             ),
+//                             const SizedBox(width: 12),
+//                             Expanded(
+//                               child: Column(
+//                                 crossAxisAlignment: CrossAxisAlignment.start,
+//                                 children: [
+//                                   const Text(
+//                                     'Order Status',
+//                                     style: TextStyle(
+//                                       fontWeight: FontWeight.bold,
+//                                       fontSize: 16,
+//                                     ),
+//                                   ),
+//                                   if (orderData?.statusTimeline.isNotEmpty ??
+//                                       false)
+//                                     Text(
+//                                       orderData!.statusTimeline.last.message,
+//                                       style: TextStyle(
+//                                         fontSize: 12,
+//                                         color: Colors.grey[600],
+//                                       ),
+//                                     ),
+//                                 ],
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         const SizedBox(height: 16),
+//                         CustomProgressBar(
+//                             currentStep: currentStep, totalSteps: 5),
+//                         const SizedBox(height: 16),
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: [
+//                             _buildStepItem(
+//                               icon: Icons.shopping_cart,
+//                               label: 'Order\nPlaced',
+//                               isActive: currentStep >= 1,
+//                             ),
+//                             _buildStepItem(
+//                               icon: Icons.store,
+//                               label: 'Vendor\nAccepted',
+//                               isActive: currentStep >= 2,
+//                             ),
+//                             _buildStepItem(
+//                               icon: Icons.two_wheeler,
+//                               label: 'Rider\nAccepted',
+//                               isActive: currentStep >= 3,
+//                             ),
+//                             _buildStepItem(
+//                               icon: Icons.local_shipping,
+//                               label: 'Out for\nDelivery',
+//                               isActive: currentStep >= 4,
+//                             ),
+//                             _buildStepItem(
+//                               icon: Icons.check_circle,
+//                               label: 'Delivered',
+//                               isActive: currentStep >= 5,
+//                             ),
+//                           ],
+//                         ),
+//                         const SizedBox(height: 20),
+//                       ],
+//                     ),
+//                     Positioned(
+//                       top: 0,
+//                       right: 0,
+//                       child: Text(
+//                         _formatLastUpdate(),
+//                         style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//     );
+//   }
+
+//   // ---------------- Helpers ----------------
+//   Widget _buildStepItem({
+//     required IconData icon,
+//     required String label,
+//     required bool isActive,
+//   }) {
+//     return Column(
+//       children: [
+//         Container(
+//           width: 40,
+//           height: 40,
+//           decoration: BoxDecoration(
+//             color: isActive ? Colors.blue[50] : Colors.grey[50],
+//             borderRadius: BorderRadius.circular(20),
+//             border: Border.all(
+//               color: isActive ? Colors.blue : Colors.grey.shade300,
+//               width: 2,
+//             ),
+//           ),
+//           child: Icon(
+//             icon,
+//             color: isActive ? Colors.blue : Colors.grey[600],
+//             size: 20,
+//           ),
+//         ),
+//         const SizedBox(height: 4),
+//         SizedBox(
+//           width: 50,
+//           child: Text(
+//             label,
+//             textAlign: TextAlign.center,
+//             style: TextStyle(
+//               fontSize: 9,
+//               fontWeight: FontWeight.normal,
+//               color: isActive ? Colors.blue : Colors.grey[600],
+//               height: 1.2,
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   String _formatTimestamp(DateTime timestamp) {
+//     final now = DateTime.now();
+//     final difference = now.difference(timestamp);
+
+//     if (difference.inMinutes < 60) {
+//       return '${difference.inMinutes}m ago';
+//     } else if (difference.inHours < 24) {
+//       return '${difference.inHours}h ago';
+//     } else {
+//       return '${difference.inDays}d ago';
+//     }
+//   }
+
+//   String _formatLastUpdate() {
+//     if (orderData?.statusTimeline.isEmpty ?? true) {
+//       return 'No updates';
+//     }
+//     final lastUpdate = orderData!.statusTimeline.last.timestamp;
+//     return 'Updated ${_formatTimestamp(lastUpdate)}';
+//   }
+// }
 
 class OrderStatusWidget extends StatefulWidget {
   final String userId;
@@ -470,8 +832,8 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
     // Poll API every 8 seconds
     _timer = Timer.periodic(const Duration(seconds: 8), (timer) {
       if (mounted) {
-        if (_isDelivered()) {
-          timer.cancel(); // Stop polling once delivered
+        if (_isDelivered() || _isCancelled()) {
+          timer.cancel(); // Stop polling once delivered or cancelled
         } else {
           _loadOrderStatus();
         }
@@ -485,35 +847,84 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
     super.dispose();
   }
 
-  Future<void> _loadOrderStatus() async {
-    try {
-      final data = await OrderStatusService.getOrderStatus(widget.userId);
-      setState(() {
-        orderData = data;
-        isLoading = false;
-        if (data == null) {
-          error = 'Failed to load order status';
-        }
-      });
+  // Future<void> _loadOrderStatus() async {
+  //   try {
+  //     final data = await OrderStatusService.getOrderStatus(widget.userId);
+  //     setState(() {
+  //       orderData = data;
+  //       isLoading = false;
+  //       if (data == null) {
+  //         error = 'Failed to load order status';
+  //       }
+  //     });
 
-      // Show snackbar when delivered
-      if (_isDelivered()) {
-        if (mounted) {
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   const SnackBar(
-          //     content: Text("Your order has been delivered! 🎉"),
-          //     backgroundColor: Colors.green,
-          //   ),
-          // );
-        }
+  //     // Show snackbar when delivered
+  //     if (_isDelivered()) {
+  //       if (mounted) {
+  //         // ScaffoldMessenger.of(context).showSnackBar(
+  //         //   const SnackBar(
+  //         //     content: Text("Your order has been delivered! 🎉"),
+  //         //     backgroundColor: Colors.green,
+  //         //   ),
+  //         // );
+  //       }
+  //     }
+  //   } catch (e) {
+  //     setState(() {
+  //       error = 'Error: $e';
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+
+
+  Future<void> _loadOrderStatus() async {
+  try {
+    final data = await OrderStatusService.getOrderStatus(widget.userId);
+    setState(() {
+      orderData = data;
+      isLoading = false;
+      if (data == null) {
+        error = 'Failed to load order status';
       }
-    } catch (e) {
-      setState(() {
-        error = 'Error: $e';
-        isLoading = false;
-      });
+    });
+
+    // Stop polling and hide widget if cancelled
+    if (_isCancelled()) {
+      _timer?.cancel();
+      if (mounted) {
+        // Optionally show a snackbar for cancelled orders
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text("Your order has been cancelled"),
+        //     backgroundColor: Colors.orange,
+        //     duration: Duration(seconds: 2),
+        //   ),
+        // );
+      }
     }
+
+    // Show snackbar when delivered
+    if (_isDelivered()) {
+      _timer?.cancel();
+      if (mounted) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text("Your order has been delivered! 🎉"),
+        //     backgroundColor: Colors.green,
+        //     duration: Duration(seconds: 2),
+        //   ),
+        // );
+      }
+    }
+  } catch (e) {
+    setState(() {
+      error = 'Error: $e';
+      isLoading = false;
+    });
   }
+}
 
   bool _isDelivered() {
     if (orderData == null) return false;
@@ -522,6 +933,33 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
     return statuses
         .any((s) => s.contains('delivered') || s.contains('completed'));
   }
+
+  // bool _isCancelled() {
+  //   if (orderData == null) return false;
+  //   final statuses =
+  //       orderData!.statusTimeline.map((s) => s.status.toLowerCase());
+  //   return statuses
+  //       .any((s) => s.contains('cancelled') || s.contains('canceled'));
+  // }
+
+
+  bool _isCancelled() {
+  if (orderData == null) return false;
+  
+  // Check both status and message fields for cancelled state
+  final statuses = orderData!.statusTimeline.map((s) => s.status.toLowerCase());
+  final messages = orderData!.statusTimeline.map((s) => s.message.toLowerCase());
+  
+  return statuses.any((s) => 
+      s.contains('cancelled') || 
+      s.contains('canceled') ||
+      s == 'cancelled' ||
+      s == 'canceled'
+    ) || messages.any((m) => 
+      m.contains('cancelled') || 
+      m.contains('canceled')
+    );
+}
 
   int get currentStep {
     if (orderData?.statusTimeline.isEmpty ?? true) return 1;
@@ -606,8 +1044,8 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // Hide widget completely when order is delivered
-    if (_isDelivered()) {
+    // Hide widget completely when order is delivered or cancelled
+    if (_isDelivered() || _isCancelled()) {
       return const SizedBox.shrink();
     }
 
@@ -808,11 +1246,6 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
     return 'Updated ${_formatTimestamp(lastUpdate)}';
   }
 }
-
-
-
-
-
 
 // class OrderStatusWidget extends StatefulWidget {
 //   final String userId;

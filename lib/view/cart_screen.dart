@@ -2178,7 +2178,7 @@ class _CartScreenState extends State<CartScreen> {
         Uri.parse('http://31.97.206.144:7021/api/admin/getcoupons'),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 10));
-      
+
       print('response status codeeeeeeeeeeeeeeeee ${response.statusCode}');
       print('response bodyyyyyyyyyyyyyyyy ${response.body}');
 
@@ -2253,14 +2253,18 @@ class _CartScreenState extends State<CartScreen> {
       }
 
       final cartProvider = Provider.of<CartProvider>(context, listen: false);
-      final discount = (cartProvider.cart.subTotal *
-              (coupon['discountPercentage'] as num).toDouble() /
-              100)
-          .toStringAsFixed(2);
+      // final discount = (cartProvider.cart.subTotal *
+      //         (coupon['discountPercentage'] as num).toDouble() /
+      //         100)
+      //     .toStringAsFixed(2);
+
+      final discountPercentage =
+          (coupon['discountPercentage'] as num).toDouble();
+      final discount = (cartProvider.cart.subTotal * discountPercentage / 100);
 
       setState(() {
         appliedCoupon = couponCode;
-        discountAmount = double.parse(discount);
+        discountAmount = double.parse(discount.toString());
       });
 
       couponController.clear();
@@ -2534,14 +2538,28 @@ class _CartScreenState extends State<CartScreen> {
     return subtotal;
   }
 
-  double calculateTotalPayable(CartProvider cartProvider) {
-    double subtotal = calculateSubtotal(cartProvider);
-    double platformFee = cartProvider.cart.platformFee;
-    double deliveryCharge = cartProvider.cart.deliveryCharge;
-    double afterDiscount =
-        subtotal + platformFee + deliveryCharge - discountAmount;
+  // double calculateTotalPayable(CartProvider cartProvider) {
+  //   double subtotal = calculateSubtotal(cartProvider);
+  //   double platformFee = cartProvider.cart.platformFee;
+  //   double deliveryCharge = cartProvider.cart.deliveryCharge;
+  //   double afterDiscount =
+  //       subtotal + platformFee + deliveryCharge - discountAmount;
 
-    return afterDiscount < 0 ? 0 : afterDiscount;
+  //   return afterDiscount < 0 ? 0 : afterDiscount;
+  // }
+
+  double calculateTotalPayable(CartProvider cartProvider) {
+    final cart = cartProvider.cart;
+    double subtotal = cart.subTotal;
+    double platformFee = cart.platformFee;
+    double deliveryCharge = cart.deliveryCharge;
+
+    double totalBeforeDiscount = subtotal + platformFee + deliveryCharge;
+    double afterDiscount = totalBeforeDiscount - discountAmount;
+
+    return afterDiscount < 0
+        ? 0
+        : double.parse(afterDiscount.toStringAsFixed(2));
   }
 
   @override
@@ -2566,14 +2584,14 @@ class _CartScreenState extends State<CartScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 64,
-                      color: Colors.grey[400],
-                    ),
+                    // Icon(
+                    //   Icons.error_outline,
+                    //   size: 64,
+                    //   color: Colors.grey[400],
+                    // ),
                     const SizedBox(height: 16),
                     Text(
-                      cartProvider.errorMessage!,
+                      'Please provide your internet connection',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 16,
@@ -2581,13 +2599,13 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        cartProvider.clearError();
-                        cartProvider.initializeCart();
-                      },
-                      child: const Text('Retry'),
-                    ),
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     cartProvider.clearError();
+                    //     cartProvider.initializeCart();
+                    //   },
+                    //   child: const Text('Retry'),
+                    // ),
                   ],
                 ),
               );
@@ -2866,7 +2884,7 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ),
                 Text(
-                  'Price: ₹${item.price}',
+                  'Price: ₹${item.totalPrice}',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade600,
@@ -3119,40 +3137,41 @@ class _CartScreenState extends State<CartScreen> {
         width: double.infinity,
         height: 50,
         child: ElevatedButton(
-          // onPressed: cartProvider.isEmpty || cartProvider.isLoading
-          //     ? null
-          //     : () {
-          //         final totalAmount = calculateTotalPayable(cartProvider);
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //               builder: (context) => PaymentScreen(
-          //                     amount:totalAfterDiscount,
-          //                     coupouncode: appliedCoupon,
-          //                   )),
-          //         );
-          //       },
-
           onPressed: cartProvider.isEmpty || cartProvider.isLoading
               ? null
               : () {
-                  final cart = cartProvider.cart;
-                  final totalAmount = cart.subTotal +
-                      cart.platformFee +
-                      cart.deliveryCharge -
-                      discountAmount;
-
+                  final totalAmount = calculateTotalPayable(cartProvider);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PaymentScreen(
-                        amount: (totalAmount < 0 ? 0 : totalAmount)
-                            .toStringAsFixed(2),
-                        coupouncode: appliedCoupon,
-                      ),
-                    ),
+                        builder: (context) => PaymentScreen(
+                              amount: totalAmount.toString(),
+                              coupouncode: appliedCoupon,
+                            )),
                   );
                 },
+
+          // onPressed: cartProvider.isEmpty || cartProvider.isLoading
+          //     ? null
+          //     : () {
+          //         final cart = cartProvider.cart;
+          //         final totalAmount = cart.subTotal +
+          //             cart.platformFee +
+          //             // cart.deliveryCharge -
+          //             discountAmount;
+
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => PaymentScreen(
+          //               amount: (totalAmount < 0 ? 0 : totalAmount)
+          //                   .toStringAsFixed(2),
+          //               coupouncode: appliedCoupon,
+          //               subtotal: cart.subTotal.toString(),
+          //             ),
+          //           ),
+          //         );
+          //       },
 
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF5931DD),
@@ -3189,6 +3208,8 @@ class _CartScreenState extends State<CartScreen> {
         cart.deliveryCharge -
         discountAmount);
 
+    final totalAmount = calculateTotalPayable(cartProvider);
+
     return Container(
       width: 343,
       padding: const EdgeInsets.all(16),
@@ -3207,21 +3228,41 @@ class _CartScreenState extends State<CartScreen> {
           _buildPriceRow(
               'platform_fee', '₹${cart.platformFee.toStringAsFixed(2)}'),
           const SizedBox(height: 8),
+
+          if (discountAmount > 0) ...[
+            const SizedBox(height: 8),
+            _buildPriceRow(
+              'discount',
+              '-₹${discountAmount.toStringAsFixed(2)}',
+              isDiscount: true,
+            ),
+          ],
+          const SizedBox(height: 8),
+
           _buildPriceRow(
               'delivery_charge', '₹${cart.deliveryCharge.toStringAsFixed(2)}'),
           if (discountAmount > 0)
             Column(
               children: [
                 const SizedBox(height: 8),
-                _buildPriceRow(
-                    'discount', '-₹${discountAmount.toStringAsFixed(2)}',
-                    isDiscount: true),
+                // _buildPriceRow(
+                //     'discount', '-₹${discountAmount.toStringAsFixed(2)}',
+                //     isDiscount: true),
               ],
             ),
           const Divider(height: 24, thickness: 1),
+          // _buildPriceRow(
+          //     'total_payable', '₹${totalAfterDiscount.toStringAsFixed(2)}',
+          //     isTotal: true),
+          //  _buildPriceRow(
+          // 'total_payable', '₹${cart.totalPayable}',
+          // isTotal: true),
+
           _buildPriceRow(
-              'total_payable', '₹${totalAfterDiscount.toStringAsFixed(2)}',
-              isTotal: true),
+            'total_payable',
+            '₹${totalAmount.toString()}',
+            isTotal: true,
+          ),
         ],
       ),
     );

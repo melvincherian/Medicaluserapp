@@ -103,7 +103,7 @@ class _AddQueryScreenState extends State<AddQueryScreen> {
           ),
         ),
         centerTitle: true,
-        backgroundColor:  Colors.blue,
+        backgroundColor:  Color(0xFF5931DD),
         elevation: 0,
         leading: InkWell(
           onTap: () => Navigator.pop(context),
@@ -111,7 +111,7 @@ class _AddQueryScreenState extends State<AddQueryScreen> {
             margin: const EdgeInsets.all(9),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300),
+              border: Border.all(color: const Color.fromARGB(255, 165, 165, 165)),
               borderRadius: BorderRadius.circular(8),
             ),
             child: GestureDetector(
@@ -323,6 +323,22 @@ class _AddQueryScreenState extends State<AddQueryScreen> {
                             ),
                           ),
 
+                          Row(
+                            children: [
+                              // const Icon(Icons.error_outline, color: Colors.red),
+                              const SizedBox(width: 12),
+                              // Expanded(
+                              //   child: Text(
+                              //     'Please provide your internet connection',
+                              //     style: const TextStyle(
+                              //       color: Colors.red,
+                              //       fontWeight: FontWeight.w500,
+                              //     ),
+                              //   ),
+                              // ),
+                            ],
+                          ),
+
                         // Submit Button
                         SizedBox(
                           width: double.infinity,
@@ -330,7 +346,7 @@ class _AddQueryScreenState extends State<AddQueryScreen> {
                           child: ElevatedButton(
                             onPressed: provider.isLoading ? null : _submitQuery,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Color(0xFF5931DD),
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),

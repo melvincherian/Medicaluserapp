@@ -2078,6 +2078,14 @@
 //   }
 // }
 
+
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:medical_user_app/view/maplocation/map_location_screen.dart';
@@ -2107,6 +2115,9 @@ class _ChangeAddressScreenState extends State<ChangeAddressScreen> {
   // Search functionality
   String _searchQuery = '';
   List<Map<String, dynamic>> _filteredAddresses = [];
+
+  final Map<String, String?> _fieldErrors = {};
+
 
   @override
   void initState() {
@@ -2486,7 +2497,7 @@ class _ChangeAddressScreenState extends State<ChangeAddressScreen> {
                       children: [
                         SizedBox(width:  12,),
                         Icon(Icons.my_location, size: 18),
-                        SizedBox(width: 16),
+                        SizedBox(width: 13),
                         Text(
                           'Choose Location On Map',
                           style: TextStyle(
@@ -2571,37 +2582,38 @@ class _ChangeAddressScreenState extends State<ChangeAddressScreen> {
 
                 // Error Message
                 if (addressProvider.errorMessage.isNotEmpty)
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.shade200),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(Icons.error_outline, color: Colors.red.shade600),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            addressProvider.errorMessage,
-                            style: TextStyle(
-                              color: Colors.red.shade700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => addressProvider.clearError(),
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.red.shade600,
-                            size: 20,
-                          ),
-                        ),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      // Icon(Icons.error_outline, color: Colors.red.shade600),
+                      const SizedBox(width: 8),
+                      // Expanded(
+                      //   child: Text(
+                      //     addressProvider.errorMessage,
+                      //     style: TextStyle(
+                      //       color: Colors.red.shade700,
+                      //       fontSize: 14,
+                      //     ),
+                      //   ),
+                      // ),
+
+                      //  Expanded(
+                      //   child: Text(
+                      //     'Please Provide your internet Connection',
+                      //     style: TextStyle(
+                      //       color: Colors.red.shade700,
+                      //       fontSize: 14,
+                      //     ),
+                      //   ),
+                      // ),
+                      // IconButton(
+                      //   onPressed: () => addressProvider.clearError(),
+                      //   icon: Icon(
+                      //     Icons.close,
+                      //     color: Colors.red.shade600,
+                      //     size: 20,
+                      //   ),
+                      // ),
+                    ],
                   ),
 
                 // Saved Locations List with search functionality
@@ -2990,22 +3002,75 @@ class _ChangeAddressScreenState extends State<ChangeAddressScreen> {
     );
   }
 
+  // Widget _buildTextField(
+  //     String label, String hint, TextEditingController controller) {
+  //   return TextField(
+  //     controller: controller,
+  //     decoration: InputDecoration(
+  //       labelText: label,
+  //       hintText: hint,
+  //       border: OutlineInputBorder(
+  //         borderRadius: BorderRadius.circular(8),
+  //       ),
+  //       isDense: true,
+  //       contentPadding:
+  //           const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+  //     ),
+  //   );
+  // }
+
+
   Widget _buildTextField(
-      String label, String hint, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+    String label, String hint, TextEditingController controller) {
+  final fieldKey = label.toLowerCase().replaceAll('/', '').replaceAll(' ', '_');
+  
+  return TextField(
+    controller: controller,
+    decoration: InputDecoration(
+      labelText: label,
+      hintText: hint,
+      errorText: _fieldErrors[fieldKey],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: _fieldErrors[fieldKey] != null ? Colors.red : Colors.grey,
         ),
-        isDense: true,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       ),
-    );
-  }
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: _fieldErrors[fieldKey] != null ? Colors.red : Colors.grey.shade400,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: _fieldErrors[fieldKey] != null ? Colors.red : const Color(0xFF6A3DE8),
+          width: 2,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: Colors.red),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+      ),
+      isDense: true,
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    ),
+    onChanged: (value) {
+      // Clear error when user starts typing
+      if (_fieldErrors[fieldKey] != null && value.trim().isNotEmpty) {
+        setState(() {
+          _fieldErrors.remove(fieldKey);
+        });
+      }
+    },
+  );
+}
 
   void _clearControllers() {
     _countryController.clear();
@@ -3014,52 +3079,131 @@ class _ChangeAddressScreenState extends State<ChangeAddressScreen> {
     _pincodeController.clear();
     _houseController.clear();
     _streetController.clear();
+     _fieldErrors.clear();
   }
+
+  // Future<void> _saveAddress(
+  //     BuildContext context, AddressProvider addressProvider) async {
+  //   // Validate fields
+  //   if (_countryController.text.trim().isEmpty ||
+  //       _stateController.text.trim().isEmpty ||
+  //       _cityController.text.trim().isEmpty ||
+  //       _pincodeController.text.trim().isEmpty ||
+  //       _houseController.text.trim().isEmpty ||
+  //       _streetController.text.trim().isEmpty) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Please fill in all fields'),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //     return;
+  //   }
+
+  //   // Clear any existing errors
+  //   addressProvider.clearError();
+
+  //   // Add address
+  //   final success = await addressProvider.addAddress(
+  //     house: _houseController.text.trim(),
+  //     street: _streetController.text.trim(),
+  //     city: _cityController.text.trim(),
+  //     state: _stateController.text.trim(),
+  //     pincode: _pincodeController.text.trim(),
+  //     country: _countryController.text.trim(),
+  //   );
+
+  //   if (success) {
+  //     Navigator.pop(context); // Close popup
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('Address added successfully!'),
+  //         backgroundColor: Colors.green,
+  //       ),
+  //     );
+  //     _clearControllers();
+  //     // Clear selected map location after saving
+  //     setState(() {
+  //       _selectedMapLocation = null;
+  //     });
+  //   }
+  // }
 
   Future<void> _saveAddress(
-      BuildContext context, AddressProvider addressProvider) async {
-    // Validate fields
-    if (_countryController.text.trim().isEmpty ||
-        _stateController.text.trim().isEmpty ||
-        _cityController.text.trim().isEmpty ||
-        _pincodeController.text.trim().isEmpty ||
-        _houseController.text.trim().isEmpty ||
-        _streetController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all fields'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
+    BuildContext context, AddressProvider addressProvider) async {
+  // Clear previous errors
+  setState(() {
+    _fieldErrors.clear();
+  });
 
-    // Clear any existing errors
-    addressProvider.clearError();
+  // Validate each field
+  bool hasError = false;
 
-    // Add address
-    final success = await addressProvider.addAddress(
-      house: _houseController.text.trim(),
-      street: _streetController.text.trim(),
-      city: _cityController.text.trim(),
-      state: _stateController.text.trim(),
-      pincode: _pincodeController.text.trim(),
-      country: _countryController.text.trim(),
-    );
-
-    if (success) {
-      Navigator.pop(context); // Close popup
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Address added successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      _clearControllers();
-      // Clear selected map location after saving
-      setState(() {
-        _selectedMapLocation = null;
-      });
-    }
+  if (_countryController.text.trim().isEmpty) {
+    _fieldErrors['country'] = 'Country is required';
+    hasError = true;
   }
+
+  if (_stateController.text.trim().isEmpty) {
+    _fieldErrors['state'] = 'State is required';
+    hasError = true;
+  }
+
+  if (_cityController.text.trim().isEmpty) {
+    _fieldErrors['city'] = 'City is required';
+    hasError = true;
+  }
+
+  if (_pincodeController.text.trim().isEmpty) {
+    _fieldErrors['pincode'] = 'Pincode is required';
+    hasError = true;
+  }
+
+  if (_houseController.text.trim().isEmpty) {
+    _fieldErrors['houseflat_no'] = 'House/Flat No. is required';
+    hasError = true;
+  }
+
+  if (_streetController.text.trim().isEmpty) {
+    _fieldErrors['street'] = 'Street is required';
+    hasError = true;
+  }
+
+  if (hasError) {
+    setState(() {}); // Trigger rebuild to show errors
+    return;
+  }
+
+  // Clear any existing errors
+  addressProvider.clearError();
+
+  // Add address
+  final success = await addressProvider.addAddress(
+    house: _houseController.text.trim(),
+    street: _streetController.text.trim(),
+    city: _cityController.text.trim(),
+    state: _stateController.text.trim(),
+    pincode: _pincodeController.text.trim(),
+    country: _countryController.text.trim(),
+  );
+
+  if (success) {
+    Navigator.pop(context); // Close popup
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Address added successfully!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+    _clearControllers();
+    // Clear selected map location after saving
+    setState(() {
+      _selectedMapLocation = null;
+      _fieldErrors.clear(); // Clear errors
+    });
+  }
+}
+
+
+
 }

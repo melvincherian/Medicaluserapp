@@ -80,9 +80,9 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
               const Divider(),
               // Filter options
               _buildFilterOption('all', 'All Orders', Icons.list_alt),
-              _buildFilterOption('delivered', 'Delivered', Icons.check_circle),
-              _buildFilterOption('Ongoing', 'ongoing', Icons.access_time),
-              // _buildFilterOption('Ongoing', 'Ongoing', Icons.check_circle_outline),
+              _buildFilterOption('pending', 'Pending', Icons.check_circle),
+              // _buildFilterOption('ongoing', 'Ongoing', Icons.access_time),
+              _buildFilterOption('accepted', 'Accepted', Icons.check_circle_outline),
               // _buildFilterOption('processing', 'Processing', Icons.local_shipping),
               // _buildFilterOption('delivered', 'Delivered', Icons.check_circle),
               _buildFilterOption('cancelled', 'Cancelled', Icons.cancel),
@@ -120,6 +120,33 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
     );
   }
 
+  // Widget _buildFilterOption(String value, String label, IconData icon) {
+  //   final isSelected = _selectedFilter == value;
+  //   return ListTile(
+  //     leading: Icon(
+  //       icon,
+  //       color: isSelected ? Colors.deepPurple : Colors.grey[600],
+  //     ),
+  //     title: Text(
+  //       label,
+  //       style: TextStyle(
+  //         color: isSelected ? Colors.deepPurple : Colors.black,
+  //         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+  //       ),
+  //     ),
+  //     trailing:
+  //         isSelected ? const Icon(Icons.check, color: Colors.deepPurple) : null,
+  //     selected: isSelected,
+  //     selectedTileColor: Colors.deepPurple.withOpacity(0.1),
+  //     onTap: () {
+  //       setState(() {
+  //         _selectedFilter = value;
+  //       });
+  //       Navigator.pop(context);
+  //     },
+  //   );
+  // }
+
   Widget _buildFilterOption(String value, String label, IconData icon) {
     final isSelected = _selectedFilter == value;
     return ListTile(
@@ -147,13 +174,26 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
     );
   }
 
+  // List<OrderModel> _getFilteredOrders(List<OrderModel> orders) {
+  //   if (_selectedFilter == 'all') {
+  //     return orders;
+  //   }
+  //   return orders
+  //       .where((order) =>
+  //           order.status.toLowerCase() == _selectedFilter.toLowerCase())
+  //       .toList();
+  // }
+
   List<OrderModel> _getFilteredOrders(List<OrderModel> orders) {
     if (_selectedFilter == 'all') {
       return orders;
     }
+
+    // Normalize the filter value to lowercase for comparison
+    final filterLower = _selectedFilter.toLowerCase();
+
     return orders
-        .where((order) =>
-            order.status.toLowerCase() == _selectedFilter.toLowerCase())
+        .where((order) => order.status.toLowerCase() == filterLower)
         .toList();
   }
 
@@ -566,20 +606,13 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                           ),
                         ),
                         if (itemsCount > 1)
-                          Text(
-                            '+${itemsCount - 1} more items',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        const Text(
-                          'Apollo Pharmacy',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.black87,
-                          ),
-                        ),
+                          // Text(
+                          //   '+${itemsCount - 1} more items',
+                          //   style: TextStyle(
+                          //     fontSize: 12,
+                          //     color: Colors.grey[600],
+                          //   ),
+                          // ),
                         const SizedBox(height: 4),
                         // Location row
                         Row(
@@ -663,8 +696,12 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            if (order.status != 'Cancelled' &&
+                                order.status != 'canceled')
                             IconButton(
+                              
                                 onPressed: () {
+                                  
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -673,18 +710,35 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                                               )));
                                 },
                                 icon: const Icon(Icons.description_outlined)),
-                            IconButton(
+                            // IconButton(
+                            //     onPressed: () {
+                            //       Navigator.push(
+                            //           context,
+                            //           MaterialPageRoute(
+                            //               builder: (context) => ChatScreen(
+                            //                     userId: userId.toString(),
+                            //                     riderId: order.assignedRider
+                            //                         .toString(),
+                            //                   )));
+                            //     },
+                            //     icon: const Icon(Icons.chat_bubble_outline)),
+
+                            if (order.status != 'Cancelled' &&
+                                order.status != 'canceled')
+                              IconButton(
                                 onPressed: () {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChatScreen(
-                                                userId: userId.toString(),
-                                                riderId: order.assignedRider
-                                                    .toString(),
-                                              )));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                        userId: userId.toString(),
+                                        riderId: order.assignedRider.toString(),
+                                      ),
+                                    ),
+                                  );
                                 },
-                                icon: const Icon(Icons.chat_bubble_outline)),
+                                icon: const Icon(Icons.chat_bubble_outline),
+                              ),
                           ],
                         )
 
@@ -761,72 +815,151 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
               Row(
                 children: [
                   // Cancel Order button - Enhanced with proper conditions
+                  // Expanded(
+                  //   child: OutlinedButton(
+                  //     onPressed: (canCancel && !isCancellingThisOrder)
+                  //         ? () => _handleCancelOrder(order, orderProvider)
+                  //         : null,
+                  //     style: OutlinedButton.styleFrom(
+                  //       foregroundColor: canCancel ? Colors.red : Colors.grey,
+                  //       side: BorderSide(
+                  //         color: canCancel
+                  //             ? Colors.red.shade300
+                  //             : Colors.grey.shade300,
+                  //       ),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(20),
+                  //       ),
+                  //       padding: const EdgeInsets.symmetric(vertical: 12),
+                  //     ),
+                  //     child: isCancellingThisOrder
+                  //         ? const SizedBox(
+                  //             width: 16,
+                  //             height: 16,
+                  //             child: CircularProgressIndicator(
+                  //               strokeWidth: 2,
+                  //               valueColor:
+                  //                   AlwaysStoppedAnimation<Color>(Colors.red),
+                  //             ),
+                  //           )
+                  //         : AppText(
+                  //             canCancel ? 'cancel_order' : 'cannot_cancel',
+                  //             style: const TextStyle(
+                  //               fontSize: 14,
+                  //               fontWeight: FontWeight.w500,
+                  //             ),
+                  //           ),
+                  //   ),
+                  // ),
+                  // const SizedBox(width: 12),
+                  // // Track Order button
+                  // Expanded(
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => NavigateScreen(
+                  //                     userId: userId.toString(),
+                  //                     orderId: order.id,
+                  //                   )));
+                  //       // _handleTrackOrder(order);
+                  //     },
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: const Color(0xFF5E35B1),
+                  //       foregroundColor: Colors.white,
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(20),
+                  //       ),
+                  //       padding: const EdgeInsets.symmetric(vertical: 12),
+                  //     ),
+                  //     child: const AppText(
+                  //       'Track Order',
+                  //       style: TextStyle(
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.w500,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: (canCancel && !isCancellingThisOrder)
-                          ? () => _handleCancelOrder(order, orderProvider)
-                          : null,
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: canCancel ? Colors.red : Colors.grey,
-                        side: BorderSide(
-                          color: canCancel
-                              ? Colors.red.shade300
-                              : Colors.grey.shade300,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: isCancellingThisOrder
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.red),
+                    child: order.status == 'Cancelled' ||
+                            order.status == 'canceled'
+                        ? const SizedBox
+                            .shrink() // Hide cancel button if order is cancelled
+                        : OutlinedButton(
+                            onPressed: (canCancel && !isCancellingThisOrder)
+                                ? () => _handleCancelOrder(order, orderProvider)
+                                : null,
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor:
+                                  canCancel ? Colors.red : Colors.grey,
+                              side: BorderSide(
+                                color: canCancel
+                                    ? Colors.red.shade300
+                                    : Colors.grey.shade300,
                               ),
-                            )
-                          : AppText(
-                              canCancel ? 'cancel_order' : 'cannot_cancel',
-                              style: const TextStyle(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            child: isCancellingThisOrder
+                                ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.red),
+                                    ),
+                                  )
+                                : AppText(
+                                    canCancel
+                                        ? 'cancel_order'
+                                        : 'cannot_cancel',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                          ),
+                  ),
+                  if (order.status != 'Cancelled' &&
+                      order.status != 'cancelled')
+                    const SizedBox(width: 12),
+                  Expanded(
+                    child: order.status == 'Cancelled' ||
+                            order.status == 'canceled'
+                        ? const SizedBox
+                            .shrink() // Hide track button if order is cancelled
+                        : ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NavigateScreen(
+                                            userId: userId.toString(),
+                                            orderId: order.id,
+                                          )));
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF5E35B1),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                            ),
+                            child: const AppText(
+                              'Track Order',
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Track Order button
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NavigateScreen(
-                                      userId: userId.toString(),
-                                      orderId: order.id,
-                                    )));
-                        // _handleTrackOrder(order);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF5E35B1),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      child: const AppText(
-                        'Track Order',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                          ),
                   ),
                 ],
               ),
@@ -995,7 +1128,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                                                 orderId: order.id,
                                               )));
                                 },
-                                icon: Icon(Icons.receipt_long)),
+                                icon:const Icon(Icons.receipt_long)),
                           ],
                         ),
                         // Date
@@ -1189,6 +1322,10 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
       );
 
       if (success) {
+        //added this extra line
+
+        await orderProvider.refreshOrders();
+
         _showSuccessSnackBar(orderProvider.getCancelResponseMessage() ??
             'Order cancelled successfully');
       } else {
@@ -1450,13 +1587,13 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
     var options = {
       'key': 'rzp_test_BxtRNvflG06PTV', // Replace with your Razorpay key
       'amount': (order.totalAmount * 100).toInt(), // Amount in paise
-      'name': 'Medical App',
+      'name': 'CLYNIX',
       'description': 'Medicine Reorder Payment',
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
       'prefill': {
-        'contact': "9961593179", // Get from user profile
-        'email': "user@example.com", // Get from user profile
+        'contact': "8309056333", // Get from user profile
+        'email': "Simcurarx@gmail.com", // Get from user profile
       },
       'external': {
         'wallets': ['paytm']

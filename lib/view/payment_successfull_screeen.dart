@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/view/main_layout.dart';
-import 'package:medical_user_app/view/notification_screen.dart';
-import 'package:medical_user_app/view/order_hystory_screen.dart';
+
 
 class PaymentSuccessfullScreeen extends StatelessWidget {
   final String? orderId;
@@ -28,7 +27,7 @@ class PaymentSuccessfullScreeen extends StatelessWidget {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => const MainLayout()),
-              (Route<dynamic> route) => false, // removes all previous routes
+              (Route<dynamic> route) => false,
             );
           },
           child: Container(
@@ -68,9 +67,8 @@ class PaymentSuccessfullScreeen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                'You have successfully Booked your order\n'
-                'We sent you details of your booking to your\n'
-                'mobile number. You can check on my bookings',
+                'Your order has been booked successfully!\n'
+                'Check My Bookings to track your order.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,

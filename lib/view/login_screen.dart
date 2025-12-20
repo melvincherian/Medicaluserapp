@@ -85,37 +85,37 @@ class LoginScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               // Or divider
-              Row(
-                children: const [
-                  Expanded(child: Divider(thickness: 1)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'Or',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                  Expanded(child: Divider(thickness: 1)),
-                ],
-              ),
+              // Row(
+              //   children: const [
+              //     Expanded(child: Divider(thickness: 1)),
+              //     Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 16),
+              //       child: Text(
+              //         'Or',
+              //         style: TextStyle(color: Colors.grey),
+              //       ),
+              //     ),
+              //     Expanded(child: Divider(thickness: 1)),
+              //   ],
+              // ),
               const SizedBox(height: 20),
               // Social Login Options
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _socialLoginButton('assets/icons/google.png', () {
-                    // Google login logic
-                  }),
-                  const SizedBox(width: 24),
-                  _socialLoginButton('assets/icons/facebook.png', () {
-                    // Facebook login logic
-                  }),
-                  const SizedBox(width: 24),
-                  _socialLoginButton('assets/icons/x.png', () {
-                    // Twitter/X login logic
-                  }),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     _socialLoginButton('assets/icons/google.png', () {
+              //       // Google login logic
+              //     }),
+              //     const SizedBox(width: 24),
+              //     _socialLoginButton('assets/icons/facebook.png', () {
+              //       // Facebook login logic
+              //     }),
+              //     const SizedBox(width: 24),
+              //     _socialLoginButton('assets/icons/x.png', () {
+              //       // Twitter/X login logic
+              //     }),
+              //   ],
+              // ),
               const Spacer(),
               // Sign Up Option
               Padding(
@@ -132,7 +132,7 @@ class LoginScreen extends StatelessWidget {
                             builder: (context) => const SignupScreen(),
                           ),
                         );
-                      },
+                      }, 
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(

@@ -99,6 +99,7 @@ class AuthService {
   static Future<AuthResponse> register({
     required String name,
     required String mobile,
+    required String email,
   }) async {
     try {
       print('[$_tag] Starting registration for $mobile');
@@ -120,6 +121,7 @@ class AuthService {
         body: json.encode({
           'name': name.trim(),
           'mobile': mobile.trim(),
+          'email':email.trim(),
         }),
       ).timeout(const Duration(seconds: 30));
 

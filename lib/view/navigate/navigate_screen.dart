@@ -2,9 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/widgets/progress_bar.dart';
 
-// Import your existing service and models
-// import 'order_status_service.dart'; // Adjust the import path as needed
-
 class NavigateScreen extends StatefulWidget {
   final String userId;
   final String?orderId;
@@ -183,7 +180,7 @@ class _NavigateScreenState extends State<NavigateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Navigate',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+        title: const Text('Order Tracker',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
         centerTitle: true,
         leading: IconButton(onPressed: (){
           Navigator.of(context).pop();

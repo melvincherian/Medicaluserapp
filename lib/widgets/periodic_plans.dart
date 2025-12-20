@@ -4856,6 +4856,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
     }
   }
 
+
   // Future<Map<String, dynamic>?> _fetchCurrentPlanData() async {
   //   try {
   //     final user = await SharedPreferencesHelper.getUser();
@@ -4905,6 +4906,11 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+      bool _isCheckingPharmacy = false;
+
+
+      
+
     return Container(
       width: double.infinity,
       height: 160,
@@ -5923,6 +5929,7 @@ class _MedicineDetailsModalWithSearchState
       _selectedMedicines = List<Medicine>.from(widget.previouslySelectedMedicines!);
     }
   }
+  
 
   // Load current plan status from API
   Future<void> _loadCurrentPlanStatus() async {

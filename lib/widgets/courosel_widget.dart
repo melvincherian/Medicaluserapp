@@ -699,13 +699,13 @@ class _OrderMedicineCarouselWithAppTextState extends State<OrderMedicineCarousel
                               color: Colors.grey,
                             ),
                             SizedBox(height: 8),
-                            Text(
-                              'Failed to load image',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                              ),
-                            ),
+                            // Text(
+                            //   'Failed to load image',
+                            //   style: TextStyle(
+                            //     color: Colors.grey,
+                            //     fontSize: 14,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -716,7 +716,7 @@ class _OrderMedicineCarouselWithAppTextState extends State<OrderMedicineCarousel
             );
           },
           options: CarouselOptions(
-            height: 188,
+            height: 140,
             viewportFraction: 0.9,
             initialPage: 0,
             enableInfiniteScroll: bannerImages.length > 1,

@@ -1,4 +1,4 @@
-package com.example.medical_user_app
+package com.clynix.clynix
 
 import io.flutter.embedding.android.FlutterActivity
 

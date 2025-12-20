@@ -1189,7 +1189,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           }
 
           if (provider.error != null) {
-            return Center(child: Text("Error: ${provider.error}"));
+            return Center(child: Text("Please Provide Internet Connection"));
           }
 
           if (provider.notifications.isEmpty) {

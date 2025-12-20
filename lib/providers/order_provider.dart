@@ -640,7 +640,7 @@ class OrderProvider extends ChangeNotifier {
         notifyListeners();
         return orderResponse.order;
       } else {
-        _setError('Failed to create order');
+        _setError('Payment processing failed. Please try again or use a different payment method');
         return null;
       }
     } catch (e) {

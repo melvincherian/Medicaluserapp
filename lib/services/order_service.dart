@@ -574,7 +574,7 @@ class OrderService {
         final Map<String, dynamic> data = json.decode(response.body);
         return OrderResponse.fromJson(data);
       } else {
-        print('$_logTag: Failed to create order - Status: ${response.statusCode}');
+        print('$_logTag:Failed to create order - Status: ${response.statusCode}');
         return null;
       }
     } catch (e, stackTrace) {
@@ -949,8 +949,8 @@ class OrderService {
         body: json.encode(requestBody),
       );
 
-      print('$_logTag: Response status: ${response.statusCode}');
-      print('$_logTag: Response body: ${response.body}');
+      print('$_logTag: Response statusssss for cancel orderrrrrrrrrr: ${response.statusCode}');
+      print('$_logTag: Response bodyyyyyyyyyyyyyyyyyyyyyyy for cancel orderrr: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         print('$_logTag: Order cancelled successfully');
@@ -1037,8 +1037,8 @@ class OrderService {
         body: json.encode(requestBody),
       );
 
-      print('$_logTag: Response status: ${response.statusCode}');
-      print('$_logTag: Response body: ${response.body}');
+      print('$_logTag: Response statusssss code for cancel orderrrrr: ${response.statusCode}');
+      print('$_logTag: Response bodyyyyyyyyyyyy for cancel orderrrrrrrrrr: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         // Try to parse response body for additional information

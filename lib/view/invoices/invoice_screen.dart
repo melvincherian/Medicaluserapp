@@ -522,7 +522,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           child: pw.Column(
             children: [
               _buildSummaryRow('Subtotal:', '$subtotal'),
-              _buildSummaryRow('Delivery Charge:', '$deliveryCharge'),
+              // _buildSummaryRow('Delivery Charge:', '$deliveryCharge'),
               pw.Divider(color: PdfColors.grey400),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -571,7 +571,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
         ),
         pw.Text(
-          'Email: support@clynix.com | Phone: +91 9999999999',
+          'Email: Simcurarx@gmail.com | Phone: +91 8309056333',
           style: pw.TextStyle(fontSize: 10, color: PdfColors.grey600),
         ),
       ],
@@ -635,7 +635,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Invoice',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
-        backgroundColor: Colors.blue.shade600,
+        backgroundColor: Color(0xFF5931DD),
         foregroundColor: Colors.white,
         centerTitle: true,
         leading: InkWell(

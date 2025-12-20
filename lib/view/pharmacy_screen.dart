@@ -71,27 +71,121 @@ class _PharmacyScreenState extends State<PharmacyScreen>
     }
   }
 
+
   void _onSearchChanged() {
-    if (!mounted) return;
+  if (!mounted) return;
 
-    final provider =
-        Provider.of<PharmacyMedicineProvider>(context, listen: false);
-    setState(() {
-      _isSearchActive = _searchController.text.isNotEmpty;
-    });
+  final provider =
+      Provider.of<PharmacyMedicineProvider>(context, listen: false);
+  
+  final searchText = _searchController.text.trim();
+  
+  setState(() {
+    _isSearchActive = searchText.isNotEmpty;
+  });
 
-    // Use provider's search functionality
-    provider.searchMedicines(_searchController.text);
+  if (searchText.isEmpty) {
+    // When search is cleared, reload the current category
+    if (pharmacy != null && pharmacy!.categories.isNotEmpty) {
+      final selectedCategory = pharmacy!.categories[_selectedCategoryIndex];
+      provider.filterByCategory(
+        pharmacyId: widget.pharmacyId!,
+        category: selectedCategory.name.toLowerCase(),
+      );
+    }
+  } else {
+    // Perform search
+    provider.searchMedicines(searchText);
   }
+}
+
+void _clearSearch() {
+  _searchController.clear();
+  final provider =
+      Provider.of<PharmacyMedicineProvider>(context, listen: false);
+  
+  setState(() {
+    _isSearchActive = false;
+  });
+  
+  // Reload current category medicines when search is cleared
+  if (pharmacy != null && pharmacy!.categories.isNotEmpty) {
+    final selectedCategory = pharmacy!.categories[_selectedCategoryIndex];
+    provider.filterByCategory(
+      pharmacyId: widget.pharmacyId!,
+      category: selectedCategory.name.toLowerCase(),
+    );
+  }
+}
+
+  // void _onSearchChanged() {
+  //   if (!mounted) return;
+
+  //   final provider =
+  //       Provider.of<PharmacyMedicineProvider>(context, listen: false);
+  //   setState(() {
+  //     _isSearchActive = _searchController.text.isNotEmpty;
+  //   });
+
+  //   // Use provider's search functionality
+  //   provider.searchMedicines(_searchController.text);
+  // }
+
+  // Future<void> _addToCart(Medicine medicine) async {
+  //   if (_addingToCartMedicines.contains(medicine.id)) return;
+
+  //   setState(() {
+  //     _addingToCartMedicines.add(medicine.id);
+  //   });
+
+  //   final cartProvider = Provider.of<CartProvider>(context, listen: false);
+  //   final success = await cartProvider.addToCart(medicine.id);
+
+  //   setState(() {
+  //     _addingToCartMedicines.remove(medicine.id);
+  //   });
+
+  //   if (success) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text('${medicine.name} added to cart'),
+  //         backgroundColor: Colors.green,
+  //         duration: const Duration(seconds: 2),
+  //       ),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text(cartProvider.errorMessage ?? 'Failed to add to cart'),
+  //         backgroundColor: Colors.red,
+  //         duration: const Duration(seconds: 3),
+  //       ),
+  //     );
+  //   }
+  // }
 
   Future<void> _addToCart(Medicine medicine) async {
+    // Check if already in cart
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+    if (cartProvider.isInCart(medicine.id)) {
+      // Optionally show a message that it's already in cart
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${medicine.name} is already in cart'),
+          backgroundColor: Colors.orange,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return; // Exit early
+    }
+
     if (_addingToCartMedicines.contains(medicine.id)) return;
 
     setState(() {
       _addingToCartMedicines.add(medicine.id);
     });
 
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
     final success = await cartProvider.addToCart(medicine.id);
 
     setState(() {
@@ -341,15 +435,15 @@ class _PharmacyScreenState extends State<PharmacyScreen>
   //   });
   // }
 
-  void _clearSearch() {
-    _searchController.clear();
-    final provider =
-        Provider.of<PharmacyMedicineProvider>(context, listen: false);
-    provider.clearSearch();
-    setState(() {
-      _isSearchActive = false;
-    });
-  }
+  // void _clearSearch() {
+  //   _searchController.clear();
+  //   final provider =
+  //       Provider.of<PharmacyMedicineProvider>(context, listen: false);
+  //   provider.clearSearch();
+  //   setState(() {
+  //     _isSearchActive = false;
+  //   });
+  // }
 
   Widget _buildCategoryItemWithLoading({
     required String imagePath,
@@ -848,7 +942,7 @@ class _PharmacyScreenState extends State<PharmacyScreen>
                           width: 80,
                           height: 80,
                           color: Colors.grey.shade200,
-                          child: Icon(Icons.local_pharmacy, size: 40),
+                          child:const Icon(Icons.local_pharmacy, size: 40),
                         ),
                 ),
                 const SizedBox(width: 16),
@@ -1089,40 +1183,40 @@ class _PharmacyScreenState extends State<PharmacyScreen>
             ),
           ),
           const SizedBox(width: 8),
-          AnimatedBuilder(
-            animation: _voiceAnimation,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: _isListening ? _voiceAnimation.value : 1.0,
-                child: GestureDetector(
-                  onTap: _isListening ? _stopListening : _startListening,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    decoration: BoxDecoration(
-                      color:
-                          _isListening ? Colors.red : const Color(0xFF5931DD),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: _isListening
-                          ? [
-                              BoxShadow(
-                                color: Colors.red.withOpacity(0.3),
-                                blurRadius: 10,
-                                spreadRadius: 2,
-                              )
-                            ]
-                          : null,
-                    ),
-                    child: Icon(
-                      Icons.mic,
-                      color: Colors.white,
-                      size: _isListening ? 28 : 24,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
+          // AnimatedBuilder(
+          //   animation: _voiceAnimation,
+          //   builder: (context, child) {
+          //     return Transform.scale(
+          //       scale: _isListening ? _voiceAnimation.value : 1.0,
+          //       child: GestureDetector(
+          //         onTap: _isListening ? _stopListening : _startListening,
+          //         child: Container(
+          //           height: 48,
+          //           width: 48,
+          //           decoration: BoxDecoration(
+          //             color:
+          //                 _isListening ? Colors.red : const Color(0xFF5931DD),
+          //             borderRadius: BorderRadius.circular(24),
+          //             boxShadow: _isListening
+          //                 ? [
+          //                     BoxShadow(
+          //                       color: Colors.red.withOpacity(0.3),
+          //                       blurRadius: 10,
+          //                       spreadRadius: 2,
+          //                     )
+          //                   ]
+          //                 : null,
+          //           ),
+          //           child: Icon(
+          //             Icons.mic,
+          //             color: Colors.white,
+          //             size: _isListening ? 28 : 24,
+          //           ),
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
         ],
       ),
     );
@@ -1439,9 +1533,10 @@ class _PharmacyScreenState extends State<PharmacyScreen>
                           _addingToCartMedicines.contains(medicine.id);
 
                       return ElevatedButton(
-                        onPressed: isAddingToCart || cartProvider.isLoading
-                            ? null
-                            : () => _addToCart(medicine),
+                        onPressed:
+                            isAddingToCart || cartProvider.isLoading || isInCart
+                                ? null // Disable if in cart
+                                : () => _addToCart(medicine),
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               isInCart ? Colors.green : Color(0xFF5931DD),
@@ -1449,6 +1544,9 @@ class _PharmacyScreenState extends State<PharmacyScreen>
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
+                          disabledBackgroundColor: isInCart
+                              ? Colors.green
+                              : Colors.grey, // Style when disabled
                         ),
                         child: isAddingToCart
                             ? const SizedBox(

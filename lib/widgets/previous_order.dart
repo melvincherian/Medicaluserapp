@@ -688,28 +688,28 @@ class _MedicationOrdersListState extends State<MedicationOrdersList> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 32,
-                  ),
+                  // const Icon(
+                  //   Icons.error_outline,
+                  //   color: Colors.red,
+                  //   size: 32,
+                  // ),
                   const SizedBox(height: 8),
                   Text(
-                    orderProvider.errorMessage!,
+                    'No previous orders',
                     style: const TextStyle(
-                      color: Colors.red,
+                      color: Colors.black,
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () {
-                      orderProvider.clearError();
-                      orderProvider.refreshOrders();
-                    },
-                    child: const Text('Retry'),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     orderProvider.clearError();
+                  //     orderProvider.refreshOrders();
+                  //   },
+                  //   child: const Text('Retry'),
+                  // ),
                 ],
               ),
             ),
@@ -761,6 +761,292 @@ class _MedicationOrdersListState extends State<MedicationOrdersList> {
     );
   }
 
+//   Widget _buildOrderCard(
+//       BuildContext context, OrderModel order, OrderProvider orderProvider) {
+//     // Get the first medication from order items (assuming it exists)
+//     final firstItem =
+//         order.orderItems.isNotEmpty ? order.orderItems.first : null;
+
+//     return Container(
+//       width: 303,
+//       height: 163,
+//       margin: const EdgeInsets.all(5),
+//       decoration: BoxDecoration(
+//         borderRadius: BorderRadius.circular(8),
+//         border: Border.all(
+//           color: Colors.grey.shade300,
+//           width: 2,
+//         ),
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.all(12.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             // Top section with image, name, and price
+//             Row(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 // Medicine Image
+//                 ClipRRect(
+//                   borderRadius: BorderRadius.circular(8),
+//                   child: firstItem?.imageUrl != null
+//                       ? Image.network(
+//                           firstItem!.imageUrl!,
+//                           width: 75,
+//                           height: 75,
+//                           fit: BoxFit.cover,
+//                           errorBuilder: (context, error, stackTrace) {
+//                             return Image.asset(
+//                               'assets/tablet.png',
+//                               width: 75,
+//                               height: 75,
+//                               fit: BoxFit.cover,
+//                             );
+//                           },
+//                         )
+//                       : Image.asset(
+//                           'assets/tablet.png',
+//                           width: 75,
+//                           height: 75,
+//                           fit: BoxFit.cover,
+//                         ),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 // Name and details
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         firstItem?.name ?? 'Multiple Items',
+//                         style: const TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 16,
+//                         ),
+//                         maxLines: 1,
+//                         overflow: TextOverflow.ellipsis,
+//                       ),
+//                       Text(
+//                         '${order.orderItems.length} item${order.orderItems.length > 1 ? 's' : ''}',
+//                         style: TextStyle(
+//                           fontSize: 14,
+//                           color: Colors.grey[600],
+//                         ),
+//                       ),
+//                       const SizedBox(height: 4),
+//                       // Location with icon
+//                       Row(
+//                         children: [
+//                           const Icon(
+//                             Icons.location_on,
+//                             color: Color(0xFF5931DD),
+//                             size: 16,
+//                           ),
+//                           const SizedBox(width: 4),
+//                           Expanded(
+//                             child: Text(
+//                               order.deliveryAddress.city ?? 'Unknown Location',
+//                               style: TextStyle(
+//                                 fontSize: 12,
+//                                 color: Colors.grey[600],
+//                               ),
+//                               maxLines: 1,
+//                               overflow: TextOverflow.ellipsis,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 5),
+//                       // Status with icon
+//                       Row(
+//                         children: [
+//                           Icon(
+//                             _getStatusIcon(order.status),
+//                             color: _getStatusColor(order.status),
+//                             size: 16,
+//                           ),
+//                           const SizedBox(width: 4),
+//                           Text(
+//                             order.status,
+//                             style: TextStyle(
+//                               fontSize: 12,
+//                               color: _getStatusColor(order.status),
+//                               fontWeight: FontWeight.w500,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 // Price
+//                 Text(
+//                   '₹${order.totalAmount.toStringAsFixed(0)}',
+//                   style: const TextStyle(
+//                     fontWeight: FontWeight.bold,
+//                     fontSize: 16,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             const SizedBox(height: 16),
+//             // Buttons
+//             Row(
+//               children: [
+//                 // Re-Order Button
+//                 // Expanded(
+//                 //   child: ElevatedButton(
+//                 //     onPressed: (_isProcessingOrder || orderProvider.isCreatingOrder)
+//                 //         ? null
+//                 //         : () {
+//                 //             // Store the order ID for reorder process
+//                 //             _currentReorderOrderId = order.id;
+
+//                 //             Navigator.push(context, MaterialPageRoute(builder: (context)=>ReorderDetailScreen()));
+//                 //             // Initiate payment for reorder
+//                 //             // _initiateRazorpayPaymentForReorder(order);
+//                 //           },
+//                 //     style: ElevatedButton.styleFrom(
+//                 //       backgroundColor: const Color(0xFF5931DD),
+//                 //       foregroundColor: Colors.white,
+//                 //       shape: RoundedRectangleBorder(
+//                 //         borderRadius: BorderRadius.circular(25),
+//                 //       ),
+//                 //       padding: const EdgeInsets.symmetric(vertical: 12),
+//                 //     ),
+//                 //     child: (_isProcessingOrder || orderProvider.isCreatingOrder)
+//                 //         ? const SizedBox(
+//                 //             width: 16,
+//                 //             height: 16,
+//                 //             child: CircularProgressIndicator(
+//                 //               strokeWidth: 2,
+//                 //               color: Colors.white,
+//                 //             ),
+//                 //           )
+//                 //         : const Text(
+//                 //             'Reorder',
+//                 //             style: TextStyle(
+//                 //               fontWeight: FontWeight.bold,
+//                 //             ),
+//                 //           ),
+//                 //   ),
+//                 // ),
+
+//                 // Replace the Reorder button section in your _buildOrderCard method with this:
+
+// // Re-Order Button
+//                 Expanded(
+//                   child: ElevatedButton(
+//                     onPressed:
+//                         (_isProcessingOrder || orderProvider.isCreatingOrder)
+//                             ? null
+//                             : () {
+//                                 if (order.status != 'Cancelled') {
+//                                   // Navigate to ReorderDetailScreen with order data
+//                                   Navigator.push(
+//                                     context,
+//                                     MaterialPageRoute(
+//                                       builder: (context) =>
+//                                           ReorderDetailScreen(order: order),
+//                                     ),
+//                                   );
+//                                 } else {
+//                                   ScaffoldMessenger.of(context).showSnackBar(
+//                                     const SnackBar(
+//                                       content: Text(
+//                                           "Your order is cancelled, unable to reorder"),
+//                                       backgroundColor: Colors.red,
+//                                       behavior: SnackBarBehavior.floating,
+//                                     ),
+//                                   );
+//                                 }
+
+//                                 // if(order.status != 'Cancelled'){
+//                                 //                          // Navigate to ReorderDetailScreen with order data
+//                                 //   Navigator.push(
+//                                 //       context,
+//                                 //       MaterialPageRoute(
+//                                 //           builder: (context) =>
+//                                 //               ReorderDetailScreen(order: order)));
+//                                 // }else{
+//                                 //   ScaffoldMessenger.of(context);
+//                                 // }
+//                               },
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: const Color(0xFF5931DD),
+//                       foregroundColor: Colors.white,
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(25),
+//                       ),
+//                       padding: const EdgeInsets.symmetric(vertical: 12),
+//                     ),
+//                     child: (_isProcessingOrder || orderProvider.isCreatingOrder)
+//                         ? const SizedBox(
+//                             width: 16,
+//                             height: 16,
+//                             child: CircularProgressIndicator(
+//                               strokeWidth: 2,
+//                               color: Colors.white,
+//                             ),
+//                           )
+//                         : const Text(
+//                             'Reorder',
+//                             style: TextStyle(
+//                               fontWeight: FontWeight.bold,
+//                             ),
+//                           ),
+//                   ),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 // Details Button
+//                 Expanded(
+//                   child: OutlinedButton(
+//                     onPressed: () async {
+//                       User? user = await SharedPreferencesHelper.getUser();
+//                       if (user != null && user.id.isNotEmpty) {
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (context) => SinglePreviousOrderScreen(
+//                               orderId: order.id,
+//                               userId: user.id,
+//                             ),
+//                           ),
+//                         );
+//                       } else {
+//                         ScaffoldMessenger.of(context).showSnackBar(
+//                           const SnackBar(
+//                             content: Text("User not logged in"),
+//                             backgroundColor: Colors.red,
+//                           ),
+//                         );
+//                       }
+//                     },
+//                     style: OutlinedButton.styleFrom(
+//                       foregroundColor: const Color(0xFF5931DD),
+//                       side: const BorderSide(color: Color(0xFF5931DD)),
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(25),
+//                       ),
+//                       padding: const EdgeInsets.symmetric(vertical: 12),
+//                     ),
+//                     child: const Text(
+//                       'Details',
+//                       style: TextStyle(
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
   Widget _buildOrderCard(
       BuildContext context, OrderModel order, OrderProvider orderProvider) {
     // Get the first medication from order items (assuming it exists)
@@ -769,7 +1055,7 @@ class _MedicationOrdersListState extends State<MedicationOrdersList> {
 
     return Container(
       width: 303,
-      height: 163,
+      height: 166,
       margin: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -894,55 +1180,14 @@ class _MedicationOrdersListState extends State<MedicationOrdersList> {
             // Buttons
             Row(
               children: [
-                // Re-Order Button
-                // Expanded(
-                //   child: ElevatedButton(
-                //     onPressed: (_isProcessingOrder || orderProvider.isCreatingOrder)
-                //         ? null
-                //         : () {
-                //             // Store the order ID for reorder process
-                //             _currentReorderOrderId = order.id;
-
-                //             Navigator.push(context, MaterialPageRoute(builder: (context)=>ReorderDetailScreen()));
-                //             // Initiate payment for reorder
-                //             // _initiateRazorpayPaymentForReorder(order);
-                //           },
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: const Color(0xFF5931DD),
-                //       foregroundColor: Colors.white,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(25),
-                //       ),
-                //       padding: const EdgeInsets.symmetric(vertical: 12),
-                //     ),
-                //     child: (_isProcessingOrder || orderProvider.isCreatingOrder)
-                //         ? const SizedBox(
-                //             width: 16,
-                //             height: 16,
-                //             child: CircularProgressIndicator(
-                //               strokeWidth: 2,
-                //               color: Colors.white,
-                //             ),
-                //           )
-                //         : const Text(
-                //             'Reorder',
-                //             style: TextStyle(
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           ),
-                //   ),
-                // ),
-
-                // Replace the Reorder button section in your _buildOrderCard method with this:
-
-// Re-Order Button
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed:
-                        (_isProcessingOrder || orderProvider.isCreatingOrder)
-                            ? null
-                            : () {
-                                if (order.status != 'Cancelled') {
+                // Re-Order Button - Only show if order is NOT cancelled
+                if (order.status.toLowerCase() != 'cancelled')
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed:
+                          (_isProcessingOrder || orderProvider.isCreatingOrder)
+                              ? null
+                              : () {
                                   // Navigate to ReorderDetailScreen with order data
                                   Navigator.push(
                                     context,
@@ -951,54 +1196,36 @@ class _MedicationOrdersListState extends State<MedicationOrdersList> {
                                           ReorderDetailScreen(order: order),
                                     ),
                                   );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          "Your order is cancelled, unable to reorder"),
-                                      backgroundColor: Colors.red,
-                                      behavior: SnackBarBehavior.floating,
-                                    ),
-                                  );
-                                }
-
-                                // if(order.status != 'Cancelled'){
-                                //                          // Navigate to ReorderDetailScreen with order data
-                                //   Navigator.push(
-                                //       context,
-                                //       MaterialPageRoute(
-                                //           builder: (context) =>
-                                //               ReorderDetailScreen(order: order)));
-                                // }else{
-                                //   ScaffoldMessenger.of(context);
-                                // }
-                              },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5931DD),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
+                                },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF5931DD),
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child:
+                          (_isProcessingOrder || orderProvider.isCreatingOrder)
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Reorder',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                     ),
-                    child: (_isProcessingOrder || orderProvider.isCreatingOrder)
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : const Text(
-                            'Reorder',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                   ),
-                ),
-                const SizedBox(width: 12),
+                // Add spacing only if reorder button is visible
+                if (order.status.toLowerCase() != 'cancelled')
+                  const SizedBox(width: 12),
                 // Details Button
                 Expanded(
                   child: OutlinedButton(
@@ -1046,6 +1273,233 @@ class _MedicationOrdersListState extends State<MedicationOrdersList> {
       ),
     );
   }
+
+  // Widget _buildOrderCard(
+  //     BuildContext context, OrderModel order, OrderProvider orderProvider) {
+  //   // Get the first medication from order items (assuming it exists)
+  //   final firstItem =
+  //       order.orderItems.isNotEmpty ? order.orderItems.first : null;
+
+  //   return Container(
+  //     width: 303,
+  //     height: 166,
+  //     margin: const EdgeInsets.all(5),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(8),
+  //       border: Border.all(
+  //         color: Colors.grey.shade300,
+  //         width: 2,
+  //       ),
+  //     ),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(12.0),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           // Top section with image, name, and price
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               // Medicine Image
+  //               ClipRRect(
+  //                 borderRadius: BorderRadius.circular(8),
+  //                 child: firstItem?.imageUrl != null
+  //                     ? Image.network(
+  //                         firstItem!.imageUrl!,
+  //                         width: 75,
+  //                         height: 75,
+  //                         fit: BoxFit.cover,
+  //                         errorBuilder: (context, error, stackTrace) {
+  //                           return Image.asset(
+  //                             'assets/tablet.png',
+  //                             width: 75,
+  //                             height: 75,
+  //                             fit: BoxFit.cover,
+  //                           );
+  //                         },
+  //                       )
+  //                     : Image.asset(
+  //                         'assets/tablet.png',
+  //                         width: 75,
+  //                         height: 75,
+  //                         fit: BoxFit.cover,
+  //                       ),
+  //               ),
+  //               const SizedBox(width: 12),
+  //               // Name and details
+  //               Expanded(
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Text(
+  //                       firstItem?.name ?? 'Multiple Items',
+  //                       style: const TextStyle(
+  //                         fontWeight: FontWeight.bold,
+  //                         fontSize: 16,
+  //                       ),
+  //                       maxLines: 1,
+  //                       overflow: TextOverflow.ellipsis,
+  //                     ),
+  //                     Text(
+  //                       '${order.orderItems.length} item${order.orderItems.length > 1 ? 's' : ''}',
+  //                       style: TextStyle(
+  //                         fontSize: 14,
+  //                         color: Colors.grey[600],
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 4),
+  //                     // Location with icon
+  //                     Row(
+  //                       children: [
+  //                         const Icon(
+  //                           Icons.location_on,
+  //                           color: Color(0xFF5931DD),
+  //                           size: 16,
+  //                         ),
+  //                         const SizedBox(width: 4),
+  //                         Expanded(
+  //                           child: Text(
+  //                             order.deliveryAddress.city ?? 'Unknown Location',
+  //                             style: TextStyle(
+  //                               fontSize: 12,
+  //                               color: Colors.grey[600],
+  //                             ),
+  //                             maxLines: 1,
+  //                             overflow: TextOverflow.ellipsis,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 5),
+  //                     // Status with icon
+  //                     Row(
+  //                       children: [
+  //                         Icon(
+  //                           _getStatusIcon(order.status),
+  //                           color: _getStatusColor(order.status),
+  //                           size: 16,
+  //                         ),
+  //                         const SizedBox(width: 4),
+  //                         Text(
+  //                           order.status,
+  //                           style: TextStyle(
+  //                             fontSize: 12,
+  //                             color: _getStatusColor(order.status),
+  //                             fontWeight: FontWeight.w500,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //               // Price
+  //               Text(
+  //                 '₹${order.totalAmount.toStringAsFixed(0)}',
+  //                 style: const TextStyle(
+  //                   fontWeight: FontWeight.bold,
+  //                   fontSize: 16,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           const SizedBox(height: 16),
+  //           // Buttons
+  //           Row(
+  //             children: [
+  //               // Re-Order Button - Only show if order is NOT cancelled
+  //               if (order.status.toLowerCase() != 'cancelled')
+  //                 Expanded(
+  //                   child: ElevatedButton(
+  //                     onPressed:
+  //                         (_isProcessingOrder || orderProvider.isCreatingOrder)
+  //                             ? null
+  //                             : () {
+  //                                 // Navigate to ReorderDetailScreen with order data
+  //                                 Navigator.push(
+  //                                   context,
+  //                                   MaterialPageRoute(
+  //                                     builder: (context) =>
+  //                                         ReorderDetailScreen(order: order),
+  //                                   ),
+  //                                 );
+  //                               },
+  //                     style: ElevatedButton.styleFrom(
+  //                       backgroundColor: const Color(0xFF5931DD),
+  //                       foregroundColor: Colors.white,
+  //                       shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(25),
+  //                       ),
+  //                       padding: const EdgeInsets.symmetric(vertical: 12),
+  //                     ),
+  //                     child:
+  //                         (_isProcessingOrder || orderProvider.isCreatingOrder)
+  //                             ? const SizedBox(
+  //                                 width: 16,
+  //                                 height: 16,
+  //                                 child: CircularProgressIndicator(
+  //                                   strokeWidth: 2,
+  //                                   color: Colors.white,
+  //                                 ),
+  //                               )
+  //                             : const Text(
+  //                                 'Reorder',
+  //                                 style: TextStyle(
+  //                                   fontWeight: FontWeight.bold,
+  //                                 ),
+  //                               ),
+  //                   ),
+  //                 ),
+  //               // Add spacing only if reorder button is visible
+  //               if (order.status.toLowerCase() != 'cancelled')
+  //                 const SizedBox(width: 12),
+  //               // Details Button
+  //               Expanded(
+  //                 child: OutlinedButton(
+  //                   onPressed: () async {
+  //                     User? user = await SharedPreferencesHelper.getUser();
+  //                     if (user != null && user.id.isNotEmpty) {
+  //                       Navigator.push(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                           builder: (context) => SinglePreviousOrderScreen(
+  //                             orderId: order.id,
+  //                             userId: user.id,
+  //                           ),
+  //                         ),
+  //                       );
+  //                     } else {
+  //                       ScaffoldMessenger.of(context).showSnackBar(
+  //                         const SnackBar(
+  //                           content: Text("User not logged in"),
+  //                           backgroundColor: Colors.red,
+  //                         ),
+  //                       );
+  //                     }
+  //                   },
+  //                   style: OutlinedButton.styleFrom(
+  //                     foregroundColor: const Color(0xFF5931DD),
+  //                     side: const BorderSide(color: Color(0xFF5931DD)),
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(25),
+  //                     ),
+  //                     padding: const EdgeInsets.symmetric(vertical: 12),
+  //                   ),
+  //                   child: const Text(
+  //                     'Details',
+  //                     style: TextStyle(
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Method to initiate Razorpay payment for reorder
   void _initiateRazorpayPaymentForReorder(OrderModel order) {

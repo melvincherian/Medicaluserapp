@@ -3136,26 +3136,12 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_user_app/view/change_address_screen.dart';
 import 'package:medical_user_app/view/main_layout.dart';
 import 'package:medical_user_app/widgets/periodic_plans.dart';
 import 'package:provider/provider.dart';
-import 'package:medical_user_app/providers/language_provider.dart';
 import 'package:medical_user_app/providers/periodic_plan_provider.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -4069,8 +4055,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildCheckoutButton(PeriodicPlanProvider provider) {
     // Check if address is selected and medications list is not empty to enable/disable button
-    bool isButtonEnabled =
-        selectedAddress != null && !provider.isLoading && medications.isNotEmpty;
+    bool isButtonEnabled = selectedAddress != null &&
+        !provider.isLoading &&
+        medications.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),

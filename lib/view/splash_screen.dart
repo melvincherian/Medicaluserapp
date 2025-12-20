@@ -522,7 +522,7 @@ class AppText extends StatelessWidget {
       case 'welcome':
         return 'Welcome';
       case 'slogan':
-        return 'Your Health is, Our Priority';
+        return 'Your Health is Our Priority';
       default:
         return key;
     }

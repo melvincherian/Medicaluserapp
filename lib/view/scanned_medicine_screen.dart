@@ -145,7 +145,7 @@ class _ScannedMedicineScreenState extends State<ScannedMedicineScreen> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        SnackBar( 
           content: Text('${medicine!.name} added to cart'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),

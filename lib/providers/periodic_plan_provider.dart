@@ -6,7 +6,7 @@
 //   bool _isLoading = false;
 //   String? _error;
 //   List<Map<String, dynamic>> _periodicPlans = [];
-  
+
 //   // Getters
 //   bool get isLoading => _isLoading;
 //   String? get error => _error;
@@ -42,11 +42,11 @@
 
 //       // Prepare order items from medications
 //       List<Map<String, dynamic>> orderItems = [];
-      
+
 //       for (var medication in medications) {
 //         // Extract medicine ID from medication data
 //         String? medicineId;
-        
+
 //         // Try to get medicineId from different possible fields
 //         if (medication.containsKey('medicineId')) {
 //           medicineId = medication['medicineId'];
@@ -55,7 +55,7 @@
 //         } else if (medication.containsKey('_id')) {
 //           medicineId = medication['_id'];
 //         }
-        
+
 //         if (medicineId != null && medicineId.isNotEmpty) {
 //           orderItems.add({
 //             'medicineId': medicineId,
@@ -90,7 +90,7 @@
 //       if (result['success'] == true) {
 //         // Refresh the periodic plans list
 //         await getUserPeriodicPlans();
-        
+
 //         _isLoading = false;
 //         notifyListeners();
 //         return true;
@@ -125,7 +125,7 @@
 //       } else {
 //         _error = result['message'] ?? 'Failed to get periodic plans';
 //       }
-      
+
 //       notifyListeners();
 //     } catch (e) {
 //       _error = 'An error occurred: ${e.toString()}';
@@ -180,17 +180,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/services/periodic_plan_service.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
@@ -199,7 +188,7 @@ class PeriodicPlanProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   List<Map<String, dynamic>> _periodicPlans = [];
-  
+
   // Getters
   bool get isLoading => _isLoading;
   String? get error => _error;
@@ -236,11 +225,11 @@ class PeriodicPlanProvider extends ChangeNotifier {
       // Prepare order items from medications with enhanced data
       List<Map<String, dynamic>> orderItems = [];
       double totalAmount = 0.0;
-      
+
       for (var medication in medications) {
         // Extract medicine ID from medication data
         String? medicineId;
-        
+
         // Try to get medicineId from different possible fields
         if (medication.containsKey('medicineId')) {
           medicineId = medication['medicineId'];
@@ -249,7 +238,7 @@ class PeriodicPlanProvider extends ChangeNotifier {
         } else if (medication.containsKey('_id')) {
           medicineId = medication['_id'];
         }
-        
+
         if (medicineId != null && medicineId.isNotEmpty) {
           // Parse price - handle different price formats
           double price = 0.0;
@@ -259,7 +248,7 @@ class PeriodicPlanProvider extends ChangeNotifier {
             priceStr = priceStr.replaceAll(RegExp(r'[^\d.]'), '');
             price = double.tryParse(priceStr) ?? 0.0;
           }
-          
+
           int quantity = medication['count'] ?? 1;
           double itemTotal = price * quantity;
           totalAmount += itemTotal;
@@ -273,7 +262,8 @@ class PeriodicPlanProvider extends ChangeNotifier {
           });
         } else {
           // Handle missing medicineId case
-          print('Warning: No medicineId found for medication: ${medication['name']}');
+          print(
+              'Warning: No medicineId found for medication: ${medication['name']}');
           _error = 'Invalid medicine data found. Please try again.';
           _isLoading = false;
           notifyListeners();
@@ -291,25 +281,33 @@ class PeriodicPlanProvider extends ChangeNotifier {
 
       // Convert delivery dates to strings
       List<String> deliveryDateStrings = deliveryDates
-          .map((date) => '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}')
+          .map((date) =>
+              '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}')
           .toList();
 
       // Call the service with enhanced data
       final result = await PeriodicPlanService.createPeriodicPlan(
         userId: user.id,
         planType: planType,
-        orderItems: orderItems,
+        orderItems: orderItems, 
         deliveryDates: deliveryDateStrings,
         notes: notes,
         voiceNoteUrl: voiceNoteUrl,
-        totalAmount: totalAmount, // Pass total amount
+        totalAmount: totalAmount, 
       );
 
+      print('user idddddddddddddddddddddd ${user.id}');
+      print('plan tytpeeeeeeeeeeeeeeeeeee $planType');
+      print('order iteeeeeeeeeeeeeeemsss $orderItems');
+      print('dateeeeeeeeeeeeeeeeeeee $deliveryDateStrings');
+      print('notessssssssssssssssssssssssss $notes');
+      print('voiceeeeeeeeeeeeeeeeeeee $voiceNoteUrl');
+      print('total amountttttttttttttttt $totalAmount');
 
       if (result['success'] == true) {
         // Refresh the periodic plans list
         // await getUserPeriodicPlans();
-        
+
         _isLoading = false;
         notifyListeners();
         return true;
@@ -344,7 +342,7 @@ class PeriodicPlanProvider extends ChangeNotifier {
   //     } else {
   //       _error = result['message'] ?? 'Failed to get periodic plans';
   //     }
-      
+
   //     notifyListeners();
   //   } catch (e) {
   //     _error = 'An error occurred: ${e.toString()}';
@@ -364,7 +362,7 @@ class PeriodicPlanProvider extends ChangeNotifier {
         _error = 'Invalid quantity for ${medication['name']}';
         return false;
       }
-      
+
       // Validate medicine ID exists
       String? medicineId;
       if (medication.containsKey('medicineId')) {
@@ -374,7 +372,7 @@ class PeriodicPlanProvider extends ChangeNotifier {
       } else if (medication.containsKey('_id')) {
         medicineId = medication['_id'];
       }
-      
+
       if (medicineId == null || medicineId.isEmpty) {
         _error = 'Invalid medicine ID for ${medication['name']}';
         return false;

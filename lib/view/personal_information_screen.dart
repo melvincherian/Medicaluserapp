@@ -737,37 +737,75 @@ class _PersonalInformationScreenState extends State<PersonalInformationScreen> {
     return Center(
       child: Stack(
         children: [
+          // Container(
+          //   width: 80,
+          //   height: 80,
+          //   decoration: BoxDecoration(
+          //     borderRadius: BorderRadius.circular(10),
+          //     color: Colors.amber,
+          //   ),
+          //   child: ClipRRect(
+          //     borderRadius: BorderRadius.circular(10),
+          //     child: _selectedImage != null
+          //         ? Image.file(
+          //             _selectedImage!,
+          //             fit: BoxFit.cover,
+          //           )
+          //         : profileProvider.hasProfileImage()
+          //             ? Image.network(
+          //                 profileProvider.getProfileImageUrl()!,
+          //                 fit: BoxFit.cover,
+          //                 errorBuilder: (context, error, stackTrace) {
+          //                   return Image.asset(
+          //                     'assets/profile.png',
+          //                     fit: BoxFit.cover,
+          //                   );
+          //                 },
+          //               )
+          //             : Image.asset(
+          //                 'assets/profile.png',
+          //                 fit: BoxFit.cover,
+          //               ),
+          //   ),
+          // ),
           Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.amber,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      fit: BoxFit.cover,
-                    )
-                  : profileProvider.hasProfileImage()
-                      ? Image.network(
-                          profileProvider.getProfileImageUrl()!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Image.asset(
-                              'assets/profile.png',
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        )
-                      : Image.asset(
-                          'assets/profile.png',
-                          fit: BoxFit.cover,
-                        ),
-            ),
-          ),
+  width: 80,
+  height: 80,
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(10),
+    color: Colors.grey[300],
+  ),
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: _selectedImage != null
+        ? Image.file(
+            _selectedImage!,
+            fit: BoxFit.cover,
+          )
+        : profileProvider.hasProfileImage()
+            ? Image.network(
+                profileProvider.getProfileImageUrl()!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Center(
+                    child: Icon(
+                      Icons.person,
+                      size: 40,
+                      color: Colors.grey[700],
+                    ),
+                  );
+                },
+              )
+            : Center(
+                child: Icon(
+                  Icons.person,
+                  size: 40,
+                  color: Colors.grey[700],
+                ),
+              ),
+  ),
+),
+
           Positioned(
             bottom: 0,
             right: 0,

@@ -757,24 +757,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -903,7 +885,8 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
           throw Exception(data['message'] ?? 'Failed to cancel order');
         }
       } else {
-        throw Exception('Failed to cancel order. Status: ${response.statusCode}');
+        throw Exception(
+            'Failed to cancel order. Status: ${response.statusCode}');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -916,7 +899,8 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
     }
   }
 
-  Future<void> _showCancelConfirmationDialog(String orderId, String orderNumber) async {
+  Future<void> _showCancelConfirmationDialog(
+      String orderId, String orderNumber) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1139,13 +1123,22 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '₹${_calculateTotal(order).toStringAsFixed(0)}',
+              '₹${order['totalAmount']}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
                 color: Colors.green,
               ),
             ),
+
+            // Text(
+            //   '₹${_calculateTotal(order).toStringAsFixed(0)}',
+            //   style: const TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     fontSize: 16,
+            //     color: Colors.green,
+            //   ),
+            // ),
             Text(
               '${orderItems.length} item${orderItems.length > 1 ? 's' : ''}',
               style: TextStyle(
@@ -1328,14 +1321,23 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
                             'Total Amount:',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
+                          // Text(
+                          //   '₹${_calculateTotal(order).toStringAsFixed(0)}',
+                          //   style: const TextStyle(
+                          //     fontWeight: FontWeight.bold,
+                          //     color: Colors.green,
+                          //     fontSize: 16,
+                          //   ),
+                          // ),
+
                           Text(
-                            '₹${_calculateTotal(order).toStringAsFixed(0)}',
+                            '₹${order['totalAmount']}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.green,
                               fontSize: 16,
+                              color: Colors.green,
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ],
@@ -1562,11 +1564,15 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
                 //   (route) => false, // Removes all previous routes
                 // );
               },
-              child: const Icon(Icons.arrow_back_ios_new, size: 18,color: Colors.black,),
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 18,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
-        backgroundColor: Colors.blue[500],
+        backgroundColor: Color(0xFF5931DD),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [

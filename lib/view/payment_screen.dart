@@ -717,6 +717,7 @@ import 'package:medical_user_app/providers/language_provider.dart';
 import 'package:medical_user_app/providers/order_provider.dart';
 import 'package:medical_user_app/providers/cart_provider.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
+import 'package:medical_user_app/view/booking_successfull_screen.dart';
 import 'package:medical_user_app/view/card_details_screen.dart';
 import 'package:medical_user_app/view/change_address_screen.dart';
 import 'package:medical_user_app/view/payment_successfull_screeen.dart';
@@ -725,9 +726,10 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final String?subtotal;
   final String? amount;
   final String? coupouncode;
-  const PaymentScreen({Key? key, this.amount, this.coupouncode})
+  const PaymentScreen({Key? key, this.amount, this.coupouncode,this.subtotal})
       : super(
           key: key,
         );
@@ -851,7 +853,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 // }
 
   Future<void> _restoreSelectedAddress() async {
-    if (userId == null) return; // Wait until userId is loaded
+    if (userId == null) return; 
     final prefs = await SharedPreferences.getInstance();
     final addressId = prefs.getString('${userId}_selected_address_id');
     final displayAddr = prefs.getString('${userId}_display_address');
@@ -900,13 +902,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
     var options = {
       'key': 'rzp_test_BxtRNvflG06PTV', // Replace with your Razorpay key
       'amount': (cartProvider.totalAmount * 100).toInt(), // Amount in paise
-      'name': 'Medical App',
+      'name': 'CLYNIX',
       'description': 'Medicine Order Payment',
       'retry': {'enabled': true, 'max_count': 1},
       'send_sms_hash': true,
       'prefill': {
-        'contact': "9961593179", // Get from user profile
-        'email': "user@example.com", // Get from user profile
+        'contact': "8309056333", 
+        'email': "Simcurarx@gmail.com", 
       },
       'external': {
         'wallets': ['paytm']
@@ -1052,60 +1054,144 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   // Method to process the order (after payment or directly for COD)
-  Future<void> _processOrder(
-    String? paymentId,
-  ) async {
-    try {
-      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
-      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+  // Future<void> _processOrder(
+  //   String? paymentId,
+  // ) async {
+  //   try {
+  //     final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+  //     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
-      // Validate order requirements
-      if (orderProvider.currentUser == null) {
-        _showErrorSnackBar('Please log in to place an order');
-        setState(() {
-          _isProcessingOrder = false;
-        });
-        return;
-      }
+  //     // Validate order requirements
+  //     if (orderProvider.currentUser == null) {
+  //       _showErrorSnackBar('Please log in to place an order');
+  //       setState(() {
+  //         _isProcessingOrder = false;
+  //       });
+  //       return;
+  //     }
 
-      // Get selected payment method
-      String paymentMethod =
-          paymentMethods[_selectedPaymentMethod!]['value'].toString();
+  //     // Get selected payment method
+  //     String paymentMethod =
+  //         paymentMethods[_selectedPaymentMethod!]['value'].toString();
 
-      // Show loading dialog only for COD (Razorpay has its own loading)
-      if (_selectedPaymentMethod == 1) {
-        _showLoadingDialog();
-      }
+  //     // Show loading dialog only for COD (Razorpay has its own loading)
+  //     if (_selectedPaymentMethod == 1) {
+  //       _showLoadingDialog();
+  //     }
 
-      // Create order using OrderProvider
-      final order = await orderProvider.createOrder(
-          addressId: selectedAddressId.toString(),
-          notes: _notesController.text.trim(),
-          voiceNoteUrl: '', // Add voice note URL if implemented
-          paymentMethod: 'Cash on Delivery',
-          paymentId: paymentId,
-          coupon:
-              widget.coupouncode // Pass payment ID from Razorpay if available
-          );
+  //     // Create order using OrderProvider
+  //     final order = await orderProvider.createOrder(
+  //         addressId: selectedAddressId.toString(),
+  //         notes: _notesController.text.trim(),
+  //         voiceNoteUrl: '', // Add voice note URL if implemented
+  //         paymentMethod: 'Cash on Delivery',
+  //         paymentId: paymentId,
+  //         coupon:
+  //             widget.coupouncode // Pass payment ID from Razorpay if available
+  //         );
 
-      // Hide loading dialog
-      // if (Navigator.of(context).canPop()) {
-      //   Navigator.of(context).pop();
-      // }
+  //     // Hide loading dialog
+  //     // if (Navigator.of(context).canPop()) {
+  //     //   Navigator.of(context).pop();
+  //     // }
 
-       // Hide loading dialog for COD
+  //      // Hide loading dialog for COD
+  //   if (_selectedPaymentMethod == 1 && Navigator.of(context).canPop()) {
+  //     Navigator.of(context).pop();
+  //   }
+
+  //     if (order != null) {
+  //       // Order created successfully
+  //       _showSuccessSnackBar('Order placed successfully!');
+
+  //       // Clear cart after successful order
+  //       await cartProvider.clearCart();
+
+  //       // Navigate to success screen
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => PaymentSuccessfullScreeen(
+  //             orderId: order.id,
+  //             orderAmount: order.totalAmount,
+  //             paymentMethod: paymentMethod,
+  //           ),
+  //         ),
+  //       );
+  //     } else {
+  //       // Order creation failed
+  //       String errorMsg =
+  //           orderProvider.errorMessage ?? 'Payment processing failed. Please try again or use a different payment method';
+  //       _showErrorSnackBar(errorMsg);
+  //       setState(() {
+  //         _isProcessingOrder = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     // Hide loading dialog if still showing
+  //     if (Navigator.of(context).canPop()) {
+  //       Navigator.of(context).pop();
+  //     }
+
+  //     print('Error processing order: $e');
+  //     _showErrorSnackBar('An error occurred while placing the order');
+  //     setState(() {
+  //       _isProcessingOrder = false;
+  //     });
+  //   }
+  // }
+
+
+
+  // Method to process the order (after payment or directly for COD)
+Future<void> _processOrder(String? paymentId) async {
+  try {
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+    // Validate order requirements
+    if (orderProvider.currentUser == null) {
+      _showErrorSnackBar('Please log in to place an order');
+      setState(() {
+        _isProcessingOrder = false;
+      });
+      return;
+    }
+
+    // Get selected payment method
+    String paymentMethod =
+        paymentMethods[_selectedPaymentMethod!]['value'].toString();
+
+    // Show loading dialog only for COD (Razorpay has its own loading)
+    if (_selectedPaymentMethod == 1) {
+      _showLoadingDialog();
+    }
+
+    // Create order using OrderProvider
+    final order = await orderProvider.createOrder(
+      addressId: selectedAddressId.toString(),
+      notes: _notesController.text.trim(),
+      voiceNoteUrl: '', // Add voice note URL if implemented
+      paymentMethod: paymentMethod,
+      paymentId: paymentId,
+      coupon: widget.coupouncode
+    );
+
+    // Hide loading dialog for COD
     if (_selectedPaymentMethod == 1 && Navigator.of(context).canPop()) {
       Navigator.of(context).pop();
     }
 
-      if (order != null) {
-        // Order created successfully
-        _showSuccessSnackBar('Order placed successfully!');
+    if (order != null) {
+      // Order created successfully
+      _showSuccessSnackBar('Order placed successfully!');
 
-        // Clear cart after successful order
-        await cartProvider.clearCart();
+      // Clear cart after successful order
+      await cartProvider.clearCart();
 
-        // Navigate to success screen
+      // Navigate based on payment method
+      if (_selectedPaymentMethod == 0) {
+        // Online payment - Navigate to PaymentSuccessfullScreeen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -1117,27 +1203,41 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         );
       } else {
-        // Order creation failed
-        String errorMsg =
-            orderProvider.errorMessage ?? 'Failed to create order';
-        _showErrorSnackBar(errorMsg);
-        setState(() {
-          _isProcessingOrder = false;
-        });
+        // Cash on Delivery - Navigate to BookingSuccessfullScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookingSuccessfullScreen(
+              orderId: order.id,
+              orderAmount: order.totalAmount,
+              paymentMethod: paymentMethod,
+              addressId: selectedAddressId,
+            ),
+          ),
+        );
       }
-    } catch (e) {
-      // Hide loading dialog if still showing
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-
-      print('Error processing order: $e');
-      _showErrorSnackBar('An error occurred while placing the order');
+    } else {
+      // Order creation failed
+      String errorMsg = orderProvider.errorMessage ?? 
+          'Payment processing failed. Please try again or use a different payment method';
+      _showErrorSnackBar(errorMsg);
       setState(() {
         _isProcessingOrder = false;
       });
     }
+  } catch (e) {
+    // Hide loading dialog if still showing
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+
+    print('Error processing order: $e');
+    _showErrorSnackBar('An error occurred while placing the order');
+    setState(() {
+      _isProcessingOrder = false;
+    });
   }
+}
 
   // Show loading dialog
   void _showLoadingDialog() {
@@ -1305,25 +1405,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ),
                                 ),
                                 RichText(
-                                  text: TextSpan(
+                                  text:const TextSpan(
                                     children: [
-                                      TextSpan(
-                                        text:
-                                            '${cartProvider.itemCount} Items from ',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: 'Apollo',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
+                                      // TextSpan(
+                                      //   text:
+                                      //       '${cartProvider.itemCount} Items from ',
+                                      //   style: TextStyle(
+                                      //     color: Colors.grey,
+                                      //     fontSize: 14,
+                                      //     fontWeight: FontWeight.w400,
+                                      //   ),
+                                      // ),
+                                      // TextSpan(
+                                      //   text: 'Apollo',
+                                      //   style: TextStyle(
+                                      //     color: Colors.black,
+                                      //     fontSize: 14,
+                                      //     fontWeight: FontWeight.bold,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),
@@ -1362,8 +1462,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         ),
                                       ),
                                     ),
-                                    Text(
-                                      '₹${widget.amount}',
+                                    // Text(
+                                    //   '₹${widget.amount}',
+                                    //   style: const TextStyle(
+                                    //     fontSize: 14,
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+
+
+                                    //  Text(
+                                    //   '₹${widget.subtotal}',
+                                    //   style: const TextStyle(
+                                    //     fontSize: 14,
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+
+                                     Text(
+                                      '₹${item.totalPrice}',
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
@@ -1607,34 +1724,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
 
               // Display error message if any
-              if (orderProvider.errorMessage != null)
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: Colors.red.shade600),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          orderProvider.errorMessage!,
-                          style: TextStyle(color: Colors.red.shade600),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => orderProvider.clearError(),
-                        color: Colors.red.shade600,
-                      ),
-                    ],
-                  ),
-                ),
+              // if (orderProvider.errorMessage != null)
+              //   Container(
+              //     margin:
+              //         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              //     padding: const EdgeInsets.all(12),
+              //     decoration: BoxDecoration(
+              //       color: Colors.red.shade50,
+              //       borderRadius: BorderRadius.circular(8),
+              //       border: Border.all(color: Colors.red.shade200),
+              //     ),
+              //     child: Row(
+              //       children: [
+              //         Icon(Icons.error_outline, color: Colors.red.shade600),
+              //         const SizedBox(width: 8),
+              //         Expanded(
+              //           child: Text(
+              //             orderProvider.errorMessage!,
+              //             style: TextStyle(color: Colors.red.shade600),
+              //           ),
+              //         ),
+              //         IconButton(
+              //           icon: const Icon(Icons.close),
+              //           onPressed: () => orderProvider.clearError(),
+              //           color: Colors.red.shade600,
+              //         ),
+              //       ],
+              //     ),
+              //   ),
             ],
           );
         },

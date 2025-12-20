@@ -161,7 +161,7 @@ class CartModel {
   final double totalPayable;
 
   CartModel({
-    required this.items,
+    required this.items, 
     required this.totalItems,
     required this.subTotal,
     required this.platformFee,

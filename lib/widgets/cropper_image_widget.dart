@@ -88,7 +88,7 @@ class _CropperScreenState extends State<CropperScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor:  Colors.blue,
+        backgroundColor: Color(0xFF5931DD),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => Navigator.pop(context),

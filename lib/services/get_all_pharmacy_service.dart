@@ -4,22 +4,22 @@ import 'package:http/http.dart' as http;
 import 'package:medical_user_app/constant/api_constants.dart';
 import '../models/pharmacy_model.dart';
 
-
 class PharmacyService {
   static const Duration _timeoutDuration = Duration(seconds: 30);
 
-  /// Fetches all pharmacies from the API
   static Future<PharmacyResponse> getAllPharmacies() async {
     try {
-      final response = await http
-          .get(
-            Uri.parse(ApiConstants.pharmacyService),
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-          )
-          .timeout(_timeoutDuration);
+      final response = await http.get(
+        Uri.parse(ApiConstants.pharmacyService),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ).timeout(_timeoutDuration);
+
+      print(
+          'response status code for getall pharmacies ${response.statusCode}');
+      print('response bodyyyyyyyyyyyy for getall pharmacies ${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -49,15 +49,13 @@ class PharmacyService {
       final uri = Uri.parse(ApiConstants.pharmacyService)
           .replace(queryParameters: queryParams);
 
-      final response = await http
-          .get(
-            uri,
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-          )
-          .timeout(_timeoutDuration);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ).timeout(_timeoutDuration);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = json.decode(response.body);
@@ -75,7 +73,7 @@ class PharmacyService {
   static Future<List<Pharmacy>> searchPharmacies(String query) async {
     try {
       final response = await getAllPharmacies();
-      
+
       // Filter pharmacies based on the search query
       final filteredPharmacies = response.pharmacies
           .where((pharmacy) =>
