@@ -21,6 +21,8 @@ class LocationProvider extends ChangeNotifier {
   String get errorMessage => _errorMessage;
   bool get hasLocation => _coordinates != null && _coordinates!.length >= 2;
 
+    
+
   // Initialize location (get current location) - Updated method signature
   Future<void> initLocation([String? userId]) async {
     try {

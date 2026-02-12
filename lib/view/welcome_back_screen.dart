@@ -57,7 +57,41 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
     super.dispose();
   }
 
- Future<void> _handleLogin() async {
+//  Future<void> _handleLogin() async {
+//   if (!_isValidPhoneNumber) {
+//     _showErrorSnackBar('Please enter a valid 10-digit mobile number');
+//     return;
+//   }
+
+//   final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+//   try {
+//     await authProvider.login(mobile: mobileController.text.trim());
+
+//     if (authProvider.status == AuthStatus.authenticated) {
+//       _showSuccessSnackBar('OTP sent successfully!');
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(builder: (context) =>  OtpScreen(phoneNumber: mobileController.text,)),
+//       );
+//     } else if (authProvider.status == AuthStatus.error) {
+//       _showErrorSnackBar(
+//         'Login Failed Please SignUp'
+//       );
+//       // _showErrorSnackBar(
+//       //   authProvider.errorMessage?.isNotEmpty == true
+//       //     ? authProvider.errorMessage!
+//       //     : 'Login failed. Please try again.',
+//       // );
+//     }
+//   } catch (e) {
+//     _showErrorSnackBar('An unexpected error occurred. Please try again.');
+//   }
+// }
+
+
+
+Future<void> _handleLogin() async {
   if (!_isValidPhoneNumber) {
     _showErrorSnackBar('Please enter a valid 10-digit mobile number');
     return;
@@ -72,17 +106,15 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
       _showSuccessSnackBar('OTP sent successfully!');
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) =>  OtpScreen(phoneNumber: mobileController.text,)),
+        MaterialPageRoute(builder: (context) => OtpScreen(phoneNumber: mobileController.text)),
       );
     } else if (authProvider.status == AuthStatus.error) {
-      _showErrorSnackBar(
-        'Login Failed Please SignUp'
+      // Auto-navigate to SignupScreen for new users
+      // _showErrorSnackBar('User not found. Please sign up first.');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SignupScreen()),
       );
-      // _showErrorSnackBar(
-      //   authProvider.errorMessage?.isNotEmpty == true
-      //     ? authProvider.errorMessage!
-      //     : 'Login failed. Please try again.',
-      // );
     }
   } catch (e) {
     _showErrorSnackBar('An unexpected error occurred. Please try again.');
@@ -142,18 +174,18 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Back',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
+        //   onPressed: () => Navigator.pop(context),
+        // ),
+        // title: const Text(
+        //   'Back',
+        //   style: TextStyle(
+        //     color: Colors.black,
+        //     fontSize: 16,
+        //     fontWeight: FontWeight.normal,
+        //   ),
+        // ),
         titleSpacing: -10,
       ),
       body: SingleChildScrollView(
@@ -170,7 +202,7 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                 child: SizedBox(
                   width: 330,
                   height: 278,
-                  child: Image.asset("assets/welcome.png"),
+                  child: Image.asset("assets/mainlogo.jpg"),
                 ),
               ),
 

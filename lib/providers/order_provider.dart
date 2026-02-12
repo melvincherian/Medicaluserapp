@@ -611,7 +611,7 @@ class OrderProvider extends ChangeNotifier {
       print('addddddddddddddddddddddddddd $addressId');
       print('trasactioniddddddddddddddddd $paymentId');
       print('couponnnnnnnnnnnnnnnnnnnnnn $coupon');
-      print('noteeeeeeeeeeeee $notes');
+      print('noteeeeeeeeeeeeeeeeeeeeeeee $notes');
       print('voiceeeeeeeeeeeeeeeeeeeeeee $voiceNoteUrl');
       print('paymentMethoddddddddddddddd $paymentMethod');
 

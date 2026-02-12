@@ -71,21 +71,43 @@ class _PharmacyScreenState extends State<PharmacyScreen>
     }
   }
 
-
   void _onSearchChanged() {
-  if (!mounted) return;
+    if (!mounted) return;
 
-  final provider =
-      Provider.of<PharmacyMedicineProvider>(context, listen: false);
-  
-  final searchText = _searchController.text.trim();
-  
-  setState(() {
-    _isSearchActive = searchText.isNotEmpty;
-  });
+    final provider =
+        Provider.of<PharmacyMedicineProvider>(context, listen: false);
 
-  if (searchText.isEmpty) {
-    // When search is cleared, reload the current category
+    final searchText = _searchController.text.trim();
+
+    setState(() {
+      _isSearchActive = searchText.isNotEmpty;
+    });
+
+    if (searchText.isEmpty) {
+      // When search is cleared, reload the current category
+      if (pharmacy != null && pharmacy!.categories.isNotEmpty) {
+        final selectedCategory = pharmacy!.categories[_selectedCategoryIndex];
+        provider.filterByCategory(
+          pharmacyId: widget.pharmacyId!,
+          category: selectedCategory.name.toLowerCase(),
+        );
+      }
+    } else {
+      // Perform search
+      provider.searchMedicines(searchText);
+    }
+  }
+
+  void _clearSearch() {
+    _searchController.clear();
+    final provider =
+        Provider.of<PharmacyMedicineProvider>(context, listen: false);
+
+    setState(() {
+      _isSearchActive = false;
+    });
+
+    // Reload current category medicines when search is cleared
     if (pharmacy != null && pharmacy!.categories.isNotEmpty) {
       final selectedCategory = pharmacy!.categories[_selectedCategoryIndex];
       provider.filterByCategory(
@@ -93,30 +115,7 @@ class _PharmacyScreenState extends State<PharmacyScreen>
         category: selectedCategory.name.toLowerCase(),
       );
     }
-  } else {
-    // Perform search
-    provider.searchMedicines(searchText);
   }
-}
-
-void _clearSearch() {
-  _searchController.clear();
-  final provider =
-      Provider.of<PharmacyMedicineProvider>(context, listen: false);
-  
-  setState(() {
-    _isSearchActive = false;
-  });
-  
-  // Reload current category medicines when search is cleared
-  if (pharmacy != null && pharmacy!.categories.isNotEmpty) {
-    final selectedCategory = pharmacy!.categories[_selectedCategoryIndex];
-    provider.filterByCategory(
-      pharmacyId: widget.pharmacyId!,
-      category: selectedCategory.name.toLowerCase(),
-    );
-  }
-}
 
   // void _onSearchChanged() {
   //   if (!mounted) return;
@@ -942,7 +941,7 @@ void _clearSearch() {
                           width: 80,
                           height: 80,
                           color: Colors.grey.shade200,
-                          child:const Icon(Icons.local_pharmacy, size: 40),
+                          child: const Icon(Icons.local_pharmacy, size: 40),
                         ),
                 ),
                 const SizedBox(width: 16),
@@ -1548,6 +1547,25 @@ void _clearSearch() {
                               ? Colors.green
                               : Colors.grey, // Style when disabled
                         ),
+                        // child: isAddingToCart
+                        //     ? const SizedBox(
+                        //         width: 20,
+                        //         height: 20,
+                        //         child: CircularProgressIndicator(
+                        //           strokeWidth: 2,
+                        //           valueColor: AlwaysStoppedAnimation<Color>(
+                        //               Colors.white),
+                        //         ),
+                        //       )
+                        //     : Text(
+                        //         isInCart
+                        //             ? 'In Cart (${cartProvider.getItemQuantity(medicine.id)})'
+                        //             : 'Add to Cart',
+                        //         style: const TextStyle(
+                        //           color: Colors.white,
+                        //         ),
+                        //       ),
+
                         child: isAddingToCart
                             ? const SizedBox(
                                 width: 20,
@@ -1558,14 +1576,33 @@ void _clearSearch() {
                                       Colors.white),
                                 ),
                               )
-                            : Text(
-                                isInCart
-                                    ? 'In Cart (${cartProvider.getItemQuantity(medicine.id)})'
-                                    : 'Add to Cart',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
+                            : isInCart
+                                ? GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CartScreen(
+                                            amount: cartProvider.cart.subTotal
+                                                .toInt(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'In Cart (${cartProvider.getItemQuantity(medicine.id)})',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        decoration: TextDecoration
+                                            .underline, // 👈 optional UX hint
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  )
+                                : const Text(
+                                    'Add to Cart',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                       );
                     },
                   ),

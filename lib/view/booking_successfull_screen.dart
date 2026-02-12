@@ -558,6 +558,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/view/main_layout.dart';
+import 'package:medical_user_app/view/order_hystory_screen.dart';
 
 class BookingSuccessfullScreen extends StatefulWidget {
   final String? orderId;
@@ -640,7 +641,7 @@ class _BookingSuccessfullScreenState extends State<BookingSuccessfullScreen>
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => const MainLayout()),
+                MaterialPageRoute(builder: (context) => const OrdersHistoryScreen()),
                 (Route<dynamic> route) => false,
               );
             },
