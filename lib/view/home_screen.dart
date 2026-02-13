@@ -6808,7 +6808,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     _searchPlaceholderController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 300),
     );
 
     _headerFadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
@@ -6879,25 +6879,53 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  // void _startPlaceholderRotation() {
+  //   Future.delayed(const Duration(seconds: 3), () {
+  //     if (mounted) {
+  //       _searchPlaceholderController.reverse().then((_) {
+  //         if (mounted) {
+  //           setState(() {
+  //             _currentMedicineIndex =
+  //                 (_currentMedicineIndex + 1) % _medicinePlaceholders.length;
+  //             _currentPlaceholder =
+  //                 _medicinePlaceholders[_currentMedicineIndex];
+  //           });
+  //           _searchPlaceholderController.forward().then((_) {
+  //             _startPlaceholderRotation();
+  //           });
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
+
+
+
   void _startPlaceholderRotation() {
-    Future.delayed(const Duration(seconds: 3), () {
-      if (mounted) {
-        _searchPlaceholderController.reverse().then((_) {
-          if (mounted) {
-            setState(() {
-              _currentMedicineIndex =
-                  (_currentMedicineIndex + 1) % _medicinePlaceholders.length;
-              _currentPlaceholder =
-                  _medicinePlaceholders[_currentMedicineIndex];
-            });
-            _searchPlaceholderController.forward().then((_) {
-              _startPlaceholderRotation();
-            });
-          }
-        });
-      }
-    });
-  }
+  Future.delayed(const Duration(seconds: 3), () {
+    if (mounted) {
+      _searchPlaceholderController.reverse().then((_) {
+        if (mounted) {
+          setState(() {
+            _currentMedicineIndex =
+                (_currentMedicineIndex + 1) % _medicinePlaceholders.length;
+            _currentPlaceholder =
+                _medicinePlaceholders[_currentMedicineIndex];
+          });
+          // Add a small delay before fading in to prevent overlap
+          Future.delayed(const Duration(milliseconds: 50), () {
+            if (mounted) {
+              _searchPlaceholderController.forward().then((_) {
+                _startPlaceholderRotation();
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+}
 
   Future<void> _handleRefresh() async {
     if (_isRefreshing) return;
@@ -7522,336 +7550,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  // New Animated App Bar
-  SliverAppBar _buildAnimatedAppBar() {
-    return SliverAppBar(
-        expandedHeight: 200,
-        floating: false,
-        pinned: true,
-        elevation: 0,
-        backgroundColor: const Color(0xFF5931DD),
-        flexibleSpace: FlexibleSpaceBar(
-          background: FadeTransition(
-            opacity: _headerFadeAnimation,
-            child: SlideTransition(
-              position: _headerSlideAnimation,
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF5931DD),
-                      Color(0xFF7C3AED),
-                    ],
-                  ),
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: [
-                            // Profile Avatar
-                            Consumer<ProfileProvider>(
-                              builder: (context, profileProvider, child) {
-                                final hasImage =
-                                    profileProvider.hasProfileImage();
-                                final imageUrl =
-                                    profileProvider.getProfileImageUrl();
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const ProfileScreen()),
-                                    );
-                                  },
-                                  child: Hero(
-                                    tag: 'profile_avatar',
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: CircleAvatar(
-                                        radius: 28,
-                                        backgroundColor: Colors.white,
-                                        backgroundImage: hasImage
-                                            ? NetworkImage(imageUrl!)
-                                            : null,
-                                        onBackgroundImageError: hasImage
-                                            ? (exception, stackTrace) {}
-                                            : null,
-                                        child: !hasImage
-                                            ? const Icon(
-                                                Icons.person,
-                                                size: 32,
-                                                color: Color(0xFF5931DD),
-                                              )
-                                            : null,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                            const SizedBox(width: 16),
-
-                            // User Info - Use cached user
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _currentUser?.name ?? "Guest",
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            // Notification Bell
-                            SizedBox(
-                              width: 44,
-                              height: 44,
-                              child: GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const NotificationScreen()),
-                                  );
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Consumer<NotificationProvider>(
-                                    builder:
-                                        (context, notificationProvider, child) {
-                                      return Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          const Center(
-                                            child: Icon(
-                                              Icons.notifications_outlined,
-                                              size: 24,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          if (notificationProvider
-                                              .notifications.isNotEmpty)
-                                            Positioned(
-                                              right: 8,
-                                              top: 8,
-                                              child: Container(
-                                                width: 10,
-                                                height: 10,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                    color:
-                                                        const Color(0xFF5931DD),
-                                                    width: 2,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-
-                        // Location Widget
-                        Consumer<LocationProvider>(
-                          builder: (context, locationProvider, child) {
-                            final addressParts =
-                                (locationProvider.address ?? '')
-                                    .split(',')
-                                    .map((e) => e.trim())
-                                    .toList();
-                            final primaryAddress = addressParts.isNotEmpty
-                                ? addressParts[0]
-                                : 'Unknown location';
-                            final secondaryAddress = addressParts.length > 1
-                                ? addressParts.sublist(1).join(', ')
-                                : '';
-
-                            return GestureDetector(
-                              onTap: () async {
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LocationSearchScreen(
-                                        userId: userId.toString()),
-                                  ),
-                                );
-
-                                if (result == true && mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: const Row(
-                                        children: [
-                                          Icon(
-                                            Icons.location_on,
-                                            color: Colors.white,
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 8),
-                                          Text('Updating location...'),
-                                        ],
-                                      ),
-                                      backgroundColor: const Color(0xFF6366F1),
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      margin: const EdgeInsets.all(16),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.3),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: const Icon(
-                                        Icons.location_on,
-                                        color: Color(0xFF5931DD),
-                                        size: 18,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          if (locationProvider.isLoading ==
-                                              true)
-                                            const Row(
-                                              children: [
-                                                SizedBox(
-                                                  width: 12,
-                                                  height: 12,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                SizedBox(width: 8),
-                                                Text(
-                                                  'Loading location...',
-                                                  style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ],
-                                            )
-                                          else if (locationProvider.hasError ==
-                                              true)
-                                            const Text(
-                                              'Tap to set location',
-                                              style: TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            )
-                                          else ...[
-                                            Text(
-                                              primaryAddress,
-                                              style: const TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            if (secondaryAddress.isNotEmpty)
-                                              Text(
-                                                secondaryAddress,
-                                                style: TextStyle(
-                                                  fontSize: 11,
-                                                  color: Colors.white
-                                                      .withOpacity(0.8),
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                          ],
-                                        ],
-                                      ),
-                                    ),
-                                    const Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ));
-  }
-
-  // New Circular Categories Widget
   Widget _buildCircularCategories() {
     return Consumer<CategoryProvider>(
       builder: (context, categoryProvider, child) {
