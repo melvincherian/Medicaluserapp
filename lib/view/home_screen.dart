@@ -6687,24 +6687,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/medicine_model.dart';
 import 'package:medical_user_app/models/user_model.dart';
@@ -6775,18 +6757,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // Search placeholder animation
   late AnimationController _searchPlaceholderController;
   int _currentMedicineIndex = 0;
-  final List<String> _medicinePlaceholders = [
-    'dolo',
-    'paracetamol',
-    'aspirin',
-    'crocin',
-    'vitamin c',
-    'amoxicillin',
-    'ibuprofen',
-    'cetirizine',
-    'azithromycin',
-    'omeprazole',
-  ];
+
+  List<String> _medicinePlaceholders = ['Search medicine...'];
+  // final List<String> _medicinePlaceholders = [
+  //   'dolo',
+  //   'paracetamol',
+  //   'aspirin',
+  //   'crocin',
+  //   'vitamin c',
+  //   'amoxicillin',
+  //   'ibuprofen',
+  //   'cetirizine',
+  //   'azithromycin',
+  //   'omeprazole',
+  // ];
   String _currentPlaceholder = 'dolo';
 
   @override
@@ -6794,7 +6778,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     super.initState();
     _initSpeech();
     _loadUserId();
-    
+
     // Initialize animations
     _headerAnimationController = AnimationController(
       vsync: this,
@@ -6845,14 +6829,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
+
+
+  void _updatePlaceholdersFromMedicines() {
+  final medicineProvider = Provider.of<MedicineProvider>(context, listen: false);
+  
+  if (medicineProvider.medicines.isNotEmpty) {
+    setState(() {
+      _medicinePlaceholders = medicineProvider.medicines
+          .take(10) // Take first 10 medicines
+          .map((medicine) => medicine.name.toLowerCase())
+          .toList();
+      
+      if (_medicinePlaceholders.isNotEmpty) {
+        _currentPlaceholder = _medicinePlaceholders[0];
+      }
+    });
+  }
+}
+
   // Separate method to initialize data only once
   Future<void> _initializeData() async {
     DisclaimerDialog.showIfNeeded(context);
-    
-    final profileProvider = Provider.of<ProfileProvider>(context, listen: false);
+
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
     await profileProvider.initializeUser();
     await profileProvider.fetchUserProfile();
-    
+
     final langCode = Provider.of<LanguageProvider>(context, listen: false)
         .locale
         .languageCode;
@@ -6862,7 +6866,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         .read<CategoryProvider>()
         .fetchCategories(serviceName: "", languageCode: langCode);
     await context.read<MedicineProvider>().loadMedicines();
-    
+
+
+      _updatePlaceholdersFromMedicines();
+
     // Load location after userId is available
     if (userId != null) {
       await _handleCurrentLocation();
@@ -6899,33 +6906,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   //   });
   // }
 
-
-
-
   void _startPlaceholderRotation() {
-  Future.delayed(const Duration(seconds: 3), () {
-    if (mounted) {
-      _searchPlaceholderController.reverse().then((_) {
-        if (mounted) {
-          setState(() {
-            _currentMedicineIndex =
-                (_currentMedicineIndex + 1) % _medicinePlaceholders.length;
-            _currentPlaceholder =
-                _medicinePlaceholders[_currentMedicineIndex];
-          });
-          // Add a small delay before fading in to prevent overlap
-          Future.delayed(const Duration(milliseconds: 50), () {
-            if (mounted) {
-              _searchPlaceholderController.forward().then((_) {
-                _startPlaceholderRotation();
-              });
-            }
-          });
-        }
-      });
-    }
-  });
-}
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        _searchPlaceholderController.reverse().then((_) {
+          if (mounted) {
+            setState(() {
+              _currentMedicineIndex =
+                  (_currentMedicineIndex + 1) % _medicinePlaceholders.length;
+              _currentPlaceholder =
+                  _medicinePlaceholders[_currentMedicineIndex];
+            });
+            // Add a small delay before fading in to prevent overlap
+            Future.delayed(const Duration(milliseconds: 50), () {
+              if (mounted) {
+                _searchPlaceholderController.forward().then((_) {
+                  _startPlaceholderRotation();
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 
   Future<void> _handleRefresh() async {
     if (_isRefreshing) return;
@@ -7018,7 +7022,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Future<void> _handleCurrentLocation() async {
     if (_isLoadingCurrentLocation) return; // Prevent multiple calls
-    
+
     setState(() {
       _isLoadingCurrentLocation = true;
     });
@@ -7184,15 +7188,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }
   }
 
-  void _stopListening() async {
-    await _speechToText.stop();
-    if (mounted) {
-      setState(() {
-        _isListening = false;
-      });
-    }
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -7353,7 +7348,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         serviceProvider.fetchAllServices();
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(0xFF5931DD),
+                                        backgroundColor:
+                                            const Color(0xFF5931DD),
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 16, vertical: 8),
                                       ),
@@ -7459,7 +7455,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       _buildCircularCategories(),
 
                       const SizedBox(height: 24),
-                      
+
                       // Use cached user instead of FutureBuilder
                       if (_currentUser != null)
                         OrderStatusWidget(userId: _currentUser!.id)
@@ -7549,7 +7545,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
 
   Widget _buildCircularCategories() {
     return Consumer<CategoryProvider>(
@@ -7868,7 +7863,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildMedicineCardItem(BuildContext context, MedicineModel medicine) {
     final String name = medicine.name;
     final String description = medicine.description;
-    final String price = '₹${medicine.mrp}';
+    // final String price = '₹${medicine.mrp}';
+
+    final String price = '₹${medicine.mrp?.toStringAsFixed(2) ?? '0.00'}';
+
     final String imagePath =
         medicine.images.isNotEmpty ? medicine.images[0] : '';
 
@@ -8489,5 +8487,5 @@ class _MedicineDetailsModalState extends State<MedicineDetailsModal> {
         ],
       ),
     );
-  } 
+  }
 }

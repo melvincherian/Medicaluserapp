@@ -640,7 +640,8 @@ class MedicineModel {
   final String name;
   final List<String> images;
   final int price;
-  final int? mrp; //
+  final double? mrp;
+  // final int? mrp; //
   final String description;
   final String? categoryName;
   final Pharmacy pharmacy;
@@ -721,21 +722,36 @@ class MedicineModel {
 
 
 
-static int _parseMrp(dynamic price) {
-    if (price == null) return 0;
+// static int _parseMrp(dynamic price) {
+//     if (price == null) return 0;
     
-    if (price is int) return price;
-    if (price is double) return price.toInt();
-    if (price is String) {
-      try {
-        return int.parse(price.replaceAll(RegExp(r'[^\d]'), ''));
-      } catch (e) {
-        return 0;
-      }
-    }
+//     if (price is int) return price;
+//     if (price is double) return price.toInt();
+//     if (price is String) {
+//       try {
+//         return int.parse(price.replaceAll(RegExp(r'[^\d]'), ''));
+//       } catch (e) {
+//         return 0;
+//       }
+//     }
     
-    return 0;
+//     return 0;
+//   }
+
+
+static double? _parseMrp(dynamic price) {
+  if (price == null) return null;
+
+  if (price is int) return price.toDouble();
+  if (price is double) return price;
+
+  if (price is String) {
+    return double.tryParse(price);
   }
+
+  return null;
+}
+
 
   Map<String, dynamic> toJson() {
     return {

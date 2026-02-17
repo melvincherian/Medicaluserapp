@@ -1,3 +1,4 @@
+
 // providers/notification_provider.dart
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/notification_model.dart';
@@ -26,6 +27,28 @@ class NotificationProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<bool> deleteNotification(String userId, String notificationId) async {
+    try {
+      _error = null;
+            bool success = await _notificationService.deleteNotification(
+        userId, 
+        notificationId
+      );
+
+      if (success) {
+        _notifications.removeWhere((notification) => notification.id == notificationId);
+        notifyListeners();
+        return true;
+      }
+      
+      return false;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
     }
   }
 }

@@ -45,15 +45,15 @@
 // //     _setLoading(true);
 // //     try {
 // //       final result = await ProfileService.getUserProfile(_user!.id);
-      
+
 // //       if (result['success']) {
 // //         final userData = result['user'];
 // //         _user = User.fromJson(userData);
-        
+
 // //         // Update stored user data
 // //         await SharedPreferencesHelper.saveUser(_user!);
 // //         _clearError();
-        
+
 // //         print('Profile fetched successfully: ${_user?.name}');
 // //         return true;
 // //       } else {
@@ -82,15 +82,15 @@
 // //     _setUpdating(true);
 // //     try {
 // //       final result = await ProfileService.updateUserData(_user!.id, name, mobile);
-      
+
 // //       if (result['success']) {
 // //         final userData = result['user'];
 // //         _user = User.fromJson(userData);
-        
+
 // //         // Update stored user data
 // //         await SharedPreferencesHelper.saveUser(_user!);
 // //         _clearError();
-        
+
 // //         print('Profile updated successfully: ${_user?.name}');
 // //         return true;
 // //       } else {
@@ -116,15 +116,15 @@
 // //     _setUpdating(true);
 // //     try {
 // //       final result = await ProfileService.updateProfileImage(_user!.id, imageFile);
-      
+
 // //       if (result['success']) {
 // //         final userData = result['user'];
 // //         _user = User.fromJson(userData);
-        
+
 // //         // Update stored user data
 // //         await SharedPreferencesHelper.saveUser(_user!);
 // //         _clearError();
-        
+
 // //         print('Profile image updated successfully');
 // //         return true;
 // //       } else {
@@ -159,15 +159,15 @@
 // //         mobile: mobile,
 // //         profileImage: profileImage,
 // //       );
-      
+
 // //       if (result['success']) {
 // //         final userData = result['user'];
 // //         _user = User.fromJson(userData);
-        
+
 // //         // Update stored user data
 // //         await SharedPreferencesHelper.saveUser(_user!);
 // //         _clearError();
-        
+
 // //         print('Complete profile updated successfully: ${_user?.name}');
 // //         return true;
 // //       } else {
@@ -276,38 +276,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'dart:io';
 // import 'package:flutter/material.dart';
 // import 'package:medical_user_app/models/user_model.dart';
@@ -355,15 +323,15 @@
 //     _setLoading(true);
 //     try {
 //       final result = await ProfileService.getUserProfile(_user!.id);
-      
+
 //       if (result['success']) {
 //         final userData = result['user'];
 //         _user = User.fromJson(userData);
-        
+
 //         // Update stored user data
 //         await SharedPreferencesHelper.saveUser(_user!);
 //         _clearError();
-        
+
 //         print('Profile fetched successfully: ${_user?.name}');
 //         return true;
 //       } else {
@@ -392,25 +360,25 @@
 //     _setUpdating(true);
 //     try {
 //       final result = await ProfileService.updateUserData(_user!.id, name, mobile);
-      
+
 //       if (result['success']) {
 //         final userData = result['user'];
 //         final updatedUser = User.fromJson(userData);
-        
+
 //         // Only update if data actually changed to prevent unnecessary rebuilds
-//         if (_user?.name != updatedUser.name || 
+//         if (_user?.name != updatedUser.name ||
 //             _user?.mobile != updatedUser.mobile ||
 //             _user?.profileImage != updatedUser.profileImage) {
 //           _user = updatedUser;
-          
+
 //           // Update stored user data
 //           await SharedPreferencesHelper.saveUser(_user!);
 //           _clearError();
-          
+
 //           print('Profile updated successfully: ${_user?.name}');
 //           notifyListeners(); // Notify only when data changes
 //         }
-        
+
 //         return true;
 //       } else {
 //         _setError(result['message']);
@@ -435,23 +403,23 @@
 //     _setUpdating(true);
 //     try {
 //       final result = await ProfileService.updateProfileImage(_user!.id, imageFile);
-      
+
 //       if (result['success']) {
 //         final userData = result['user'];
 //         final updatedUser = User.fromJson(userData);
-        
+
 //         // Only update if profile image actually changed
 //         if (_user?.profileImage != updatedUser.profileImage) {
 //           _user = updatedUser;
-          
+
 //           // Update stored user data
 //           await SharedPreferencesHelper.saveUser(_user!);
 //           _clearError();
-          
+
 //           print('Profile image updated successfully');
 //           notifyListeners(); // Notify only when data changes
 //         }
-        
+
 //         return true;
 //       } else {
 //         _setError(result['message']);
@@ -485,25 +453,25 @@
 //         mobile: mobile,
 //         profileImage: profileImage,
 //       );
-      
+
 //       if (result['success']) {
 //         final userData = result['user'];
 //         final updatedUser = User.fromJson(userData);
-        
+
 //         // Only update if data actually changed
-//         if (_user?.name != updatedUser.name || 
+//         if (_user?.name != updatedUser.name ||
 //             _user?.mobile != updatedUser.mobile ||
 //             _user?.profileImage != updatedUser.profileImage) {
 //           _user = updatedUser;
-          
+
 //           // Update stored user data
 //           await SharedPreferencesHelper.saveUser(_user!);
 //           _clearError();
-          
+
 //           print('Complete profile updated successfully: ${_user?.name}');
 //           notifyListeners(); // Notify only when data changes
 //         }
-        
+
 //         return true;
 //       } else {
 //         _setError(result['message']);
@@ -617,27 +585,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/user_model.dart';
@@ -677,7 +624,6 @@ class ProfileProvider with ChangeNotifier {
 
   // Fetch user profile from API
   Future<bool> fetchUserProfile() async {
-    
     if (_user?.id == null) {
       _setError('No user ID available');
       return false;
@@ -690,14 +636,14 @@ class ProfileProvider with ChangeNotifier {
       if (result['success']) {
         final userData = result['user'];
         final fetchedUser = User.fromJson(userData);
-        
+
         // Preserve existing data if API returns empty values
         _user = _mergeUserData(_user!, fetchedUser);
-        
+
         // Update stored user data
         await SharedPreferencesHelper.saveUser(_user!);
         _clearError();
-        
+
         print('Profile fetched successfully: ${_user?.name}');
         notifyListeners();
         return true;
@@ -730,40 +676,40 @@ class ProfileProvider with ChangeNotifier {
 
     _setUpdating(true);
     try {
-      final result = await ProfileService.updateUserData(_user!.id, inputName, inputMobile);
-      
+      final result = await ProfileService.updateUserData(
+          _user!.id, inputName, inputMobile);
+
       if (result['success']) {
         final userData = result['user'];
         final updatedUser = User.fromJson(userData);
-        
+
         // Create a merged user that preserves the input values if API returns empty
         final mergedUser = User(
           id: updatedUser.id.isNotEmpty ? updatedUser.id : _user!.id,
           name: updatedUser.name.isNotEmpty ? updatedUser.name : inputName,
-          mobile: updatedUser.mobile.isNotEmpty ? updatedUser.mobile : inputMobile,
-                    email: updatedUser.email.isNotEmpty ? updatedUser.email : inputMobile,
-
-          
+          mobile:
+              updatedUser.mobile.isNotEmpty ? updatedUser.mobile : inputMobile,
+          email: updatedUser.email.isNotEmpty ? updatedUser.email : inputMobile,
           code: updatedUser.code.isNotEmpty ? updatedUser.code : _user!.code,
           profileImage: updatedUser.profileImage ?? _user!.profileImage,
           createdAt: updatedUser.createdAt ?? _user!.createdAt,
           updatedAt: updatedUser.updatedAt ?? DateTime.now(),
         );
-        
+
         // Only update if data actually changed
-        if (_user?.name != mergedUser.name || 
+        if (_user?.name != mergedUser.name ||
             _user?.mobile != mergedUser.mobile ||
             _user?.profileImage != mergedUser.profileImage) {
           _user = mergedUser;
-          
+
           // Update stored user data
           await SharedPreferencesHelper.saveUser(_user!);
           _clearError();
-          
+
           print('Profile updated successfully: ${_user?.name}');
           notifyListeners(); // Notify only when data changes
         }
-        
+
         return true;
       } else {
         _setError(result['message']);
@@ -787,27 +733,28 @@ class ProfileProvider with ChangeNotifier {
 
     _setUpdating(true);
     try {
-      final result = await ProfileService.updateProfileImage(_user!.id, imageFile);
-      
+      final result =
+          await ProfileService.updateProfileImage(_user!.id, imageFile);
+
       if (result['success']) {
         final userData = result['user'];
         final updatedUser = User.fromJson(userData);
-        
+
         // Merge with existing data to preserve name and mobile
         final mergedUser = _mergeUserData(_user!, updatedUser);
-        
+
         // Only update if profile image actually changed
         if (_user?.profileImage != mergedUser.profileImage) {
           _user = mergedUser;
-          
+
           // Update stored user data
           await SharedPreferencesHelper.saveUser(_user!);
           _clearError();
-          
+
           print('Profile image updated successfully');
           notifyListeners(); // Notify only when data changes
         }
-        
+
         return true;
       } else {
         _setError(result['message']);
@@ -845,37 +792,39 @@ class ProfileProvider with ChangeNotifier {
         mobile: inputMobile,
         profileImage: profileImage,
       );
-      
+
       if (result['success']) {
         final userData = result['user'];
         final updatedUser = User.fromJson(userData);
-        
+
         // Create a merged user that preserves the input values if API returns empty
         final mergedUser = User(
           id: updatedUser.id.isNotEmpty ? updatedUser.id : _user!.id,
           name: updatedUser.name.isNotEmpty ? updatedUser.name : inputName,
-          mobile: updatedUser.mobile.isNotEmpty ? updatedUser.mobile : inputMobile,
-          email: updatedUser.email.isNotEmpty?updatedUser.email:_user!.email,
+          mobile:
+              updatedUser.mobile.isNotEmpty ? updatedUser.mobile : inputMobile,
+          email:
+              updatedUser.email.isNotEmpty ? updatedUser.email : _user!.email,
           code: updatedUser.code.isNotEmpty ? updatedUser.code : _user!.code,
           profileImage: updatedUser.profileImage ?? _user!.profileImage,
           createdAt: updatedUser.createdAt ?? _user!.createdAt,
           updatedAt: updatedUser.updatedAt ?? DateTime.now(),
         );
-        
+
         // Only update if data actually changed
-        if (_user?.name != mergedUser.name || 
+        if (_user?.name != mergedUser.name ||
             _user?.mobile != mergedUser.mobile ||
             _user?.profileImage != mergedUser.profileImage) {
           _user = mergedUser;
-          
+
           // Update stored user data
           await SharedPreferencesHelper.saveUser(_user!);
           _clearError();
-          
+
           print('Complete profile updated successfully: ${_user?.name}');
           notifyListeners(); // Notify only when data changes
         }
-        
+
         return true;
       } else {
         _setError(result['message']);
@@ -896,7 +845,7 @@ class ProfileProvider with ChangeNotifier {
       id: newUser.id.isNotEmpty ? newUser.id : existingUser.id,
       name: newUser.name.isNotEmpty ? newUser.name : existingUser.name,
       mobile: newUser.mobile.isNotEmpty ? newUser.mobile : existingUser.mobile,
-            email: newUser.email.isNotEmpty ? newUser.email : existingUser.email,
+      email: newUser.email.isNotEmpty ? newUser.email : existingUser.email,
       code: newUser.code.isNotEmpty ? newUser.code : existingUser.code,
       profileImage: newUser.profileImage ?? existingUser.profileImage,
       createdAt: newUser.createdAt ?? existingUser.createdAt,
@@ -908,7 +857,7 @@ class ProfileProvider with ChangeNotifier {
   void updateUserLocally({
     String? name,
     String? mobile,
-    String?email,
+    String? email,
     String? profileImage,
   }) {
     if (_user != null) {
@@ -916,7 +865,7 @@ class ProfileProvider with ChangeNotifier {
         id: _user!.id,
         name: name ?? _user!.name,
         mobile: mobile ?? _user!.mobile,
-        email: email?? _user!.email,
+        email: email ?? _user!.email,
         code: _user!.code,
         profileImage: profileImage ?? _user!.profileImage,
         createdAt: _user!.createdAt,
@@ -1005,15 +954,14 @@ class ProfileProvider with ChangeNotifier {
   }
 
   void clearUser() async {
-  _user = null;
-  _errorMessage = null;
-  _isLoading = false;
-  _isUpdating = false;
+    _user = null;
+    _errorMessage = null;
+    _isLoading = false;
+    _isUpdating = false;
 
-  // Also remove saved user data from SharedPreferences
-  await SharedPreferencesHelper.clearAuthData();
+    // Also remove saved user data from SharedPreferences
+    await SharedPreferencesHelper.clearAuthData();
 
-  notifyListeners();
-}
-  
+    notifyListeners();
+  }
 }

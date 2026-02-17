@@ -11,8 +11,11 @@ class ApiConstants {
 
   static const String userLocationapi='$baseUrl/users/add-location';
 
-  static const String perioidicplan='$baseUrl/users/periodic-order/:userId';
 
+  static const String deletenotification='$baseUrl/users/:userId/notifications/:notificationId';
+
+  static const String perioidicplan='$baseUrl/users/periodic-order/:userId';
+  
   // static const String allMedicines = '$baseUrl/pharmacy/allmedicine';
 
   static String getMedicinesByCategory(String categoryName) =>

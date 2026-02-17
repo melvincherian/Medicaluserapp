@@ -258,6 +258,21 @@ class SharedPreferencesHelper {
     }
   }
 
+
+  // Add this method to your SharedPreferencesHelper class
+static Future<bool> clearUser() async {
+  try {
+    await init();
+    print('=== Clearing user data ===');
+    final result = await _prefs!.remove(_keyUser);
+    print('User data cleared: $result');
+    return result;
+  } catch (e) {
+    print('Error clearing user data: $e');
+    return false;
+  }
+}
+
   // Get complete auth data
   static Future<Map<String, dynamic>> getAuthData() async {
     try {

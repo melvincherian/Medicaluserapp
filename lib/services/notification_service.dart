@@ -19,12 +19,9 @@ class NotificationService {
         },
       );
 
-      
-
-
-            print('notification statussss codeeeeeeeeeeeeeeeeeeeeee ${response.statusCode}');
-            print('notification bodyyyyyyyyyyyyyyyyyyyyyyy ${response.body}');
-
+      print(
+          'notification statussss codeeeeeeeeeeeeeeeeeeeeee ${response.statusCode}');
+      print('notification bodyyyyyyyyyyyyyyyyyyyyyyy ${response.body}');
 
       if (response.statusCode == 200) {
         final body = json.decode(response.body);
@@ -40,4 +37,34 @@ class NotificationService {
       throw Exception('Error fetching notifications: $e');
     }
   }
+
+Future<bool> deleteNotification(String userId, String notificationId) async {
+  try {
+    final token = await SharedPreferencesHelper.getToken();
+    final url = ApiConstants.deletenotification
+        .replaceAll(':userId', userId)
+        .replaceAll(':notificationId', notificationId);
+
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    print('Delete notification status code: ${response.statusCode}');
+    print('Delete notification body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      throw Exception(
+          'Failed to delete notification (Status: ${response.statusCode})');
+    }
+  } catch (e) {
+    print('Error deleting notification: $e');
+    throw Exception('Error deleting notification: $e');
+  }
+}
 }

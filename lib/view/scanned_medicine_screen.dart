@@ -656,7 +656,7 @@ import 'dart:convert';
 import 'package:medical_user_app/view/cart_screen.dart';
 
 class ScannedMedicineScreen extends StatefulWidget {
-  final int? mrp;
+  final double? mrp;
   final String? medicineId;
   final String? address;
 
@@ -1508,7 +1508,7 @@ class _ScannedMedicineScreenState extends State<ScannedMedicineScreen>
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            CartScreen(amount: medicine?.price),
+                                            CartScreen(amount: medicine?.price.toDouble()),
                                       ),
                                     );
                                   }
@@ -1523,7 +1523,7 @@ class _ScannedMedicineScreenState extends State<ScannedMedicineScreen>
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            CartScreen(amount: medicine?.price),
+                                            CartScreen(amount: medicine?.price.toDouble()),
                                       ),
                                     );
                                   } else if (mounted) {

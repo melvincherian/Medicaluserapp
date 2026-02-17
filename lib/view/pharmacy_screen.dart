@@ -216,7 +216,7 @@ class _PharmacyScreenState extends State<PharmacyScreen>
       MaterialPageRoute(
         builder: (context) => ScannedMedicineScreen(
           medicineId: medicine.id,
-          mrp: medicine.mrp.toInt(),
+          mrp: medicine.mrp.toDouble(),
           address: pharmacy!.address,
         ),
       ),
@@ -785,7 +785,7 @@ class _PharmacyScreenState extends State<PharmacyScreen>
                               context,
                               MaterialPageRoute(
                                 builder: (context) => CartScreen(
-                                  amount: cartProvider.cart.subTotal.toInt(),
+                                  amount: cartProvider.cart.subTotal.toDouble(),
                                 ),
                               ),
                             );
@@ -1584,7 +1584,7 @@ class _PharmacyScreenState extends State<PharmacyScreen>
                                         MaterialPageRoute(
                                           builder: (context) => CartScreen(
                                             amount: cartProvider.cart.subTotal
-                                                .toInt(),
+                                                .toDouble(),
                                           ),
                                         ),
                                       );

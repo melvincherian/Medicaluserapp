@@ -1128,6 +1128,327 @@
 
 
 
+// import 'package:flutter/material.dart';
+// import 'package:medical_user_app/utils/shared_preferences_helper.dart';
+// import 'package:provider/provider.dart';
+// import 'package:medical_user_app/providers/notification_provider.dart';
+// import 'package:medical_user_app/widgets/progress_bar.dart';
+
+// class NotificationScreen extends StatefulWidget {
+//   const NotificationScreen({super.key});
+
+//   @override
+//   State<NotificationScreen> createState() => _NotificationScreenState();
+// }
+
+// class _NotificationScreenState extends State<NotificationScreen> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadNotifications();
+//   }
+
+//   Future<void> _loadNotifications() async {
+//     final user = await SharedPreferencesHelper.getUser();
+//     if (user != null) {
+//       Provider.of<NotificationProvider>(context, listen: false)
+//           .loadNotifications(user.id);
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Colors.white,
+//       appBar: AppBar(
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         centerTitle: true,
+//         title: const Text(
+//           'Notifications',
+//           style: TextStyle(
+//               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
+//         ),
+//         leading: InkWell(
+//           onTap: () => Navigator.pop(context),
+//           child: Container(
+//             margin: const EdgeInsets.all(8),
+//             decoration: BoxDecoration(
+//               color: Colors.white,
+//               border: Border.all(color: Colors.grey.shade300),
+//               borderRadius: BorderRadius.circular(8),
+//             ),
+//             child: const Icon(Icons.arrow_back_ios_new, size: 18),
+//           ),
+//         ),
+//       ),
+//       body: Consumer<NotificationProvider>(
+//         builder: (context, provider, child) {
+//           if (provider.isLoading) {
+//             return const Center(child: CircularProgressIndicator());
+//           }
+
+//           if (provider.error != null) {
+//             return Center(child: Text("Please Provide Internet Connection"));
+//           }
+
+//           if (provider.notifications.isEmpty) {
+//             return const Center(child: Text("No notifications found."));
+//           }
+
+//           return ListView.builder(
+//             padding: const EdgeInsets.all(16),
+//             itemCount: provider.notifications.length,
+//             itemBuilder: (context, index) {
+//               final notification = provider.notifications[index];
+//               return Padding(
+//                 padding: const EdgeInsets.only(bottom: 16),
+//                 child: Container(
+//                   width: double.infinity,
+//                   padding: const EdgeInsets.all(16),
+//                   decoration: BoxDecoration(
+//                     color: Colors.white,
+//                     borderRadius: BorderRadius.circular(12),
+//                     border: Border.all(
+//                       width: 1,
+//                       color: const Color.fromARGB(255, 192, 192, 192),
+//                     ),
+//                   ),
+//                   child: Column(
+//                     children: [
+//                       // Order ID + Time Row
+//                       Stack(
+//                         children: [
+//                           Row(
+//                             children: [
+//                               // Container(
+//                               //   width: 60,
+//                               //   height: 60,
+//                               //   decoration: BoxDecoration(
+//                               //     color: Colors.blue[50],
+//                               //     borderRadius: BorderRadius.circular(12),
+//                               //   ),
+//                               //   child: ClipRRect(
+//                               //     borderRadius: BorderRadius.circular(12),
+//                               //     child: Image.asset(
+//                               //       "assets/tablet.png",
+//                               //       width: 60,
+//                               //       height: 60,
+//                               //       fit: BoxFit.cover,
+//                               //     ),
+//                               //   ),
+//                               // ),
+//                               const SizedBox(width: 8),
+//                               Expanded(
+//                                 child: Text(
+//                                   "Your order ID:\n${notification.orderId}",
+//                                   style: const TextStyle(
+//                                     fontWeight: FontWeight.bold,
+//                                     fontSize: 16,
+//                                   ),
+//                                 ),
+//                               ),
+//                             ],
+//                           ),
+//                           Positioned(
+//                             top: 0,
+//                             right: 0,
+//                             child: Column(
+//                               children: [
+//                                 Text(
+//                                   _timeAgo(notification.timestamp),
+//                                   style: TextStyle(
+//                                     fontSize: 12,
+//                                     color: Colors.grey[600],
+//                                   ),
+//                                 ),
+//                                 // const Icon(Icons.keyboard_arrow_down),
+//                               ],
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 16),
+
+//                       // Notification Message
+//                       Row(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Expanded(
+//                             child: Text(
+//                               notification.message,
+//                               style: const TextStyle(
+//                                 fontWeight: FontWeight.w500,
+//                                 fontSize: 14,
+//                               ),
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 16),
+
+//                       // Dynamic Progress Bar (updated to 5 steps)
+//                       CustomProgressBar(
+//                         currentStep: _getStepFromStatus(notification.status),
+//                         totalSteps: 5,
+//                       ),
+//                       const SizedBox(height: 16),
+
+//                       // Steps Row (updated to 5 steps matching OrderStatusWidget)
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           _buildStepItem(
+//                             icon: Icons.shopping_cart,
+//                             label: 'Order\nPlaced',
+//                             isActive: _getStepFromStatus(notification.status) >= 1,
+//                           ),
+//                           _buildStepItem(
+//                             icon: Icons.store,
+//                             label: 'Vendor\nAccepted',
+//                             isActive: _getStepFromStatus(notification.status) >= 2,
+//                           ),
+//                           _buildStepItem(
+//                             icon: Icons.two_wheeler,
+//                             label: 'Rider\nAccepted',
+//                             isActive: _getStepFromStatus(notification.status) >= 3,
+//                           ),
+//                           _buildStepItem(
+//                             icon: Icons.local_shipping,
+//                             label: 'Out for\nDelivery',
+//                             isActive: _getStepFromStatus(notification.status) >= 4,
+//                           ),
+//                           _buildStepItem(
+//                             icon: Icons.check_circle,
+//                             label: 'Delivered',
+//                             isActive: _getStepFromStatus(notification.status) >= 5,
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               );
+//             },
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+//   Widget _buildStepItem({
+//     required IconData icon,
+//     required String label,
+//     required bool isActive,
+//   }) {
+//     return Column(
+//       children: [
+//         Container(
+//           width: 40,
+//           height: 40,
+//           decoration: BoxDecoration(
+//             color: isActive ? Colors.blue[50] : Colors.grey[50],
+//             borderRadius: BorderRadius.circular(20),
+//             border: Border.all(
+//               color: isActive ? Colors.blue : Colors.grey.shade300,
+//               width: 2,
+//             ),
+//           ),
+//           child: Icon(
+//             icon,
+//             color: isActive ? Colors.blue : Colors.grey[600],
+//             size: 20,
+//           ),
+//         ),
+//         const SizedBox(height: 4),
+//         SizedBox(
+//           width: 50,
+//           child: Text(
+//             label,
+//             textAlign: TextAlign.center,
+//             style: TextStyle(
+//               fontSize: 9,
+//               fontWeight: FontWeight.normal,
+//               color: isActive ? Colors.blue : Colors.grey[600],
+//               height: 1.2,
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+
+//   /// Map status string to step number (matching OrderStatusWidget logic with 5 steps)
+//   int _getStepFromStatus(String status) {
+//     final statusLower = status.toLowerCase();
+    
+//     // Step 5: Delivered
+//     if (statusLower.contains('delivered') || 
+//         statusLower.contains('completed')) {
+//       return 5;
+//     }
+    
+//     // Step 4: Out for Delivery
+//     if (statusLower.contains('out for delivery') ||
+//         statusLower.contains('pickedup') || 
+//         statusLower.contains('picked up')) {
+//       return 4;
+//     }
+    
+//     // Step 3: Rider Accepted
+//     if (statusLower.contains('rider accepted')) {
+//       return 3;
+//     }
+    
+//     // Step 2: Vendor Accepted
+//     if (statusLower.contains('vendor accepted') ||
+//         (statusLower.contains('accepted') && !statusLower.contains('rider'))) {
+//       return 2;
+//     }
+    
+//     // Step 1: Order Placed
+//     if (statusLower.contains('pending') || 
+//         statusLower.contains('placed') ||
+//         statusLower.contains('rider assigned') ||
+//         statusLower.contains('assigned')) {
+//       return 1;
+//     }
+    
+//     return 1; // Default to first step
+//   }
+
+//   /// Helper to show "time ago" string
+//   String _timeAgo(DateTime dateTime) {
+//     final diff = DateTime.now().difference(dateTime);
+//     if (diff.inSeconds < 60) {
+//       return "${diff.inSeconds}s ago";
+//     } else if (diff.inMinutes < 60) {
+//       return "${diff.inMinutes}m ago";
+//     } else if (diff.inHours < 24) {
+//       return "${diff.inHours}h ago";
+//     } else {
+//       return "${diff.inDays}d ago";
+//     }
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:provider/provider.dart';
@@ -1153,6 +1474,76 @@ class _NotificationScreenState extends State<NotificationScreen> {
     if (user != null) {
       Provider.of<NotificationProvider>(context, listen: false)
           .loadNotifications(user.id);
+    }
+  }
+
+  Future<void> _deleteNotification(String notificationId) async {
+    final user = await SharedPreferencesHelper.getUser();
+    if (user == null) return;
+
+    // Show confirmation dialog
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Notification'),
+        content: const Text('Are you sure you want to delete this notification?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+
+    try {
+      final provider = Provider.of<NotificationProvider>(context, listen: false);
+      bool success = await provider.deleteNotification(user.id, notificationId);
+
+      // Close loading dialog
+      Navigator.pop(context);
+
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Notification deleted successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to delete notification'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog
+      Navigator.pop(context);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -1189,7 +1580,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           }
 
           if (provider.error != null) {
-            return Center(child: Text("Please Provide Internet Connection"));
+            return const Center(child: Text("Please Provide Internet Connection"));
           }
 
           if (provider.notifications.isEmpty) {
@@ -1201,131 +1592,172 @@ class _NotificationScreenState extends State<NotificationScreen> {
             itemCount: provider.notifications.length,
             itemBuilder: (context, index) {
               final notification = provider.notifications[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      width: 1,
-                      color: const Color.fromARGB(255, 192, 192, 192),
+              return Dismissible(
+                key: Key(notification.id),
+                direction: DismissDirection.endToStart,
+                confirmDismiss: (direction) async {
+                  return await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Delete Notification'),
+                      content: const Text('Are you sure you want to delete this notification?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          style: TextButton.styleFrom(foregroundColor: Colors.red),
+                          child: const Text('Delete'),
+                        ),
+                      ],
                     ),
+                  );
+                },
+                onDismissed: (direction) async {
+                  final user = await SharedPreferencesHelper.getUser();
+                  if (user != null) {
+                    await provider.deleteNotification(user.id, notification.id);
+                  }
+                },
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Column(
-                    children: [
-                      // Order ID + Time Row
-                      Stack(
-                        children: [
-                          Row(
-                            children: [
-                              // Container(
-                              //   width: 60,
-                              //   height: 60,
-                              //   decoration: BoxDecoration(
-                              //     color: Colors.blue[50],
-                              //     borderRadius: BorderRadius.circular(12),
-                              //   ),
-                              //   child: ClipRRect(
-                              //     borderRadius: BorderRadius.circular(12),
-                              //     child: Image.asset(
-                              //       "assets/tablet.png",
-                              //       width: 60,
-                              //       height: 60,
-                              //       fit: BoxFit.cover,
-                              //     ),
-                              //   ),
-                              // ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  "Your order ID:\n${notification.orderId}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          Positioned(
-                            top: 0,
-                            right: 0,
-                            child: Column(
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        width: 1,
+                        color: const Color.fromARGB(255, 192, 192, 192),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        // Order ID + Time + Delete Button Row
+                        Stack(
+                          children: [
+                            Row(
                               children: [
-                                Text(
-                                  _timeAgo(notification.timestamp),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey[600],
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    "Your order ID:\n${notification.orderId}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
                                   ),
                                 ),
-                                // const Icon(Icons.keyboard_arrow_down),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Notification Message
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              notification.message,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    _timeAgo(notification.timestamp),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  InkWell(
+                                    onTap: () => _deleteNotification(notification.id),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.shade50,
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-                      // Dynamic Progress Bar (updated to 5 steps)
-                      CustomProgressBar(
-                        currentStep: _getStepFromStatus(notification.status),
-                        totalSteps: 5,
-                      ),
-                      const SizedBox(height: 16),
+                        // Notification Message
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                notification.message,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
 
-                      // Steps Row (updated to 5 steps matching OrderStatusWidget)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _buildStepItem(
-                            icon: Icons.shopping_cart,
-                            label: 'Order\nPlaced',
-                            isActive: _getStepFromStatus(notification.status) >= 1,
-                          ),
-                          _buildStepItem(
-                            icon: Icons.store,
-                            label: 'Vendor\nAccepted',
-                            isActive: _getStepFromStatus(notification.status) >= 2,
-                          ),
-                          _buildStepItem(
-                            icon: Icons.two_wheeler,
-                            label: 'Rider\nAccepted',
-                            isActive: _getStepFromStatus(notification.status) >= 3,
-                          ),
-                          _buildStepItem(
-                            icon: Icons.local_shipping,
-                            label: 'Out for\nDelivery',
-                            isActive: _getStepFromStatus(notification.status) >= 4,
-                          ),
-                          _buildStepItem(
-                            icon: Icons.check_circle,
-                            label: 'Delivered',
-                            isActive: _getStepFromStatus(notification.status) >= 5,
-                          ),
-                        ],
-                      ),
-                    ],
+                        // Dynamic Progress Bar (updated to 5 steps)
+                        CustomProgressBar(
+                          currentStep: _getStepFromStatus(notification.status),
+                          totalSteps: 5,
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Steps Row (updated to 5 steps matching OrderStatusWidget)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildStepItem(
+                              icon: Icons.shopping_cart,
+                              label: 'Order\nPlaced',
+                              isActive: _getStepFromStatus(notification.status) >= 1,
+                            ),
+                            _buildStepItem(
+                              icon: Icons.store,
+                              label: 'Vendor\nAccepted',
+                              isActive: _getStepFromStatus(notification.status) >= 2,
+                            ),
+                            _buildStepItem(
+                              icon: Icons.two_wheeler,
+                              label: 'Rider\nAccepted',
+                              isActive: _getStepFromStatus(notification.status) >= 3,
+                            ),
+                            _buildStepItem(
+                              icon: Icons.local_shipping,
+                              label: 'Out for\nDelivery',
+                              isActive: _getStepFromStatus(notification.status) >= 4,
+                            ),
+                            _buildStepItem(
+                              icon: Icons.check_circle,
+                              label: 'Delivered',
+                              isActive: _getStepFromStatus(notification.status) >= 5,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
