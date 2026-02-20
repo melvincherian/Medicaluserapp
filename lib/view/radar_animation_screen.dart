@@ -1329,16 +1329,93 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
     return 'Updated ${_formatTimestamp(lastUpdate)}';
   }
 
+  // Widget _buildStepItem({
+  //   required IconData icon,
+  //   required String label,
+  //   required bool isActive,
+  // }) {
+  //   return Column(
+  //     children: [
+  //       Container(
+  //         width: 40,
+  //         height: 40,
+  //         decoration: BoxDecoration(
+  //           gradient: isActive
+  //               ? LinearGradient(
+  //                   begin: Alignment.topLeft,
+  //                   end: Alignment.bottomRight,
+  //                   colors: [
+  //                     Colors.white.withOpacity(0.9),
+  //                     Colors.white.withOpacity(0.7),
+  //                   ],
+  //                 )
+  //               : null,
+  //           color: isActive ? null : Colors.white.withOpacity(0.2),
+  //           borderRadius: BorderRadius.circular(24),
+  //           border: Border.all(
+  //             color: isActive 
+  //                 ? Colors.white 
+  //                 : Colors.white.withOpacity(0.3),
+  //             width: 2.5,
+  //           ),
+  //           boxShadow: isActive
+  //               ? [
+  //                   BoxShadow(
+  //                     color: Colors.white.withOpacity(0.5),
+  //                     blurRadius: 12,
+  //                     spreadRadius: 2,
+  //                     offset: Offset(0, 4),
+  //                   ),
+  //                 ]
+  //               : [],
+  //         ),
+  //         child: Icon(
+  //           icon,
+  //           color: isActive ? Color(0xFF667eea) : Colors.white60,
+  //           size: 24,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 8),
+  //       Container(
+  //         width: 60,
+  //         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+  //         child: Text(
+  //           label,
+  //           textAlign: TextAlign.center,
+  //           style: TextStyle(
+  //             fontSize: 10,
+  //             fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+  //             color: isActive ? Colors.white : Colors.white60,
+  //             height: 1.3,
+  //             shadows: isActive
+  //                 ? [
+  //                     Shadow(
+  //                       color: Colors.black.withOpacity(0.3),
+  //                       offset: Offset(0, 1),
+  //                       blurRadius: 2,
+  //                     ),
+  //                   ]
+  //                 : [],
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+
+
   Widget _buildStepItem({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-  }) {
-    return Column(
+  required IconData icon,
+  required String label,
+  required bool isActive,
+}) {
+  return Flexible(
+    child: Column(
       children: [
         Container(
-          width: 48,
-          height: 48,
+          width: 40,  // Reduced from 48
+          height: 40, // Reduced from 48
           decoration: BoxDecoration(
             gradient: isActive
                 ? LinearGradient(
@@ -1351,12 +1428,12 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                   )
                 : null,
             color: isActive ? null : Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(20), // Reduced from 24
             border: Border.all(
               color: isActive 
                   ? Colors.white 
                   : Colors.white.withOpacity(0.3),
-              width: 2.5,
+              width: 2,  // Reduced from 2.5
             ),
             boxShadow: isActive
                 ? [
@@ -1372,21 +1449,20 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
           child: Icon(
             icon,
             color: isActive ? Color(0xFF667eea) : Colors.white60,
-            size: 24,
+            size: 20,  // Reduced from 24
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),  // Reduced from 8
         Container(
-          width: 60,
-          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
           child: Text(
             label,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 9,  // Reduced from 10
               fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
               color: isActive ? Colors.white : Colors.white60,
-              height: 1.3,
+              height: 1.2,  // Reduced from 1.3
               shadows: isActive
                   ? [
                       Shadow(
@@ -1400,8 +1476,9 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {

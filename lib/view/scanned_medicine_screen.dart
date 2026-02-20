@@ -1391,57 +1391,54 @@ class _ScannedMedicineScreenState extends State<ScannedMedicineScreen>
     );
   }
 
-  Widget _buildActionButtons() {
-    return Consumer<CartProvider>(
-      builder: (context, cartProvider, child) {
-        final isInCart = widget.medicineId != null
-            ? cartProvider.isInCart(widget.medicineId!)
-            : false;
 
-        return Row(
-          children: [
-            // Add to Cart Button
-            Expanded(
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                height: 56,
-                child: OutlinedButton(
-                  onPressed: isAddingToCart ||
-                          cartProvider.isLoading ||
-                          isInCart
-                      ? null
-                      : () async {
-                          if (!isInCart) {
-                            await _addToCart();
-                          }
-                        },
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(
-                      color: isInCart
-                          ? const Color(0xFF4CAF50)
-                          : const Color(0xFF5931DD),
-                      width: 2,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    backgroundColor: isInCart
-                        ? const Color(0xFF4CAF50).withOpacity(0.1)
-                        : Colors.transparent,
+  Widget _buildActionButtons() {
+  return Consumer<CartProvider>(
+    builder: (context, cartProvider, child) {
+      final isInCart = widget.medicineId != null
+          ? cartProvider.isInCart(widget.medicineId!)
+          : false;
+
+      return Row(
+        children: [
+          /// ADD TO CART
+          Expanded(
+            child: SizedBox(
+              height: 56,
+              child: OutlinedButton(
+                onPressed:
+                    isAddingToCart || cartProvider.isLoading || isInCart
+                        ? null
+                        : () async {
+                            if (!isInCart) {
+                              await _addToCart();
+                            }
+                          },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: isInCart
+                        ? const Color(0xFF4CAF50)
+                        : const Color(0xFF5931DD),
+                    width: 2,
                   ),
-                  child: isAddingToCart
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xFF5931DD),
-                            ),
-                          ),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  backgroundColor: isInCart
+                      ? const Color(0xFF4CAF50).withOpacity(0.1)
+                      : Colors.transparent,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+                child: isAddingToCart
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      )
+                    : FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               isInCart
@@ -1450,140 +1447,316 @@ class _ScannedMedicineScreenState extends State<ScannedMedicineScreen>
                               color: isInCart
                                   ? const Color(0xFF4CAF50)
                                   : const Color(0xFF5931DD),
-                              size: 20,
+                              size: 18,
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                isInCart
+                                    ? 'In Cart (${cartProvider.getItemQuantity(widget.medicineId!)})'
+                                    : 'Add to Cart',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: isInCart
+                                      ? const Color(0xFF4CAF50)
+                                      : const Color(0xFF5931DD),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 10),
+
+          /// ORDER NOW
+          Expanded(
+            child: Container(
+              height: 56,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF5931DD), Color(0xFF7B52ED)],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: ElevatedButton(
+                onPressed:
+                    isOrderingNow || cartProvider.isLoading
+                        ? null
+                        : () async {
+                            if (medicine != null &&
+                                widget.medicineId != null) {
+                              final isInCart = cartProvider
+                                  .isInCart(widget.medicineId!);
+
+                              if (!isInCart) {
+                                setState(() => isOrderingNow = true);
+                                await cartProvider
+                                    .addToCart(widget.medicineId!);
+                                setState(() => isOrderingNow = false);
+                              }
+
+                              if (mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CartScreen(
+                                      amount:
+                                          medicine?.price.toDouble(),
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: isOrderingNow
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.5,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      )
+                    : const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.shopping_bag_rounded,
+                                color: Colors.white, size: 18),
+                            SizedBox(width: 6),
                             Text(
-                              isInCart
-                                  ? 'In Cart (${cartProvider.getItemQuantity(widget.medicineId!)})'
-                                  : 'Add to Cart',
+                              'Order Now',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                color: isInCart
-                                    ? const Color(0xFF4CAF50)
-                                    : const Color(0xFF5931DD),
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13,
                               ),
                             ),
                           ],
                         ),
-                ),
+                      ),
               ),
             ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
-            const SizedBox(width: 12),
 
-            // Order Now Button
-            Expanded(
-              child: Container(
-                height: 56,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF5931DD), Color(0xFF7B52ED)],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF5931DD).withOpacity(0.4),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
-                    ),
-                  ],
-                ),
-                child: ElevatedButton(
-                  onPressed:
-                      isOrderingNow || cartProvider.isLoading
-                          ? null
-                          : () async {
-                              if (medicine != null &&
-                                  widget.medicineId != null) {
-                                final isInCart = cartProvider
-                                    .isInCart(widget.medicineId!);
+  // Widget _buildActionButtons() {
+  //   return Consumer<CartProvider>(
+  //     builder: (context, cartProvider, child) {
+  //       final isInCart = widget.medicineId != null
+  //           ? cartProvider.isInCart(widget.medicineId!)
+  //           : false;
 
-                                if (isInCart) {
-                                  if (mounted) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CartScreen(amount: medicine?.price.toDouble()),
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  setState(() => isOrderingNow = true);
-                                  final success = await cartProvider
-                                      .addToCart(widget.medicineId!);
-                                  setState(() => isOrderingNow = false);
+  //       return Row(
+  //         children: [
+  //           // Add to Cart Button
+  //           Expanded(
+  //             child: AnimatedContainer(
+  //               duration: const Duration(milliseconds: 300),
+  //               height: 56,
+  //               child: OutlinedButton(
+  //                 onPressed: isAddingToCart ||
+  //                         cartProvider.isLoading ||
+  //                         isInCart
+  //                     ? null
+  //                     : () async {
+  //                         if (!isInCart) {
+  //                           await _addToCart();
+  //                         }
+  //                       },
+  //                 style: OutlinedButton.styleFrom(
+  //                   side: BorderSide(
+  //                     color: isInCart
+  //                         ? const Color(0xFF4CAF50)
+  //                         : const Color(0xFF5931DD),
+  //                     width: 2,
+  //                   ),
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(16),
+  //                   ),
+  //                   backgroundColor: isInCart
+  //                       ? const Color(0xFF4CAF50).withOpacity(0.1)
+  //                       : Colors.transparent,
+  //                 ),
+  //                 child: isAddingToCart
+  //                     ? const SizedBox(
+  //                         width: 24,
+  //                         height: 24,
+  //                         child: CircularProgressIndicator(
+  //                           strokeWidth: 2.5,
+  //                           valueColor: AlwaysStoppedAnimation<Color>(
+  //                             Color(0xFF5931DD),
+  //                           ),
+  //                         ),
+  //                       )
+  //                     : Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: [
+  //                           Icon(
+  //                             isInCart
+  //                                 ? Icons.check_circle_rounded
+  //                                 : Icons.shopping_cart_outlined,
+  //                             color: isInCart
+  //                                 ? const Color(0xFF4CAF50)
+  //                                 : const Color(0xFF5931DD),
+  //                             size: 17,
+  //                           ),
+  //                           const SizedBox(width: 8),
+  //                           Text(
+  //                             isInCart
+  //                                 ? 'In Cart (${cartProvider.getItemQuantity(widget.medicineId!)})'
+  //                                 : 'Add to Cart',
+  //                             style: TextStyle(
+  //                               color: isInCart
+  //                                   ? const Color(0xFF4CAF50)
+  //                                   : const Color(0xFF5931DD),
+  //                               fontWeight: FontWeight.bold,
+  //                               fontSize: 13,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //               ),
+  //             ),
+  //           ),
 
-                                  if (success && mounted) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            CartScreen(amount: medicine?.price.toDouble()),
-                                      ),
-                                    );
-                                  } else if (mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          cartProvider.errorMessage ??
-                                              'Failed to add to cart',
-                                        ),
-                                        backgroundColor: Colors.red,
-                                        behavior: SnackBarBehavior.floating,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
-                            },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: isOrderingNow
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.5,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.shopping_bag_rounded,
-                                color: Colors.white, size: 20),
-                            SizedBox(width: 8),
-                            Text(
-                              'Order Now',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  //           const SizedBox(width: 12),
+
+  //           // Order Now Button
+  //           Expanded(
+  //             child: Container(
+  //               height: 56,
+  //               decoration: BoxDecoration(
+  //                 gradient: const LinearGradient(
+  //                   colors: [Color(0xFF5931DD), Color(0xFF7B52ED)],
+  //                   begin: Alignment.centerLeft,
+  //                   end: Alignment.centerRight,
+  //                 ),
+  //                 borderRadius: BorderRadius.circular(16),
+  //                 boxShadow: [
+  //                   BoxShadow(
+  //                     color: const Color(0xFF5931DD).withOpacity(0.4),
+  //                     blurRadius: 12,
+  //                     offset: const Offset(0, 6),
+  //                   ),
+  //                 ],
+  //               ),
+  //               child: ElevatedButton(
+  //                 onPressed:
+  //                     isOrderingNow || cartProvider.isLoading
+  //                         ? null
+  //                         : () async {
+  //                             if (medicine != null &&
+  //                                 widget.medicineId != null) {
+  //                               final isInCart = cartProvider
+  //                                   .isInCart(widget.medicineId!);
+
+  //                               if (isInCart) {
+  //                                 if (mounted) {
+  //                                   Navigator.push(
+  //                                     context,
+  //                                     MaterialPageRoute(
+  //                                       builder: (context) =>
+  //                                           CartScreen(amount: medicine?.price.toDouble()),
+  //                                     ),
+  //                                   );
+  //                                 }
+  //                               } else {
+  //                                 setState(() => isOrderingNow = true);
+  //                                 final success = await cartProvider
+  //                                     .addToCart(widget.medicineId!);
+  //                                 setState(() => isOrderingNow = false);
+
+  //                                 if (success && mounted) {
+  //                                   Navigator.push(
+  //                                     context,
+  //                                     MaterialPageRoute(
+  //                                       builder: (context) =>
+  //                                           CartScreen(amount: medicine?.price.toDouble()),
+  //                                     ),
+  //                                   );
+  //                                 } else if (mounted) {
+  //                                   ScaffoldMessenger.of(context).showSnackBar(
+  //                                     SnackBar(
+  //                                       content: Text(
+  //                                         cartProvider.errorMessage ??
+  //                                             'Failed to add to cart',
+  //                                       ),
+  //                                       backgroundColor: Colors.red,
+  //                                       behavior: SnackBarBehavior.floating,
+  //                                       shape: RoundedRectangleBorder(
+  //                                         borderRadius:
+  //                                             BorderRadius.circular(12),
+  //                                       ),
+  //                                     ),
+  //                                   );
+  //                                 }
+  //                               }
+  //                             }
+  //                           },
+  //                 style: ElevatedButton.styleFrom(
+  //                   backgroundColor: Colors.transparent,
+  //                   shadowColor: Colors.transparent,
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(16),
+  //                   ),
+  //                 ),
+  //                 child: isOrderingNow
+  //                     ? const SizedBox(
+  //                         width: 24,
+  //                         height: 24,
+  //                         child: CircularProgressIndicator(
+  //                           strokeWidth: 2.5,
+  //                           valueColor:
+  //                               AlwaysStoppedAnimation<Color>(Colors.white),
+  //                         ),
+  //                       )
+  //                     : Row(
+  //                         mainAxisAlignment: MainAxisAlignment.center,
+  //                         children: const [
+  //                           Icon(Icons.shopping_bag_rounded,
+  //                               color: Colors.white, size: 17),
+  //                           SizedBox(width: 8),
+  //                           Text(
+  //                             'Order Now',
+  //                             style: TextStyle(
+  //                               color: Colors.white,
+  //                               fontWeight: FontWeight.bold,
+  //                               fontSize: 12,
+  //                             ),
+  //                           ),
+  //                         ],
+  //                       ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }

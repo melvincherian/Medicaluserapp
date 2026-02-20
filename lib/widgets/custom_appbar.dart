@@ -1502,7 +1502,7 @@ class PremiumAppBar extends StatelessWidget {
                                               Text(
                                                 'Finding your location...',
                                                 style: TextStyle(
-                                                  fontSize: 12,
+                                                  fontSize: 10,
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w600,
                                                   letterSpacing: 0.2,
