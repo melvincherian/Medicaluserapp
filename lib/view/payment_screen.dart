@@ -28,7 +28,7 @@
 
 // class _PaymentScreenState extends State<PaymentScreen> {
 //   int?
-//       _selectedPaymentMethod; 
+//       _selectedPaymentMethod;
 //   final TextEditingController _notesController = TextEditingController();
 //   bool _isListening = false;
 //   String _transcription = '';
@@ -157,7 +157,7 @@
 //     final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
 //     var options = {
-//       'key': 'rzp_test_BxtRNvflG06PTV', 
+//       'key': 'rzp_test_BxtRNvflG06PTV',
 //       'amount': (cartProvider.totalAmount * 100).toInt(),
 //       'name': 'CLYNIX',
 //       'description': 'Medicine Order Payment',
@@ -1052,32 +1052,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -1085,6 +1059,8 @@ import 'package:medical_user_app/providers/language_provider.dart';
 import 'package:medical_user_app/providers/order_provider.dart';
 import 'package:medical_user_app/providers/cart_provider.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
+import 'package:medical_user_app/view/booking_successfull_screen.dart';
+import 'package:medical_user_app/view/payment_successfull_screeen.dart';
 import 'package:medical_user_app/view/radar_animation_screen.dart';
 import 'package:medical_user_app/view/card_details_screen.dart';
 import 'package:medical_user_app/view/change_address_screen.dart';
@@ -1217,7 +1193,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   void handlePaymentSuccessResponse(PaymentSuccessResponse response) async {
     // Show non-dismissible loading dialog immediately after payment success
     _showLoadingDialog();
-    
+
     // Payment successful, now process the order
     try {
       await _processOrder(response.paymentId);
@@ -1243,7 +1219,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     var options = {
       'key': 'rzp_test_BxtRNvflG06PTV',
-      'amount': (cartProvider.totalAmount * 100).toInt(),
+      // 'amount': (cartProvider.totalAmount * 100).toInt(),
+      'amount': (double.parse(widget.amount!) * 100).toInt(),
       'name': 'CLYNIX',
       'description': 'Medicine Order Payment',
       'retry': {'enabled': true, 'max_count': 1},
@@ -1395,8 +1372,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
           paymentId: paymentId,
           coupon: widget.coupouncode);
 
-      // Hide loading dialog
-      if (Navigator.of(context).canPop()) {
+
+
+            if (_selectedPaymentMethod == 1 && Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
 
@@ -1407,18 +1385,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
         // Clear cart after successful order
         await cartProvider.clearCart();
 
-        // Navigate directly to RadarAnimationScreen for both payment methods
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RadarAnimationScreen(
-              // orderId: order.id,
-              // orderAmount: order.totalAmount,
-              // paymentMethod: paymentMethod,
-              // addressId: selectedAddressId,
+        // Navigate based on payment method
+        if (_selectedPaymentMethod == 0) {
+          // Online payment - Navigate to PaymentSuccessfullScreeen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PaymentSuccessfullScreeen(
+                orderId: order.id,
+                orderAmount: order.totalAmount,
+                paymentMethod: paymentMethod,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BookingSuccessfullScreen(
+                orderId: order.id,
+                orderAmount: order.totalAmount,
+                paymentMethod: paymentMethod,
+                addressId: selectedAddressId,
+              ),
+            ),
+          );
+        }
       } else {
         // Order creation failed
         String errorMsg = orderProvider.errorMessage ??
@@ -1442,6 +1434,54 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
+
+      // Hide loading dialog
+  //     if (Navigator.of(context).canPop()) {
+  //       Navigator.of(context).pop();
+  //     }
+
+  //     if (order != null) {
+  //       // Order created successfully
+  //       _showSuccessSnackBar('Order placed successfully!');
+
+  //       // Clear cart after successful order
+  //       await cartProvider.clearCart();
+
+  //       // Navigate directly to RadarAnimationScreen for both payment methods
+  //       Navigator.pushReplacement(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => RadarAnimationScreen(
+  //               // orderId: order.id,
+  //               // orderAmount: order.totalAmount,
+  //               // paymentMethod: paymentMethod,
+  //               // addressId: selectedAddressId,
+  //               ),
+  //         ),
+  //       );
+  //     } else {
+  //       // Order creation failed
+  //       String errorMsg = orderProvider.errorMessage ??
+  //           'Payment processing failed. Please try again or use a different payment method';
+  //       _showErrorSnackBar(errorMsg);
+  //       setState(() {
+  //         _isProcessingOrder = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     // Hide loading dialog if still showing
+  //     if (Navigator.of(context).canPop()) {
+  //       Navigator.of(context).pop();
+  //     }
+
+  //     print('Error processing order: $e');
+  //     _showErrorSnackBar('An error occurred while placing the order');
+  //     setState(() {
+  //       _isProcessingOrder = false;
+  //     });
+  //   }
+  // }
+
   // Show non-dismissible loading dialog
   void _showLoadingDialog() {
     showDialog(
@@ -1461,7 +1501,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0XFF5931DD)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0XFF5931DD)),
                     strokeWidth: 3,
                   ),
                   const SizedBox(height: 20),

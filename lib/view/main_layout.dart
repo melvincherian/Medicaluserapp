@@ -58,8 +58,11 @@ class NavBarPainter extends CustomPainter {
 
 class MainLayout extends StatefulWidget {
   final int initialIndex;
-  
-  const MainLayout({Key? key, this.initialIndex = 0,}) : super(key: key);
+
+  const MainLayout({
+    Key? key,
+    this.initialIndex = 0,
+  }) : super(key: key);
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
@@ -71,20 +74,20 @@ class _MainLayoutState extends State<MainLayout> {
 
   bool _isNavigating = false;
 
-  final amount=100;
+  final amount = 100;
 
-  
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
   }
 
-  
   // List of screens to navigate between
   static final List<Widget> _screens = [
     const HomeScreen(),
-     CartScreen(amount: 100,),
+    CartScreen(
+      amount: 100,
+    ),
     const ProfileScreen(),
     const CheckoutScreen(),
     const NearPharmacyScreen(),
@@ -103,11 +106,13 @@ class _MainLayoutState extends State<MainLayout> {
   void _navigateToPrescriptionUpload() {
     if (!_isNavigating) {
       _isNavigating = true;
-      Navigator.of(context).push(
+      Navigator.of(context)
+          .push(
         MaterialPageRoute(
           builder: (context) => const PrescriptionUploadScreen(),
         ),
-      ).then((_) {
+      )
+          .then((_) {
         _isNavigating = false;
       });
     }
@@ -115,28 +120,29 @@ class _MainLayoutState extends State<MainLayout> {
 
   Future<bool> _onWillPop() async {
     return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Exit App'),
-        content: const Text('Do you want to exit the app?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(
-              'No',
-              style: TextStyle(color: Color(0XFF5931DD)),
-            ),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Exit App'),
+            content: const Text('Do you want to exit the app?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text(
+                  'No',
+                  style: TextStyle(color: Color(0XFF5931DD)),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text(
+                  'Yes',
+                  style: TextStyle(color: Color(0XFF5931DD)),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text(
-              'Yes', 
-              style: TextStyle(color: Color(0XFF5931DD)),
-            ),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 
   @override
@@ -144,23 +150,22 @@ class _MainLayoutState extends State<MainLayout> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-body: Stack(
-  children: [
-    IndexedStack(
-      index: _selectedIndex,
-      children: _screens,
-    ),
+        body: Stack(
+          children: [
+            IndexedStack(
+              index: _selectedIndex,
+              children: _screens,
+            ),
 
-    // GLOBAL ORDER BOX
-    Positioned(
-      left: 0,
-      right: 0,
-      bottom: 140, // above navbar
-      child: const GlobalOrderBox(),
-    ),
-  ],
-),
-
+            // GLOBAL ORDER BOX
+            // Positioned(
+            //   left: 0,
+            //   right: 0,
+            //   bottom: 140, // above navbar
+            //   child: const GlobalOrderBox(),
+            // ),
+          ],
+        ),
         bottomNavigationBar: _buildCustomBottomNavBar(),
         extendBody: true,
       ),
@@ -170,7 +175,7 @@ body: Stack(
   Widget _buildCustomBottomNavBar() {
     // Get the bottom padding (system navigation bar height)
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    
+
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.bottomCenter,
