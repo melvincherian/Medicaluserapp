@@ -879,9 +879,62 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
 
 
 
-  Future<void> _loadOrderStatus() async {
+//   Future<void> _loadOrderStatus() async {
+//   try {
+//     final data = await OrderStatusService.getOrderStatus(widget.userId);
+//     setState(() {
+//       orderData = data;
+//       isLoading = false;
+//       if (data == null) {
+//         error = 'Failed to load order status';
+//       }
+//     });
+
+//     // Stop polling and hide widget if cancelled
+//     if (_isCancelled()) {
+//       _timer?.cancel();
+//       if (mounted) {
+//         // Optionally show a snackbar for cancelled orders
+//         // ScaffoldMessenger.of(context).showSnackBar(
+//         //   const SnackBar(
+//         //     content: Text("Your order has been cancelled"),
+//         //     backgroundColor: Colors.orange,
+//         //     duration: Duration(seconds: 2),
+//         //   ),
+//         // );
+//       }
+//     }
+
+//     // Show snackbar when delivered
+//     if (_isDelivered()) {
+//       _timer?.cancel();
+//       if (mounted) {
+//         // ScaffoldMessenger.of(context).showSnackBar(
+//         //   const SnackBar(
+//         //     content: Text("Your order has been delivered! 🎉"),
+//         //     backgroundColor: Colors.green,
+//         //     duration: Duration(seconds: 2),
+//         //   ),
+//         // );
+//       }
+//     }
+//   } catch (e) {
+//     setState(() {
+//       error = 'Error: $e';
+//       isLoading = false;
+//     });
+//   }
+// }
+
+
+
+Future<void> _loadOrderStatus() async {
   try {
     final data = await OrderStatusService.getOrderStatus(widget.userId);
+    
+    // Track if it was already delivered before this update
+    final wasDelivered = _isDelivered();
+    
     setState(() {
       orderData = data;
       isLoading = false;
@@ -890,40 +943,97 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
       }
     });
 
-    // Stop polling and hide widget if cancelled
-    if (_isCancelled()) {
+    // Stop polling and show popup if newly delivered
+    if (!wasDelivered && _isDelivered()) {
       _timer?.cancel();
       if (mounted) {
-        // Optionally show a snackbar for cancelled orders
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(
-        //     content: Text("Your order has been cancelled"),
-        //     backgroundColor: Colors.orange,
-        //     duration: Duration(seconds: 2),
-        //   ),
-        // );
+        _showOrderCompletedDialog();
       }
     }
 
-    // Show snackbar when delivered
-    if (_isDelivered()) {
+    // Stop polling if cancelled
+    if (_isCancelled()) {
       _timer?.cancel();
-      if (mounted) {
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   const SnackBar(
-        //     content: Text("Your order has been delivered! 🎉"),
-        //     backgroundColor: Colors.green,
-        //     duration: Duration(seconds: 2),
-        //   ),
-        // );
-      }
     }
+
   } catch (e) {
     setState(() {
       error = 'Error: $e';
       isLoading = false;
     });
   }
+}
+
+void _showOrderCompletedDialog() {
+  showDialog(
+    context: context,
+    barrierDismissible: false, // User must tap the button to close
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.green[50],
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check_circle,
+                color: Colors.green[600],
+                size: 50,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Order Delivered! 🎉',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Your order has been successfully delivered.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green[600],
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: const Text(
+                'Great, Thanks!',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
 
   bool _isDelivered() {

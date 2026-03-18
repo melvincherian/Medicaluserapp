@@ -127,6 +127,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:medical_user_app/view/main_layout.dart';
 import 'package:medical_user_app/view/radar_animation_screen.dart';
 
 class PaymentSuccessfullScreeen extends StatelessWidget {
@@ -154,15 +155,24 @@ class PaymentSuccessfullScreeen extends StatelessWidget {
         leading: InkWell(
           onTap: () {
             // Navigate to RadarAnimationScreen instead of OrdersHistoryScreen
+            // Navigator.pushAndRemoveUntil(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => RadarAnimationScreen(
+            //       // orderId: orderId,
+            //       // orderAmount: orderAmount,
+            //       // paymentMethod: paymentMethod,
+            //       // addressId: addressId,
+            //     ),
+            //   ),
+            //   (Route<dynamic> route) => false,
+            // );
+
+
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                builder: (context) => RadarAnimationScreen(
-                  // orderId: orderId,
-                  // orderAmount: orderAmount,
-                  // paymentMethod: paymentMethod,
-                  // addressId: addressId,
-                ),
+                builder: (context) =>MainLayout()
               ),
               (Route<dynamic> route) => false,
             );
@@ -218,19 +228,28 @@ class PaymentSuccessfullScreeen extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+
+
+                     Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>MainLayout()
+              ),
+              (Route<dynamic> route) => false,
+            );
                     // Navigate to RadarAnimationScreen
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RadarAnimationScreen(
-                          // orderId: orderId,
-                          // orderAmount: orderAmount,
-                          // paymentMethod: paymentMethod,
-                          // addressId: addressId,
-                        ),
-                      ),
-                      (Route<dynamic> route) => false,
-                    );
+                    // Navigator.pushAndRemoveUntil(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => RadarAnimationScreen(
+                    //       // orderId: orderId,
+                    //       // orderAmount: orderAmount,
+                    //       // paymentMethod: paymentMethod,
+                    //       // addressId: addressId,
+                    //     ),
+                    //   ),
+                    //   (Route<dynamic> route) => false,
+                    // );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0XFF5931DD),

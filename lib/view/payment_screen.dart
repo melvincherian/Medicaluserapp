@@ -1190,24 +1190,39 @@ class _PaymentScreenState extends State<PaymentScreen> {
     _showErrorSnackBar("Payment Failed: ${response.message}");
   }
 
-  void handlePaymentSuccessResponse(PaymentSuccessResponse response) async {
-    // Show non-dismissible loading dialog immediately after payment success
-    _showLoadingDialog();
+  // void handlePaymentSuccessResponse(PaymentSuccessResponse response) async {
+  //   // Show non-dismissible loading dialog immediately after payment success
+  //   _showLoadingDialog();
 
-    // Payment successful, now process the order
-    try {
-      await _processOrder(response.paymentId);
-    } catch (e) {
-      // Hide loading dialog on error
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-      setState(() {
-        _isProcessingOrder = false;
-      });
-      _showErrorSnackBar("Order processing failed after payment: $e");
-    }
+  //   // Payment successful, now process the order
+  //   try {
+  //     await _processOrder(response.paymentId);
+  //   } catch (e) {
+  //     // Hide loading dialog on error
+  //     if (Navigator.of(context).canPop()) {
+  //       Navigator.of(context).pop();
+  //     }
+  //     setState(() {
+  //       _isProcessingOrder = false;
+  //     });
+  //     _showErrorSnackBar("Order processing failed after payment: $e");
+  //   }
+  // }
+
+
+
+  void handlePaymentSuccessResponse(PaymentSuccessResponse response) async {
+  if (!mounted) return; // ADD THIS
+  _showLoadingDialog();
+  try {
+    await _processOrder(response.paymentId);
+  } catch (e) {
+    if (!mounted) return; // ADD THIS
+    if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+    setState(() => _isProcessingOrder = false);
+    _showErrorSnackBar("Order processing failed after payment: $e");
   }
+}
 
   void handleExternalWalletSelected(ExternalWalletResponse response) {
     _showErrorSnackBar("External wallet selected: ${response.walletName}");
@@ -1345,94 +1360,172 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   // Method to process the order (after payment or directly for COD)
+  // Future<void> _processOrder(String? paymentId) async {
+  //   try {
+  //     final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+  //     final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+  //     // Validate order requirements
+  //     if (orderProvider.currentUser == null) {
+  //       _showErrorSnackBar('Please log in to place an order');
+  //       setState(() {
+  //         _isProcessingOrder = false;
+  //       });
+  //       return;
+  //     }
+
+  //     // Get selected payment method
+  //     String paymentMethod =
+  //         paymentMethods[_selectedPaymentMethod!]['value'].toString();
+
+  //     // Create order using OrderProvider
+  //     final order = await orderProvider.createOrder(
+  //         addressId: selectedAddressId.toString(),
+  //         notes: _notesController.text.trim(),
+  //         voiceNoteUrl: '', // Add voice note URL if implemented
+  //         paymentMethod: paymentMethod,
+  //         paymentId: paymentId,
+  //         coupon: widget.coupouncode);
+
+
+
+  //           if (_selectedPaymentMethod == 1 && Navigator.of(context).canPop()) {
+  //       Navigator.of(context).pop();
+  //     }
+
+  //     if (order != null) {
+  //       // Order created successfully
+  //       _showSuccessSnackBar('Order placed successfully!');
+
+  //       // Clear cart after successful order
+  //       await cartProvider.clearCart();
+
+  //       // Navigate based on payment method
+  //       if (_selectedPaymentMethod == 0) {
+  //         // Online payment - Navigate to PaymentSuccessfullScreeen
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => PaymentSuccessfullScreeen(
+  //               orderId: order.id,
+  //               orderAmount: order.totalAmount,
+  //               paymentMethod: paymentMethod,
+  //             ),
+  //           ),
+  //         );
+  //       } else {
+  //         Navigator.pushReplacement(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => BookingSuccessfullScreen(
+  //               orderId: order.id,
+  //               orderAmount: order.totalAmount,
+  //               paymentMethod: paymentMethod,
+  //               addressId: selectedAddressId,
+  //             ),
+  //           ),
+  //         );
+  //       }
+  //     } else {
+  //       // Order creation failed
+  //       String errorMsg = orderProvider.errorMessage ??
+  //           'Payment processing failed. Please try again or use a different payment method';
+  //       _showErrorSnackBar(errorMsg);
+  //       setState(() {
+  //         _isProcessingOrder = false;
+  //       });
+  //     }
+  //   } catch (e) {
+  //     // Hide loading dialog if still showing
+  //     if (Navigator.of(context).canPop()) {
+  //       Navigator.of(context).pop();
+  //     }
+
+  //     print('Error processing order: $e');
+  //     _showErrorSnackBar('An error occurred while placing the order');
+  //     setState(() {
+  //       _isProcessingOrder = false;
+  //     });
+  //   }
+  // }
+
+
+
   Future<void> _processOrder(String? paymentId) async {
-    try {
-      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
-      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+  try {
+    if (!mounted) return; // ADD THIS
+    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
-      // Validate order requirements
-      if (orderProvider.currentUser == null) {
-        _showErrorSnackBar('Please log in to place an order');
-        setState(() {
-          _isProcessingOrder = false;
-        });
-        return;
-      }
-
-      // Get selected payment method
-      String paymentMethod =
-          paymentMethods[_selectedPaymentMethod!]['value'].toString();
-
-      // Create order using OrderProvider
-      final order = await orderProvider.createOrder(
-          addressId: selectedAddressId.toString(),
-          notes: _notesController.text.trim(),
-          voiceNoteUrl: '', // Add voice note URL if implemented
-          paymentMethod: paymentMethod,
-          paymentId: paymentId,
-          coupon: widget.coupouncode);
-
-
-
-            if (_selectedPaymentMethod == 1 && Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-
-      if (order != null) {
-        // Order created successfully
-        _showSuccessSnackBar('Order placed successfully!');
-
-        // Clear cart after successful order
-        await cartProvider.clearCart();
-
-        // Navigate based on payment method
-        if (_selectedPaymentMethod == 0) {
-          // Online payment - Navigate to PaymentSuccessfullScreeen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PaymentSuccessfullScreeen(
-                orderId: order.id,
-                orderAmount: order.totalAmount,
-                paymentMethod: paymentMethod,
-              ),
-            ),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BookingSuccessfullScreen(
-                orderId: order.id,
-                orderAmount: order.totalAmount,
-                paymentMethod: paymentMethod,
-                addressId: selectedAddressId,
-              ),
-            ),
-          );
-        }
-      } else {
-        // Order creation failed
-        String errorMsg = orderProvider.errorMessage ??
-            'Payment processing failed. Please try again or use a different payment method';
-        _showErrorSnackBar(errorMsg);
-        setState(() {
-          _isProcessingOrder = false;
-        });
-      }
-    } catch (e) {
-      // Hide loading dialog if still showing
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-
-      print('Error processing order: $e');
-      _showErrorSnackBar('An error occurred while placing the order');
-      setState(() {
-        _isProcessingOrder = false;
-      });
+    if (orderProvider.currentUser == null) {
+      if (!mounted) return;
+      _showErrorSnackBar('Please log in to place an order');
+      setState(() => _isProcessingOrder = false);
+      return;
     }
+
+    String paymentMethod =
+        paymentMethods[_selectedPaymentMethod!]['value'].toString();
+
+    final order = await orderProvider.createOrder(
+        addressId: selectedAddressId.toString(),
+        notes: _notesController.text.trim(),
+        voiceNoteUrl: '',
+        paymentMethod: paymentMethod,
+        paymentId: paymentId,
+        coupon: widget.coupouncode);
+
+    if (!mounted) return; // ← KEY FIX: check after every await
+
+    if (_selectedPaymentMethod == 1 && Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+
+    if (order != null) {
+      // ✅ Don't show SnackBar before navigating away — widget gets deactivated
+      await cartProvider.clearCart();
+
+      if (!mounted) return; // ADD THIS
+
+      if (_selectedPaymentMethod == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PaymentSuccessfullScreeen(
+              orderId: order.id,
+              orderAmount: order.totalAmount,
+              paymentMethod: paymentMethod,
+            ),
+          ),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BookingSuccessfullScreen(
+              orderId: order.id,
+              orderAmount: order.totalAmount,
+              paymentMethod: paymentMethod,
+              addressId: selectedAddressId,
+            ),
+          ),
+        );
+      }
+    } else {
+      if (!mounted) return; // ADD THIS
+      String errorMsg = orderProvider.errorMessage ??
+          'Payment processing failed. Please try again.';
+      _showErrorSnackBar(errorMsg);
+      setState(() => _isProcessingOrder = false);
+    }
+  } catch (e) {
+    if (!mounted) return; // ADD THIS
+    if (Navigator.of(context).canPop()) Navigator.of(context).pop();
+    print('Error processing order: $e');
+    _showErrorSnackBar('An error occurred while placing the order');
+    setState(() => _isProcessingOrder = false); 
   }
+}
 
 
       // Hide loading dialog
