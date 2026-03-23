@@ -6687,6 +6687,8 @@
 //   }
 // }
 
+
+
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/medicine_model.dart';
 import 'package:medical_user_app/models/user_model.dart';
@@ -6829,24 +6831,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
-
-
   void _updatePlaceholdersFromMedicines() {
-  final medicineProvider = Provider.of<MedicineProvider>(context, listen: false);
-  
-  if (medicineProvider.medicines.isNotEmpty) {
-    setState(() {
-      _medicinePlaceholders = medicineProvider.medicines
-          .take(10) // Take first 10 medicines
-          .map((medicine) => medicine.name.toLowerCase())
-          .toList();
-      
-      if (_medicinePlaceholders.isNotEmpty) {
-        _currentPlaceholder = _medicinePlaceholders[0];
-      }
-    });
+    final medicineProvider =
+        Provider.of<MedicineProvider>(context, listen: false);
+
+    if (medicineProvider.medicines.isNotEmpty) {
+      setState(() {
+        _medicinePlaceholders = medicineProvider.medicines
+            .take(10) // Take first 10 medicines
+            .map((medicine) => medicine.name.toLowerCase())
+            .toList();
+
+        if (_medicinePlaceholders.isNotEmpty) {
+          _currentPlaceholder = _medicinePlaceholders[0];
+        }
+      });
+    }
   }
-}
 
   // Separate method to initialize data only once
   Future<void> _initializeData() async {
@@ -6867,8 +6868,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         .fetchCategories(serviceName: "", languageCode: langCode);
     await context.read<MedicineProvider>().loadMedicines();
 
-
-      _updatePlaceholdersFromMedicines();
+    _updatePlaceholdersFromMedicines();
 
     // Load location after userId is available
     if (userId != null) {
@@ -6942,11 +6942,29 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       await _refreshAllData();
 
       if (mounted) {
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   const SnackBar(
+        //     content: Text('Page refreshed successfully'),
+        //     backgroundColor: Colors.green,
+        //     duration: Duration(seconds: 2),
+        //   ),
+        // );
+
+        // AFTER ✅
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Page refreshed successfully'),
+          SnackBar(
+            content: const Text('Page refreshed successfully'),
             backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(
+              bottom: 80,
+              left: 16,
+              right: 16,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
         );
       }
@@ -8381,7 +8399,7 @@ class _MedicineDetailsModalState extends State<MedicineDetailsModal> {
                       Row(
                         children: [
                           const Icon(
-                            Icons.location_on,
+                            Icons.location_on, 
                             size: 14,
                             color: Color.fromARGB(255, 87, 106, 245),
                           ),

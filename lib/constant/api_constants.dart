@@ -80,4 +80,6 @@ class ApiConstants {
 
   static const reorderapi='$baseUrl/users/reorder/:userId/:orderId';
 
+  static const deleteallnotification='$baseUrl/users/:userId/bulk';
+
 }

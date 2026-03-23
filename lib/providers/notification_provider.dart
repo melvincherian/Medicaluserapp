@@ -51,4 +51,36 @@ class NotificationProvider extends ChangeNotifier {
       return false;
     }
   }
+
+
+  Future<bool> deleteAllNotifications(String userId) async {
+  try {
+    _error = null;
+
+    // Extract all notification IDs from the current list
+    final notificationIds = _notifications
+        .map((notification) => notification.id)
+        .whereType<String>()
+        .toList();
+
+    if (notificationIds.isEmpty) return true;
+
+    bool success = await _notificationService.deleteAllNotifications(
+      userId,
+      notificationIds,
+    );
+
+    if (success) {
+      _notifications.clear();
+      notifyListeners();
+      return true;
+    }
+
+    return false;
+  } catch (e) {
+    _error = e.toString();
+    notifyListeners();
+    return false;
+  }
+}
 }

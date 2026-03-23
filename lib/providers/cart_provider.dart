@@ -84,74 +84,206 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
+
+
+  // Increase item quantity (optimistic update)
+Future<bool> increaseQuantity(String medicineId) async {
+  _setError(null);
+
+  // ✅ Optimistic update
+  final previousCart = _cart;
+  final updatedItems = _cart.items.map((item) {
+    if (item.medicineId == medicineId) {
+      return item.copyWith(quantity: item.quantity + 1);
+    }
+    return item;
+  }).toList();
+
+  double newSubTotal = updatedItems.fold(0.0, (sum, item) => sum + (item.totalPrice * item.quantity));
+  int newTotalItems = updatedItems.fold(0, (sum, item) => sum + item.quantity);
+
+  _cart = _cart.copyWith(
+    items: updatedItems,
+    subTotal: newSubTotal,
+    totalItems: newTotalItems,
+    totalPayable: newSubTotal + _cart.platformFee + _cart.deliveryCharge,
+  );
+  notifyListeners();
+
+  try {
+    final result = await CartServices.increaseQuantity(medicineId: medicineId);
+    if (result['success']) {
+      await _refreshCart(showLoading: false);
+      return true;
+    } else {
+      _cart = previousCart;
+      _setError(result['message']);
+      notifyListeners();
+      return false;
+    }
+  } catch (e) {
+    _cart = previousCart;
+    _setError('Failed to increase quantity: ${e.toString()}');
+    notifyListeners();
+    return false;
+  }
+}
+
+// Decrease item quantity (optimistic update)
+Future<bool> decreaseQuantity(String medicineId) async {
+  _setError(null);
+
+  final previousCart = _cart;
+  final updatedItems = _cart.items.map((item) {
+    if (item.medicineId == medicineId) {
+      return item.copyWith(quantity: item.quantity - 1);
+    }
+    return item;
+  }).toList();
+
+  double newSubTotal = updatedItems.fold(0.0, (sum, item) => sum + (item.totalPrice * item.quantity));
+  int newTotalItems = updatedItems.fold(0, (sum, item) => sum + item.quantity);
+
+  _cart = _cart.copyWith(
+    items: updatedItems,
+    subTotal: newSubTotal,
+    totalItems: newTotalItems,
+    totalPayable: newSubTotal + _cart.platformFee + _cart.deliveryCharge,
+  );
+  notifyListeners();
+
+  try {
+    final result = await CartServices.decreaseQuantity(medicineId: medicineId);
+    if (result['success']) {
+      await _refreshCart(showLoading: false);
+      return true;
+    } else {
+      _cart = previousCart;
+      _setError(result['message']);
+      notifyListeners();
+      return false;
+    }
+  } catch (e) {
+    _cart = previousCart;
+    _setError('Failed to decrease quantity: ${e.toString()}');
+    notifyListeners();
+    return false;
+  }
+}
+
   // Increase item quantity
-  Future<bool> increaseQuantity(String medicineId) async {
-    _setLoading(true);
-    _setError(null);
+  // Future<bool> increaseQuantity(String medicineId) async {
+  //   _setLoading(true);
+  //   _setError(null);
 
-    try {
-      final result = await CartServices.increaseQuantity(medicineId: medicineId);
+  //   try {
+  //     final result = await CartServices.increaseQuantity(medicineId: medicineId);
 
-      if (result['success']) {
-        await _refreshCart(showLoading: false);
-        return true;
-      } else {
-        _setError(result['message']);
-        return false;
-      }
-    } catch (e) {
-      _setError('Failed to increase quantity: ${e.toString()}');
-      return false;
-    } finally {
-      _setLoading(false);
-    }
-  }
+  //     if (result['success']) {
+  //       await _refreshCart(showLoading: false);
+  //       return true;
+  //     } else {
+  //       _setError(result['message']);
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     _setError('Failed to increase quantity: ${e.toString()}');
+  //     return false;
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
-  // Decrease item quantity
-  Future<bool> decreaseQuantity(String medicineId) async {
-    _setLoading(true);
-    _setError(null);
+  // // Decrease item quantity
+  // Future<bool> decreaseQuantity(String medicineId) async {
+  //   _setLoading(true);
+  //   _setError(null);
 
-    try {
-      final result = await CartServices.decreaseQuantity(medicineId: medicineId);
+  //   try {
+  //     final result = await CartServices.decreaseQuantity(medicineId: medicineId);
 
-      if (result['success']) {
-        await _refreshCart(showLoading: false);
-        return true;
-      } else {
-        _setError(result['message']);
-        return false;
-      }
-    } catch (e) {
-      _setError('Failed to decrease quantity: ${e.toString()}');
-      return false;
-    } finally {
-      _setLoading(false);
-    }
-  }
+  //     if (result['success']) {
+  //       await _refreshCart(showLoading: false);
+  //       return true;
+  //     } else {
+  //       _setError(result['message']);
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     _setError('Failed to decrease quantity: ${e.toString()}');
+  //     return false;
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
   // Remove item from cart completely
-  Future<bool> removeFromCart(String medicineId) async {
-    _setLoading(true);
-    _setError(null);
+  // Future<bool> removeFromCart(String medicineId) async {
+  //   _setLoading(true);
+  //   _setError(null);
 
-    try {
-      final result = await CartServices.removeFromCart(medicineId: medicineId);
+  //   try {
+  //     final result = await CartServices.removeFromCart(medicineId: medicineId);
 
-      if (result['success']) {
-        await _refreshCart(showLoading: false);
-        return true;
-      } else {
-        _setError(result['message']);
-        return false;
-      }
-    } catch (e) {
-      _setError('Failed to remove item from cart: ${e.toString()}');
+  //     if (result['success']) {
+  //       await _refreshCart(showLoading: false);
+  //       return true;
+  //     } else {
+  //       _setError(result['message']);
+  //       return false;
+  //     }
+  //   } catch (e) {
+  //     _setError('Failed to remove item from cart: ${e.toString()}');
+  //     return false;
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
+
+
+
+  // Remove item from cart completely (optimistic update)
+Future<bool> removeFromCart(String medicineId) async {
+  _setError(null);
+
+  // ✅ Optimistic update: remove immediately from local state
+  final previousCart = _cart;
+  final updatedItems = _cart.items.where((item) => item.medicineId != medicineId).toList();
+
+  // Recalculate totals locally
+  double newSubTotal = updatedItems.fold(0.0, (sum, item) => sum + (item.totalPrice * item.quantity));
+  int newTotalItems = updatedItems.fold(0, (sum, item) => sum + item.quantity);
+
+  _cart = _cart.copyWith(
+    items: updatedItems,
+    subTotal: newSubTotal,
+    totalItems: newTotalItems,
+    totalPayable: newSubTotal + _cart.platformFee + _cart.deliveryCharge,
+  );
+  notifyListeners(); // 👈 UI updates instantly
+
+  try {
+    final result = await CartServices.removeFromCart(medicineId: medicineId);
+
+    if (result['success']) {
+      // Silently sync with server in background
+      await _refreshCart(showLoading: false);
+      return true;
+    } else {
+      // ❌ Rollback on failure
+      _cart = previousCart;
+      _setError(result['message']);
+      notifyListeners();
       return false;
-    } finally {
-      _setLoading(false);
     }
+  } catch (e) {
+    // ❌ Rollback on error
+    _cart = previousCart;
+    _setError('Failed to remove item from cart: ${e.toString()}');
+    notifyListeners();
+    return false;
   }
+}
 
   // Refresh cart data
   Future<void> refreshCart() async {

@@ -53,6 +53,9 @@ Future<bool> deleteNotification(String userId, String notificationId) async {
       },
     );
 
+
+    print('Notification id for single delete notification id $notificationId');
+
     print('Delete notification status code: ${response.statusCode}');
     print('Delete notification body: ${response.body}');
 
@@ -67,4 +70,43 @@ Future<bool> deleteNotification(String userId, String notificationId) async {
     throw Exception('Error deleting notification: $e');
   }
 }
+
+
+
+Future<bool> deleteAllNotifications(String userId, List<String> notificationIds) async {
+  try {
+    final token = await SharedPreferencesHelper.getToken();
+    final url = ApiConstants.deleteallnotification.replaceAll(':userId', userId);
+
+    final response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'notificationIds': notificationIds,
+      }),
+    );
+
+    print('notification idddddddsssssssssssssssss $notificationIds');
+
+    print('Delete all notifications status code: ${response.statusCode}');
+    print('Delete all notifications body: ${response.body}');
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      return true;
+    } else {
+      throw Exception(
+          'Failed to delete all notifications (Status: ${response.statusCode})');
+    }
+  } catch (e) {
+    print('Error deleting all notifications: $e');
+    throw Exception('Error deleting all notifications: $e');
+  }
+}
+
+
+
+
 }

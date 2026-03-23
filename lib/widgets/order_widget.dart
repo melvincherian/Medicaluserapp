@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:medical_user_app/widgets/progress_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // // ---------------- Models ----------------
 // class OrderStatus {
@@ -928,12 +929,51 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
 
 
 
+// Future<void> _loadOrderStatus() async {
+//   try {
+//     final data = await OrderStatusService.getOrderStatus(widget.userId);
+    
+//     // Track if it was already delivered before this update
+//     final wasDelivered = _isDelivered();
+    
+//     setState(() {
+//       orderData = data;
+//       isLoading = false;
+//       if (data == null) {
+//         error = 'Failed to load order status';
+//       }
+//     });
+
+//     // Stop polling and show popup if newly delivered
+//     if (!wasDelivered && _isDelivered()) {
+//       _timer?.cancel();
+//       if (mounted) {
+//         _showOrderCompletedDialog();
+//       }
+//     }
+
+//     // Stop polling if cancelled
+//     if (_isCancelled()) {
+//       _timer?.cancel();
+//     }
+
+//   } catch (e) {
+//     setState(() {
+//       error = 'Error: $e';
+//       isLoading = false;
+//     });
+//   }
+// }
+
+
+
+
 Future<void> _loadOrderStatus() async {
   try {
     final data = await OrderStatusService.getOrderStatus(widget.userId);
-    
-    // Track if it was already delivered before this update
-    final wasDelivered = _isDelivered();
+        final prefs = await SharedPreferences.getInstance();
+    final dialogShownKey = 'order_delivered_dialog_shown_${widget.userId}';
+    final wasDialogAlreadyShown = prefs.getBool(dialogShownKey) ?? false;
     
     setState(() {
       orderData = data;
@@ -943,8 +983,9 @@ Future<void> _loadOrderStatus() async {
       }
     });
 
-    // Stop polling and show popup if newly delivered
-    if (!wasDelivered && _isDelivered()) {
+    // Only show dialog if delivered AND never shown before for this user
+    if (_isDelivered() && !wasDialogAlreadyShown) {
+      await prefs.setBool(dialogShownKey, true); // Mark as shown persistently
       _timer?.cancel();
       if (mounted) {
         _showOrderCompletedDialog();
