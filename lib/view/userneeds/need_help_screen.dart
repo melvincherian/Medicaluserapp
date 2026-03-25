@@ -187,10 +187,10 @@ class _NeedHelpScreenState extends State<NeedHelpScreen> {
               _contactCard(
                 icon: Icons.email,
                 title: "Email Us",
-                subtitle: "Simcurarx@gmail.com",
+                subtitle: "services.clynix@gmail.com",
                 onTap: () async {
                   try {
-                    await _sendEmail("Simcurarx@gmail.com");
+                    await _sendEmail("services.clynix@gmail.com");
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

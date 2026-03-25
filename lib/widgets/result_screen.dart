@@ -1341,6 +1341,7 @@ class _ResultScreenState extends State<ResultScreen> {
               provider.successMessage ?? 'Prescription uploaded successfully!'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 3),
+          
         ),
       );
       Navigator.pushAndRemoveUntil(
