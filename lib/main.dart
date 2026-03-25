@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/providers/add_query_provider.dart';
 import 'package:medical_user_app/providers/address_provider.dart';
@@ -22,8 +23,20 @@ import 'package:provider/provider.dart';
 import 'package:medical_user_app/view/splash_screen.dart';
 import 'package:medical_user_app/providers/auth_provider.dart';
 
+
+
+// Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
+//   await Firebase.initializeApp();
+//   print("Background message: ${message.messageId}");
+// }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  //   await Firebase.initializeApp();
+
+  // // Background handler
+  // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
 
   runApp(const MyApp());
 }

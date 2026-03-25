@@ -109,8 +109,6 @@ Future<void> _handleLogin() async {
         MaterialPageRoute(builder: (context) => OtpScreen(phoneNumber: mobileController.text)),
       );
     } else if (authProvider.status == AuthStatus.error) {
-      // Auto-navigate to SignupScreen for new users
-      // _showErrorSnackBar('User not found. Please sign up first.');
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SignupScreen()),

@@ -6689,6 +6689,7 @@
 
 
 
+
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/medicine_model.dart';
 import 'package:medical_user_app/models/user_model.dart';
@@ -6703,7 +6704,6 @@ import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:medical_user_app/view/category_screen.dart';
 import 'package:medical_user_app/view/checkout_screen.dart';
 import 'package:medical_user_app/view/near_pharmacy_screen.dart';
-import 'package:medical_user_app/view/notification_screen.dart';
 import 'package:medical_user_app/view/order_hystory_screen.dart';
 import 'package:medical_user_app/view/profile_screen.dart';
 import 'package:medical_user_app/view/scanned_medicine_screen.dart';
@@ -7024,7 +7024,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (mounted) {
         setState(() {
           userId = storedUser?.id;
-          _currentUser = storedUser; // Cache the user
+          _currentUser = storedUser;
           isLoading = false;
         });
       }
