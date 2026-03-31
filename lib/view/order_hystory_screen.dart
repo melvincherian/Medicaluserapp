@@ -34,91 +34,204 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   String _selectedFilter = 'all'; // Default filter
   bool _showFilterDialog = false;
 
+  // void _showFilterBottomSheet() {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         decoration: const BoxDecoration(
+  //           color: Colors.white,
+  //           borderRadius: BorderRadius.only(
+  //             topLeft: Radius.circular(20),
+  //             topRight: Radius.circular(20),
+  //           ),
+  //         ),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             // Handle bar
+  //             Container(
+  //               margin: const EdgeInsets.symmetric(vertical: 12),
+  //               width: 40,
+  //               height: 4,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.grey[300],
+  //                 borderRadius: BorderRadius.circular(2),
+  //               ),
+  //             ),
+  //             // Title
+  //             const Padding(
+  //               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //               child: Row(
+  //                 children: [
+  //                   Icon(Icons.filter_list, color: Colors.deepPurple),
+  //                   SizedBox(width: 10),
+  //                   Text(
+  //                     'Filter Orders',
+  //                     style: TextStyle(
+  //                       fontSize: 18,
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             const Divider(),
+  //             // Filter options
+  //             // _buildFilterOption('all', 'All Orders', Icons.list_alt),
+  //             // _buildFilterOption('pending', 'Pending', Icons.check_circle),
+  //             // // _buildFilterOption('ongoing', 'Ongoing', Icons.access_time),
+  //             // _buildFilterOption('accepted', 'Accepted', Icons.check_circle_outline),
+  //             // // _buildFilterOption('processing', 'Processing', Icons.local_shipping),
+  //             // // _buildFilterOption('delivered', 'Delivered', Icons.check_circle),
+  //             // _buildFilterOption('cancelled', 'Cancelled', Icons.cancel),
+
+  //             _buildFilterOption('all', 'All Orders', Icons.list_alt),
+  //             _buildFilterOption('pending', 'Pending', Icons.access_time),
+  //             _buildFilterOption(
+  //                 'accepted', 'Accepted', Icons.check_circle_outline),
+  //             _buildFilterOption(
+  //                 'rider accepted', 'Rider Accepted', Icons.delivery_dining),
+  //             _buildFilterOption('pickedup', 'Picked Up', Icons.inventory),
+  //             _buildFilterOption('completed', 'Completed', Icons.check_circle),
+  //             _buildFilterOption('cancelled', 'Cancelled', Icons.cancel),
+  //             const SizedBox(height: 10),
+  //             // Clear filters button
+  //             if (_selectedFilter != 'all')
+  //               Padding(
+  //                 padding:
+  //                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //                 child: SizedBox(
+  //                   width: double.infinity,
+  //                   child: OutlinedButton(
+  //                     onPressed: () {
+  //                       setState(() {
+  //                         _selectedFilter = 'all';
+  //                       });
+  //                       Navigator.pop(context);
+  //                     },
+  //                     style: OutlinedButton.styleFrom(
+  //                       foregroundColor: Colors.deepPurple,
+  //                       side: const BorderSide(color: Colors.deepPurple),
+  //                       shape: RoundedRectangleBorder(
+  //                         borderRadius: BorderRadius.circular(10),
+  //                       ),
+  //                     ),
+  //                     child: const Text('Clear Filters'),
+  //                   ),
+  //                 ),
+  //               ),
+  //             const SizedBox(height: 20),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+
+
+
   void _showFilterBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true, // ← ADD THIS
+    builder: (BuildContext context) {
+      return Container(
+        // ← ADD: constrain max height to 85% of screen
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Handle bar
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
               ),
-              // Title
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  children: [
-                    Icon(Icons.filter_list, color: Colors.deepPurple),
-                    SizedBox(width: 10),
-                    Text(
-                      'Filter Orders',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+            ),
+            // Title
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Row(
+                children: [
+                  Icon(Icons.filter_list, color: Colors.deepPurple),
+                  SizedBox(width: 10),
+                  Text(
+                    'Filter Orders',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+
+            // ← WRAP filter options + button in Flexible + SingleChildScrollView
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildFilterOption('all', 'All Orders', Icons.list_alt),
+                    _buildFilterOption('pending', 'Pending', Icons.access_time),
+                    _buildFilterOption('accepted', 'Accepted', Icons.check_circle_outline),
+                    _buildFilterOption('rider accepted', 'Rider Accepted', Icons.delivery_dining),
+                    _buildFilterOption('pickedup', 'Picked Up', Icons.inventory),
+                    _buildFilterOption('completed', 'Completed', Icons.check_circle),
+                    _buildFilterOption('cancelled', 'Cancelled', Icons.cancel),
+                    const SizedBox(height: 10),
+                    if (_selectedFilter != 'all')
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedFilter = 'all';
+                              });
+                              Navigator.pop(context);
+                            },
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.deepPurple,
+                              side: const BorderSide(color: Colors.deepPurple),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text('Clear Filters'),
+                          ),
+                        ),
+                      ),
+                    // ← Safe area padding at the bottom
+                    SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
                   ],
                 ),
               ),
-              const Divider(),
-              // Filter options
-              _buildFilterOption('all', 'All Orders', Icons.list_alt),
-              _buildFilterOption('pending', 'Pending', Icons.check_circle),
-              // _buildFilterOption('ongoing', 'Ongoing', Icons.access_time),
-              _buildFilterOption('accepted', 'Accepted', Icons.check_circle_outline),
-              // _buildFilterOption('processing', 'Processing', Icons.local_shipping),
-              // _buildFilterOption('delivered', 'Delivered', Icons.check_circle),
-              _buildFilterOption('cancelled', 'Cancelled', Icons.cancel),
-              const SizedBox(height: 10),
-              // Clear filters button
-              if (_selectedFilter != 'all')
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedFilter = 'all';
-                        });
-                        Navigator.pop(context);
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.deepPurple,
-                        side: const BorderSide(color: Colors.deepPurple),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text('Clear Filters'),
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
-    );
-  }
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   // Widget _buildFilterOption(String value, String label, IconData icon) {
   //   final isSelected = _selectedFilter == value;
@@ -184,17 +297,29 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   //       .toList();
   // }
 
-  List<OrderModel> _getFilteredOrders(List<OrderModel> orders) {
-    if (_selectedFilter == 'all') {
-      return orders;
-    }
+  // List<OrderModel> _getFilteredOrders(List<OrderModel> orders) {
+  //   if (_selectedFilter == 'all') {
+  //     return orders;
+  //   }
 
-    // Normalize the filter value to lowercase for comparison
+  //   // Normalize the filter value to lowercase for comparison
+  //   final filterLower = _selectedFilter.toLowerCase();
+
+  //   return orders
+  //       .where((order) => order.status.toLowerCase() == filterLower)
+  //       .toList();
+  // }
+
+  List<OrderModel> _getFilteredOrders(List<OrderModel> orders) {
+    if (_selectedFilter == 'all') return orders;
+
     final filterLower = _selectedFilter.toLowerCase();
 
-    return orders
-        .where((order) => order.status.toLowerCase() == filterLower)
-        .toList();
+    return orders.where((order) {
+      final statusLower = order.status.toLowerCase();
+      // Handle partial match for multi-word statuses like "Rider Accepted"
+      return statusLower == filterLower || statusLower.contains(filterLower);
+    }).toList();
   }
 
   @override
@@ -613,7 +738,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                           //     color: Colors.grey[600],
                           //   ),
                           // ),
-                        const SizedBox(height: 4),
+                          const SizedBox(height: 4),
                         // Location row
                         Row(
                           children: [
@@ -698,18 +823,16 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                           children: [
                             if (order.status != 'Cancelled' &&
                                 order.status != 'canceled')
-                            IconButton(
-                              
-                                onPressed: () {
-                                  
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => InvoiceScreen(
-                                                orderId: order.id,
-                                              )));
-                                },
-                                icon: const Icon(Icons.description_outlined)),
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => InvoiceScreen(
+                                                  orderId: order.id,
+                                                )));
+                                  },
+                                  icon: const Icon(Icons.description_outlined)),
                             // IconButton(
                             //     onPressed: () {
                             //       Navigator.push(
@@ -1128,7 +1251,7 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
                                                 orderId: order.id,
                                               )));
                                 },
-                                icon:const Icon(Icons.receipt_long)),
+                                icon: const Icon(Icons.receipt_long)),
                           ],
                         ),
                         // Date

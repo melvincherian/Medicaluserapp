@@ -30,12 +30,12 @@
 //   void setPrescriptionFile(File? file) {
 //     _selectedPrescriptionFile = file;
 //     clearMessages();
-    
+
 //     // Validate file if selected
 //     if (file != null && !PrescriptionService.validatePrescriptionFile(file)) {
 //       _errorMessage = 'Invalid file. Please select a valid image (JPG, PNG) or PDF file under 10MB.';
 //     }
-    
+
 //     notifyListeners();
 //   }
 
@@ -60,19 +60,19 @@
 //   // Validate prescription data
 //   bool validatePrescriptionData() {
 //     clearMessages();
-    
+
 //     if (_selectedPrescriptionFile == null) {
 //       _errorMessage = 'Please select a prescription file';
 //       notifyListeners();
 //       return false;
 //     }
-    
+
 //     if (!PrescriptionService.validatePrescriptionFile(_selectedPrescriptionFile!)) {
 //       _errorMessage = 'Invalid file format or size. Please select a valid image (JPG, PNG) or PDF file under 10MB.';
 //       notifyListeners();
 //       return false;
 //     }
-    
+
 //     return true;
 //   }
 
@@ -101,7 +101,7 @@
 
 //       if (result['success']) {
 //         _successMessage = result['message'];
-        
+
 //         // Add to sent prescriptions list
 //         _sentPrescriptions.insert(0, {
 //           'id': DateTime.now().millisecondsSinceEpoch.toString(),
@@ -113,10 +113,10 @@
 //           'sentAt': DateTime.now(),
 //           'status': 'sent',
 //         });
-        
+
 //         // Clear form data after successful submission
 //         clearForm();
-        
+
 //         _isLoading = false;
 //         notifyListeners();
 //         return true;
@@ -195,22 +195,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/pharmacy_model.dart';
@@ -247,19 +231,19 @@ class PrescriptionProvider extends ChangeNotifier {
   bool get isSubmittingPrescription => _isSubmittingPrescription;
   bool get isSubmittingQuery => _isSubmittingQuery;
   bool get isLoadingPharmacies => _isLoadingPharmacies;
-  
+
   List<Pharmacy> get pharmacies => _pharmacies;
   Pharmacy? get selectedPharmacy => _selectedPharmacy;
   File? get prescriptionFile => _prescriptionFile;
   String get notes => _notes;
   User? get currentUser => _currentUser;
-  
+
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
-  bool get canSubmitPrescription => 
-      _prescriptionFile != null && 
-      _selectedPharmacy != null && 
+  bool get canSubmitPrescription =>
+      _prescriptionFile != null &&
+      _selectedPharmacy != null &&
       _currentUser != null &&
       !_isSubmittingPrescription;
 
@@ -274,7 +258,7 @@ class PrescriptionProvider extends ChangeNotifier {
   Future<void> initialize() async {
     _setLoading(true);
     _clearMessages();
-    
+
     try {
       await _loadCurrentUser();
       await loadPharmacies();
@@ -291,7 +275,8 @@ class PrescriptionProvider extends ChangeNotifier {
     try {
       _currentUser = await SharedPreferencesHelper.getUser();
       if (_currentUser != null) {
-        emailController.text = _currentUser!.mobile; // Use mobile as default email
+        emailController.text =
+            _currentUser!.mobile; // Use mobile as default email
         phoneController.text = _currentUser!.mobile;
       }
     } catch (e) {
@@ -311,10 +296,10 @@ class PrescriptionProvider extends ChangeNotifier {
   Future<void> loadPharmacies() async {
     _setLoadingPharmacies(true);
     _clearMessages();
-    
+
     try {
       final result = await PrescriptionService.getAllPharmacies();
-      
+
       if (result['success']) {
         final responseData = result['data'];
         if (responseData['pharmacies'] != null) {
@@ -354,7 +339,8 @@ class PrescriptionProvider extends ChangeNotifier {
       _clearMessages();
       _setSuccess('Prescription file selected');
     } else {
-      _setError('Invalid file. Please select a valid image or PDF file (max 10MB)');
+      _setError(
+          'Invalid file. Please select a valid image or PDF file (max 10MB)');
     }
     notifyListeners();
   }
@@ -384,19 +370,13 @@ class PrescriptionProvider extends ChangeNotifier {
         notes: _notes.isNotEmpty ? _notes : null,
       );
 
-
       print('useeeeeeeeeeeeeeeeeeeeeid ${_currentUser!.id}');
-            print('pharmacyiddddddddddddddd ${selectedPharmacy!.id}');
+      print('pharmacyiddddddddddddddd ${selectedPharmacy!.id}');
 
       print('prescriptionfileeeeeeeeeeeeeeeeeee ${_prescriptionFile}');
 
       print('notesssssssssssssssssssssssss ${_notes}');
 
-
-
-      
-     
-       
       if (result['success']) {
         _setSuccess(result['message'] ?? 'Prescription sent successfully');
         _resetPrescriptionForm();
@@ -463,10 +443,11 @@ class PrescriptionProvider extends ChangeNotifier {
   // Search pharmacies
   List<Pharmacy> searchPharmacies(String query) {
     if (query.isEmpty) return _pharmacies;
-    
-    return _pharmacies.where((pharmacy) =>
-        pharmacy.name.toLowerCase().contains(query.toLowerCase())
-    ).toList();
+
+    return _pharmacies
+        .where((pharmacy) =>
+            pharmacy.name.toLowerCase().contains(query.toLowerCase()))
+        .toList();
   }
 
   // Get pharmacy distance (placeholder - implement with location service)

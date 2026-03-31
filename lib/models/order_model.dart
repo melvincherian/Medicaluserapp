@@ -1172,21 +1172,36 @@ class OrderModel {
   // }
 
   // Helper property to check if order is ongoing
-  bool get isOngoing {
-    final ongoingStatuses = [
-      'pending',
-      'confirmed',
-      'processing',
-      'shipped',
-      'out_for_delivery',
-      'rider assigned',
-      'accepted',
-      'pickedup',
-      'cancelled' // Add this line
-    ];
-    return ongoingStatuses.contains(status.toLowerCase());
-  }
+  // bool get isOngoing {
+  //   final ongoingStatuses = [
+  //     'pending',
+  //     'confirmed',
+  //     'processing',
+  //     'shipped',
+  //     'out_for_delivery',
+  //     'rider assigned',
+  //     'accepted',
+  //     'pickedup',
+  //     'cancelled' // Add this line
+  //   ];
+  //   return ongoingStatuses.contains(status.toLowerCase());
+  // }
 
+bool get isOngoing {
+  final ongoingStatuses = [
+    'pending',
+    'confirmed',
+    'processing',
+    'shipped',
+    'out_for_delivery',
+    'rider assigned',
+    'accepted',
+    'rider accepted',
+    'pickedup',
+    'picked up',
+  ];
+  return ongoingStatuses.contains(status.toLowerCase());
+}
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     try {
       // Debug print to see the structure
