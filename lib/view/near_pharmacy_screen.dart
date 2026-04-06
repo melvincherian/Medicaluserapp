@@ -1727,6 +1727,7 @@ import 'package:medical_user_app/models/user_model.dart';
 import 'package:medical_user_app/providers/profile_provider.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:medical_user_app/view/profile_screen.dart';
+import 'package:medical_user_app/view/search/user_location_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:medical_user_app/view/pharmacy_screen.dart';
 import 'package:medical_user_app/providers/pharmacy_provider.dart';
@@ -1757,6 +1758,7 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
   int _currentNameIndex = 0;
   Timer? _nameRotationTimer;
   String? _cachedUsername;
+  String?userId;
 
   @override
   void initState() {
@@ -1781,6 +1783,7 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
     if (mounted) {
       setState(() {
         _cachedUsername = user?.name ?? "Guest";
+        userId=user?.id??'asfa';
       });
     }
   }
@@ -2015,8 +2018,13 @@ class _NearPharmacyScreenState extends State<NearPharmacyScreen>
                         children: [
                           const Icon(Icons.location_on,
                               size: 24, color: Colors.black54),
-                          Text(locationText,
-                              style: const TextStyle(fontSize: 10)),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>LocationSearchScreen(userId: userId)));
+                            },
+                            child: Text(locationText,
+                                style: const TextStyle(fontSize: 10)),
+                          ),
                         ],
                       );
                     },
