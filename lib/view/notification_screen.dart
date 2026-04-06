@@ -1,4 +1,3 @@
-
 // // import 'package:flutter/material.dart';
 // // import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 // // import 'package:provider/provider.dart';
@@ -453,7 +452,6 @@
 // //     );
 // //   }
 
-
 // //   int _getStepFromStatusAndMessage(String status, String message) {
 // //     final s = status.toLowerCase().trim();
 // //     final m = message.toLowerCase().trim();
@@ -522,29 +520,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 // import 'package:provider/provider.dart';
@@ -552,7 +527,6 @@
 // import 'package:medical_user_app/widgets/progress_bar.dart';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
-
 
 // class _OrderStatusApi {
 //   static const String _base = 'http://31.97.206.144:7021/api/users';
@@ -578,7 +552,6 @@
 //     }
 //   }
 // }
-
 
 // int _resolveStep(String apiStatus) {
 //   switch (apiStatus.toLowerCase().trim()) {
@@ -1139,24 +1112,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 // import 'package:provider/provider.dart';
@@ -1164,7 +1119,6 @@
 // import 'package:medical_user_app/widgets/progress_bar.dart';
 // import 'dart:convert';
 // import 'package:http/http.dart' as http;
-
 
 // class _OrderStatusApi {
 //   static const String _base = 'http://31.97.206.144:7021/api/users';
@@ -1189,7 +1143,6 @@
 //     }
 //   }
 // }
-
 
 // // ✅ FIXED: Added all possible API status variants
 // int _resolveStep(String apiStatus) {
@@ -1754,22 +1707,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:provider/provider.dart';
@@ -1859,8 +1796,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final user = await SharedPreferencesHelper.getUser();
     if (user == null) return;
 
-    final provider =
-        Provider.of<NotificationProvider>(context, listen: false);
+    final provider = Provider.of<NotificationProvider>(context, listen: false);
 
     if (provider.notifications.isEmpty) {
       _showSnack('No notifications to delete', Colors.orange);
@@ -1899,10 +1835,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title:
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
         content: Text(content),
         actions: [
           TextButton(
@@ -1958,9 +1892,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         title: const Text(
           'Notifications',
           style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 20),
+              color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         leading: InkWell(
           onTap: () => Navigator.pop(context),
@@ -2023,16 +1955,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       color: Colors.red,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.delete,
-                        color: Colors.white, size: 30),
+                    child:
+                        const Icon(Icons.delete, color: Colors.white, size: 30),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: _NotificationCard(
                       notification: notification,
                       step: step,
-                      onDelete: () =>
-                          _deleteNotification(notification.id),
+                      onDelete: () => _deleteNotification(notification.id),
                       timeAgo: _timeAgo(notification.timestamp),
                     ),
                   ),
@@ -2129,8 +2060,8 @@ class _NotificationCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(timeAgo,
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.grey[600])),
+                        style:
+                            TextStyle(fontSize: 12, color: Colors.grey[600])),
                     const SizedBox(width: 8),
                     InkWell(
                       onTap: onDelete,
@@ -2155,16 +2086,14 @@ class _NotificationCard extends StatelessWidget {
           // ── Message ──
           Text(
             notification.message,
-            style:
-                const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
           ),
 
           const SizedBox(height: 8),
 
           // ── Status badge ──
           Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: _statusColor.withOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
@@ -2207,10 +2136,16 @@ class _NotificationCard extends StatelessWidget {
                   icon: Icons.local_shipping,
                   label: 'Out for\nDelivery',
                   isActive: step >= 4),
+              // _StepItem(
+              //     icon: Icons.check_circle,
+              //     label: 'Delivered',
+              //     isActive: step >= 5),
+
               _StepItem(
                   icon: Icons.check_circle,
                   label: 'Delivered',
-                  isActive: step >= 5),
+                  isActive: step >= 5,
+                  isDelivered: step >= 5),
             ],
           ),
         ],
@@ -2226,30 +2161,38 @@ class _StepItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool isActive;
+  final bool isDelivered;
 
   const _StepItem({
     required this.icon,
     required this.label,
     required this.isActive,
+    this.isDelivered = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final activeColor = isDelivered ? Colors.green : Colors.blue;
     return Column(
       children: [
         Container(
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: isActive ? Colors.blue[50] : Colors.grey[50],
+            // color: isActive ? Colors.blue[50] : Colors.grey[50],
+
+            color: isActive ? activeColor.withOpacity(0.1) : Colors.grey[50],
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
               color: isActive ? Colors.blue : Colors.grey.shade300,
               width: 2,
             ),
           ),
+          // child: Icon(icon,
+          //     color: isActive ? Colors.blue : Colors.grey[600], size: 20),
+
           child: Icon(icon,
-              color: isActive ? Colors.blue : Colors.grey[600], size: 20),
+              color: isActive ? activeColor : Colors.grey[600], size: 20),
         ),
         const SizedBox(height: 4),
         SizedBox(
@@ -2259,7 +2202,9 @@ class _StepItem extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 9,
-              color: isActive ? Colors.blue : Colors.grey[600],
+              // color: isActive ? Colors.blue : Colors.grey[600],
+
+                            color: isActive ? activeColor : Colors.grey[600],
               height: 1.2,
             ),
           ),
