@@ -130,108 +130,116 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   //   );
   // }
 
-
-
-
   void _showFilterBottomSheet() {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: Colors.transparent,
-    isScrollControlled: true, // ← ADD THIS
-    builder: (BuildContext context) {
-      return Container(
-        // ← ADD: constrain max height to 85% of screen
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
-        ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true, // ← ADD THIS
+      builder: (BuildContext context) {
+        return Container(
+          // ← ADD: constrain max height to 85% of screen
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.85,
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Handle bar
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 12),
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2),
-              ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            // Title
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Row(
-                children: [
-                  Icon(Icons.filter_list, color: Colors.deepPurple),
-                  SizedBox(width: 10),
-                  Text(
-                    'Filter Orders',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
               ),
-            ),
-            const Divider(),
-
-            // ← WRAP filter options + button in Flexible + SingleChildScrollView
-            Flexible(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+              // Title
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Row(
                   children: [
-                    _buildFilterOption('all', 'All Orders', Icons.list_alt),
-                    _buildFilterOption('pending', 'Pending', Icons.access_time),
-                    _buildFilterOption('accepted', 'Accepted', Icons.check_circle_outline),
-                    _buildFilterOption('rider accepted', 'Rider Accepted', Icons.delivery_dining),
-                    _buildFilterOption('pickedup', 'Picked Up', Icons.inventory),
-                    _buildFilterOption('completed', 'Completed', Icons.check_circle),
-                    _buildFilterOption('cancelled', 'Cancelled', Icons.cancel),
-                    const SizedBox(height: 10),
-                    if (_selectedFilter != 'all')
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: OutlinedButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedFilter = 'all';
-                              });
-                              Navigator.pop(context);
-                            },
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.deepPurple,
-                              side: const BorderSide(color: Colors.deepPurple),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text('Clear Filters'),
-                          ),
-                        ),
+                    Icon(Icons.filter_list, color: Colors.deepPurple),
+                    SizedBox(width: 10),
+                    Text(
+                      'Filter Orders',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
-                    // ← Safe area padding at the bottom
-                    SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+              const Divider(),
+
+              // ← WRAP filter options + button in Flexible + SingleChildScrollView
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildFilterOption('all', 'All Orders', Icons.list_alt),
+                      _buildFilterOption(
+                          'pending', 'Pending', Icons.access_time),
+                      _buildFilterOption(
+                          'accepted', 'Accepted', Icons.check_circle_outline),
+                      _buildFilterOption('rider accepted', 'Rider Accepted',
+                          Icons.delivery_dining),
+                      _buildFilterOption(
+                          'pickedup', 'Picked Up', Icons.inventory),
+                      // _buildFilterOption('completed', 'Completed', Icons.check_circle),
+                      _buildFilterOption(
+                          'delivered', 'Delivered', Icons.check_circle),
+
+                      _buildFilterOption(
+                          'cancelled', 'Cancelled', Icons.cancel),
+                      const SizedBox(height: 10),
+                      if (_selectedFilter != 'all')
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _selectedFilter = 'all';
+                                });
+                                Navigator.pop(context);
+                              },
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.deepPurple,
+                                side:
+                                    const BorderSide(color: Colors.deepPurple),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text('Clear Filters'),
+                            ),
+                          ),
+                        ),
+                      // ← Safe area padding at the bottom
+                      SizedBox(
+                          height: MediaQuery.of(context).padding.bottom + 20),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   // Widget _buildFilterOption(String value, String label, IconData icon) {
   //   final isSelected = _selectedFilter == value;

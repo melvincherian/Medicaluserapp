@@ -7,7 +7,7 @@ class ApiConstants {
   static const String categoryBase = '$baseUrl/category';
   static const String allCategories = '$categoryBase/allcategories';
 
-  static const String orderstatus='$baseUrl/order-status/:userId';
+  static const String orderstatus='$baseUrl/users/order-status/:userId';
 
   static const String userLocationapi='$baseUrl/users/add-location';
 

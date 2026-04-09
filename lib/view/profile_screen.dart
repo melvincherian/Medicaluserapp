@@ -9,6 +9,7 @@ import 'package:medical_user_app/view/detail/periodic_detail.dart';
 import 'package:medical_user_app/view/order_hystory_screen.dart';
 import 'package:medical_user_app/view/personal_information_screen.dart';
 import 'package:medical_user_app/view/prescription/prescription_screen.dart';
+import 'package:medical_user_app/view/prescription/vendor_prescription.dart';
 import 'package:medical_user_app/view/userneeds/need_help_screen.dart';
 import 'package:medical_user_app/view/welcome_back_screen.dart';
 import 'package:provider/provider.dart';
@@ -258,6 +259,20 @@ class ProfileScreen extends StatelessWidget {
                                   const PrescriptionScreen()));
                     },
                   ),
+
+                  // _buildMenuTile(
+                  //   context: context,
+                  //   title: 'Prescription Details',
+                  //   icon: Icons.medical_services_outlined,
+                  //   iconColor: Colors.grey[600],
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) =>
+                  //                 const GetVendorPrescription()));
+                  //   },
+                  // ),
 
                   _buildMenuTile(
                     context: context,

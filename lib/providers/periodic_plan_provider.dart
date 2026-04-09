@@ -183,7 +183,6 @@
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/services/periodic_plan_service.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
-
 class PeriodicPlanProvider extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;

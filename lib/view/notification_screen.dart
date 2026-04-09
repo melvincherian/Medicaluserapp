@@ -1707,15 +1707,14 @@
 //   }
 // }
 
+
+
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:provider/provider.dart';
 import 'package:medical_user_app/providers/notification_provider.dart';
 import 'package:medical_user_app/widgets/progress_bar.dart';
 
-// ─────────────────────────────────────────────
-// Status → step resolver (uses each notification's own status)
-// ─────────────────────────────────────────────
 int _resolveStep(String apiStatus) {
   switch (apiStatus.toLowerCase().trim()) {
     case 'delivered':
@@ -2204,7 +2203,7 @@ class _StepItem extends StatelessWidget {
               fontSize: 9,
               // color: isActive ? Colors.blue : Colors.grey[600],
 
-                            color: isActive ? activeColor : Colors.grey[600],
+              color: isActive ? activeColor : Colors.grey[600],
               height: 1.2,
             ),
           ),
