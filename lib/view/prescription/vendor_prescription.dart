@@ -1,31 +1,8 @@
-// import 'package:flutter/material.dart';
-
-// class GetVendorPrescription extends StatelessWidget {
-//   const GetVendorPrescription({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Scaffold();
-//   }
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:medical_user_app/models/user_model.dart';
+import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 
 class GetVendorPrescription extends StatefulWidget {
   const GetVendorPrescription({super.key});
@@ -35,252 +12,346 @@ class GetVendorPrescription extends StatefulWidget {
 }
 
 class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
-  bool _isActioned = false;
+  bool _isLoading = false;
+  bool _isFetching = true;
+  List<Map<String, dynamic>> _prescriptions = [];
+  String? _userId;
+  String? _token;
 
-  void _showSnackBar(String message, Color color) {
+  @override
+  void initState() {
+    super.initState();
+    _loadPrescriptions();
+  }
+
+  Future<void> _loadPrescriptions() async {
+    setState(() => _isFetching = true);
+
+    try {
+      final User? user = await SharedPreferencesHelper.getUser();
+      final String? token = await SharedPreferencesHelper.getToken();
+
+      if (user == null || token == null) {
+        _showSnackBar('Session expired. Please log in again.', isError: true);
+        return;
+      }
+
+      _userId = user.id;
+      _token = token;
+
+      final uri = Uri.parse(
+        'http://31.97.206.144:7021/api/users/userprescriptions/${user.id}',
+      );
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final responseData = jsonDecode(response.body);
+
+
+      print('Response status code for get user prescriptionnnnnnnnnnnn ${response.statusCode}');
+            print('Response  booooooooooooooody for get user prescriptionnnnnnnnnnnn ${response.body}');
+
+
+      if (response.statusCode == 200 && responseData['success'] == true) {
+        setState(() {
+          _prescriptions = List<Map<String, dynamic>>.from(responseData['prescriptions']);
+        });
+      } else {
+        _showSnackBar(responseData['message'] ?? 'Failed to fetch prescriptions.', isError: true);
+      }
+    } catch (e) {
+      _showSnackBar('Network error: $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isFetching = false);
+    }
+  }
+
+  Future<void> _respondToPrescription(String prescriptionId, bool accept) async {
+    setState(() => _isLoading = true);
+
+    try {
+      final uri = Uri.parse(
+        'http://31.97.206.144:7021/api/users/users/$_userId/prescription/$prescriptionId/respond',
+      );
+
+
+
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({'accept': accept}),
+      );
+
+      final responseData = jsonDecode(response.body);
+
+
+      print('Response status code for get aaaaaaaaaceeeeeeeept prescriptionnnnnnnnnnnn ${response.statusCode}');
+            print('Response  booooooooooooooody for aaaaaaaaaceeeeeeeept user prescriptionnnnnnnnnnnn ${response.body}');
+            print('prescriptionnnnnnnnnnnnnn iddddddddddddd $prescriptionId');
+
+      if (response.statusCode == 200 && responseData['success'] == true) {
+        _showSnackBar(
+          accept ? 'Prescription accepted successfully!' : 'Prescription rejected.',
+          isError: false,
+        );
+        await _loadPrescriptions(); // Refresh the list
+      } else {
+        _showSnackBar(responseData['message'] ?? 'Something went wrong.', isError: true);
+      }
+    } catch (e) {
+      _showSnackBar('Network error: $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showSnackBar(String message, {required bool isError}) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: const TextStyle(fontWeight: FontWeight.w500)),
-        backgroundColor: color,
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 3),
       ),
     );
-    setState(() => _isActioned = true);
+  }
+
+  void _confirmAndRespond(String prescriptionId, bool accept) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(accept ? 'Accept Quote' : 'Reject Quote'),
+        content: Text(
+          accept
+              ? 'Are you sure you want to accept this quote?'
+              : 'Are you sure you want to reject this prescription quote?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: accept ? Colors.green : Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(ctx);
+              _respondToPrescription(prescriptionId, accept);
+            },
+            child: Text(accept ? 'Accept' : 'Reject'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title:  Text('Prescription Details',style: TextStyle(fontWeight: FontWeight.bold),),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        elevation: 0.5,
+        title:  Text('My Prescriptions',style: TextStyle(fontWeight: FontWeight.bold),),
         centerTitle: true,
-        leading:IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back_ios)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadPrescriptions,
+          ),
+        ],
       ),
-      body: SingleChildScrollView(
+      body: _isFetching
+          ? const Center(child: CircularProgressIndicator())
+          : _prescriptions.isEmpty
+              ? const Center(child: Text('No prescriptions found.'))
+              : Stack(
+                  children: [
+                    ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: _prescriptions.length,
+                      itemBuilder: (context, index) {
+                        final prescription = _prescriptions[index];
+                        return _buildPrescriptionCard(prescription);
+                      },
+                    ),
+                    if (_isLoading)
+                      const ColoredBox(
+                        color: Colors.black26,
+                        child: Center(child: CircularProgressIndicator()),
+                      ),
+                  ],
+                ),
+    );
+  }
+
+  Widget _buildPrescriptionCard(Map<String, dynamic> prescription) {
+    final prescriptionId = prescription['prescriptionId'] ?? prescription['_id'];
+    final pharmacy = prescription['pharmacy'] as Map<String, dynamic>?;
+    final status = prescription['status'] ?? 'Pending';
+    final proposedAmount = prescription['proposedAmount'];
+    final deliveryCharge = prescription['deliveryCharge'];
+    final platformFee = prescription['platformFee'];
+    final totalAmount = prescription['totalAmount'];
+    final proposedDescription = prescription['proposedDescription'];
+    final prescriptionUrl = prescription['prescriptionUrl'];
+
+    final bool canRespond = status == 'QuoteAccepted';
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(),
-            const SizedBox(height: 16),
-            _buildMedicineList(),
-            const SizedBox(height: 16),
-            _buildSummary(),
-            const SizedBox(height: 24),
-            _buildActionButtons(),
+            // Prescription image
+            if (prescriptionUrl != null)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  prescriptionUrl,
+                  width: double.infinity,
+                  height: 180,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    height: 180,
+                    color: Colors.grey[200],
+                    child: const Center(child: Icon(Icons.image_not_supported)),
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 12),
+
+            // Status chip
+            Align(
+              alignment: Alignment.center,
+              child: Chip(
+                label: Text(status),
+                backgroundColor: _statusColor(status).withOpacity(0.15),
+                labelStyle: TextStyle(
+                  color: _statusColor(status),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // Pharmacy info
+            if (pharmacy != null) ...[
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: pharmacy['image'] != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          pharmacy['image'],
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : const Icon(Icons.local_pharmacy),
+                title: Text(
+                  pharmacy['name'] ?? '',
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(pharmacy['address'] ?? ''),
+              ),
+              const Divider(),
+            ],
+
+            // Proposed description
+            if (proposedDescription != null && (proposedDescription as String).isNotEmpty) ...[
+              const Text('Items', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              const SizedBox(height: 6),
+              Text(proposedDescription, style: const TextStyle(fontSize: 14)),
+              const SizedBox(height: 12),
+            ],
+
+            // Amount breakdown
+            if (proposedAmount != null) ...[
+              const Text('Quote Breakdown', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+              const SizedBox(height: 8),
+              _buildAmountRow('Medicine amount', '₹$proposedAmount'),
+              if (deliveryCharge != null) _buildAmountRow('Delivery charge', '₹$deliveryCharge'),
+              if (platformFee != null) _buildAmountRow('Platform fee', '₹$platformFee'),
+              const Divider(),
+              _buildAmountRow('Total', '₹${totalAmount ?? proposedAmount}', isBold: true),
+              const SizedBox(height: 16),
+            ],
+
+            // Accept / Reject buttons — only shown when canRespond
+            if (canRespond)
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () => _confirmAndRespond(prescriptionId, false),
+                      child: const Text('Reject', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () => _confirmAndRespond(prescriptionId, true),
+                      child: const Text('Accept', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade100),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('PRESCRIPTION', style: TextStyle(fontSize: 11, color: Colors.blueGrey, letterSpacing: 1.2)),
-          const SizedBox(height: 4),
-          const Text('Rx #2024-00847', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 2),
-          Text('Issued: 09 Apr 2026  ·  Valid for 30 days',
-              style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
-        ],
-      ),
+  Widget _buildAmountRow(String label, String value, {bool isBold = false}) {
+    final style = TextStyle(
+      fontSize: 14,
+      fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
     );
-  }
-
-  Widget _buildMedicineList() {
-    final medicines = [
-      {
-        'name': 'Dolo 650',
-        'generic': 'Paracetamol 650mg · Tablet',
-        'dose': '1 tab × 3/day',
-        'timing': 'After meals',
-        'duration': '5 days',
-        'color': Colors.orange,
-        'icon': Icons.medication_rounded,
-      },
-      {
-        'name': 'Azithromycin 500',
-        'generic': 'Azithromycin 500mg · Tablet',
-        'dose': '1 tab × 1/day',
-        'timing': 'Before meals',
-        'duration': '3 days',
-        'color': Colors.blue,
-        'icon': Icons.shield_rounded,
-      },
-      {
-        'name': 'Pan-D',
-        'generic': 'Pantoprazole + Domperidone · Capsule',
-        'dose': '1 cap × 2/day',
-        'timing': 'Empty stomach',
-        'duration': '7 days',
-        'color': Colors.green,
-        'icon': Icons.local_pharmacy_rounded,
-      },
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
-            child: Text('PRESCRIBED MEDICINES',
-                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade500, letterSpacing: 1.1)),
-          ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: medicines.length,
-            separatorBuilder: (_, __) => Divider(color: Colors.grey.shade100, height: 1),
-            itemBuilder: (context, index) {
-              final m = medicines[index];
-              final color = m['color'] as Color;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: color.withOpacity(0.12),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(m['icon'] as IconData, color: color, size: 20),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(m['name'] as String,
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 2),
-                          Text(m['generic'] as String,
-                              style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
-                          const SizedBox(height: 8),
-                          Wrap(
-                            spacing: 6,
-                            runSpacing: 4,
-                            children: [
-                              _buildChip(m['dose'] as String, color),
-                              _buildChip(m['timing'] as String, Colors.grey),
-                              _buildChip(m['duration'] as String, Colors.grey),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChip(String label, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(label, style: TextStyle(fontSize: 11, color: Colors.blue)),
-    );
-  }
-
-  Widget _buildSummary() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: Column(
-        children: [
-          _buildSummaryRow('Total items', '3 medicines'),
-          Divider(color: Colors.grey.shade100, height: 1),
-          _buildSummaryRow('Estimated amount', '₹480.00'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
-          Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(label, style: style),
+          Text(value, style: style),
         ],
       ),
     );
   }
 
-  Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: _isActioned
-                ? null
-                : () => _showSnackBar('Order rejected successfully.', Colors.red.shade600),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              foregroundColor: Colors.red,
-              side: const BorderSide(color: Colors.red),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            child: const Text('Reject', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton(
-            onPressed: _isActioned
-                ? null
-                : () => _showSnackBar('Your order has been accepted successfully!', Colors.green.shade600),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-            child: const Text('Accept', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-          ),
-        ),
-      ],
-    );
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'QuoteAccepted': return Colors.green;
+      case 'Pending': return Colors.orange;
+      case 'Rejected': return Colors.red;
+      default: return Colors.grey;
+    }
   }
 }

@@ -1447,101 +1447,101 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
                   ),
                 ],
 
-                // Cancel & Accept Order Buttons
-                if (_canCancelOrder(currentStatus)) ...[
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      // Cancel Order Button
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            _showCancelConfirmationDialog(orderId, orderNumber);
-                          },
-                          icon: const Icon(Icons.cancel_outlined),
-                          label: const Text(
-                            'Cancel Order',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 12),
-
-                      // Accept Order Button
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Order accepted successfully'),
-                                backgroundColor: Colors.green,
-                                duration: Duration(seconds: 2),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.check_circle_outline),
-                          label: const Text(
-                            'Accept Order',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-
-                // Cancel Order Button
+                // // Cancel & Accept Order Buttons
                 // if (_canCancelOrder(currentStatus)) ...[
                 //   const SizedBox(height: 20),
-                //   SizedBox(
-                //     width: double.infinity,
-                //     child: ElevatedButton.icon(
-                //       onPressed: () {
-                //         _showCancelConfirmationDialog(orderId, orderNumber);
-                //       },
-                //       icon: const Icon(Icons.cancel_outlined),
-                //       label: const Text(
-                //         'Cancel Order',
-                //         style: TextStyle(
-                //           fontSize: 16,
-                //           fontWeight: FontWeight.bold,
+                //   Row(
+                //     children: [
+                //       // Cancel Order Button
+                //       Expanded(
+                //         child: ElevatedButton.icon(
+                //           onPressed: () {
+                //             _showCancelConfirmationDialog(orderId, orderNumber);
+                //           },
+                //           icon: const Icon(Icons.cancel_outlined),
+                //           label: const Text(
+                //             'Cancel Order',
+                //             style: TextStyle(
+                //               fontSize: 14,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           ),
+                //           style: ElevatedButton.styleFrom(
+                //             backgroundColor: Colors.red,
+                //             foregroundColor: Colors.white,
+                //             padding: const EdgeInsets.symmetric(vertical: 14),
+                //             shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(8),
+                //             ),
+                //           ),
                 //         ),
                 //       ),
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: Colors.red,
-                //         foregroundColor: Colors.white,
-                //         padding: const EdgeInsets.symmetric(vertical: 14),
-                //         shape: RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(8),
-                //         ),
-                //       ),
-                //     ),
 
+                //       const SizedBox(width: 12),
+
+                //       // Accept Order Button
+                //       Expanded(
+                //         child: ElevatedButton.icon(
+                //           onPressed: () {
+                //             ScaffoldMessenger.of(context).showSnackBar(
+                //               const SnackBar(
+                //                 content: Text('Order accepted successfully'),
+                //                 backgroundColor: Colors.green,
+                //                 duration: Duration(seconds: 2),
+                //               ),
+                //             );
+                //           },
+                //           icon: const Icon(Icons.check_circle_outline),
+                //           label: const Text(
+                //             'Accept Order',
+                //             style: TextStyle(
+                //               fontSize: 14,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           ),
+                //           style: ElevatedButton.styleFrom(
+                //             backgroundColor: Colors.green,
+                //             foregroundColor: Colors.white,
+                //             padding: const EdgeInsets.symmetric(vertical: 14),
+                //             shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(8),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
                 //   ),
                 // ],
+
+                // Cancel Order Button
+                if (_canCancelOrder(currentStatus)) ...[
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        _showCancelConfirmationDialog(orderId, orderNumber);
+                      },
+                      icon: const Icon(Icons.cancel_outlined),
+                      label: const Text(
+                        'Cancel Order',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+
+                  ),
+                ],
               ],
             ),
           ),

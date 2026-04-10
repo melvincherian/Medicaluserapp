@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medical_user_app/models/prescription_model.dart';
 import 'package:medical_user_app/providers/auth_provider.dart';
 import 'package:medical_user_app/providers/profile_provider.dart';
 import 'package:medical_user_app/providers/language_provider.dart';
@@ -260,19 +261,19 @@ class ProfileScreen extends StatelessWidget {
                     },
                   ),
 
-                  // _buildMenuTile(
-                  //   context: context,
-                  //   title: 'Prescription Details',
-                  //   icon: Icons.medical_services_outlined,
-                  //   iconColor: Colors.grey[600],
-                  //   onTap: () {
-                  //     Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) =>
-                  //                 const GetVendorPrescription()));
-                  //   },
-                  // ),
+                    _buildMenuTile(
+                      context: context,
+                      title: 'Prescription Details',
+                      icon: Icons.medical_services_outlined,
+                      iconColor: Colors.grey[600],
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const GetVendorPrescription()));
+                      },
+                    ),
 
                   _buildMenuTile(
                     context: context,
