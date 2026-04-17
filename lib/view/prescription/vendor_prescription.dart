@@ -1298,9 +1298,17 @@ Future<void> _respondToPrescription(
                               style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14)),
+
                           Text('Qty: ${item['quantity'] ?? 1}',
                               style: const TextStyle(
                                   fontSize: 13, color: Colors.grey)),
+
+                                  
+                                      Text('₹${item['price'] ?? 0}',
+        style: const TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: Colors.black87)),
                         ],
                       ),
                       if ((item['dosage'] ?? '').toString().isNotEmpty)
