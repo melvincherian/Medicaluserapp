@@ -8,13 +8,15 @@ class OrderMedicineCarouselWithAppText extends StatefulWidget {
   const OrderMedicineCarouselWithAppText({Key? key}) : super(key: key);
 
   @override
-  State<OrderMedicineCarouselWithAppText> createState() => _OrderMedicineCarouselWithAppTextState();
+  State<OrderMedicineCarouselWithAppText> createState() =>
+      _OrderMedicineCarouselWithAppTextState();
 }
 
-class _OrderMedicineCarouselWithAppTextState extends State<OrderMedicineCarouselWithAppText> {
+class _OrderMedicineCarouselWithAppTextState
+    extends State<OrderMedicineCarouselWithAppText> {
   int _currentIndex = 0;
   final CarouselController _carouselController = CarouselController();
-  
+
   List<String> bannerImages = [];
   bool isLoading = true;
   bool hasError = false;
@@ -33,7 +35,7 @@ class _OrderMedicineCarouselWithAppTextState extends State<OrderMedicineCarousel
       });
 
       final response = await http.get(
-        Uri.parse('http://31.97.206.144:7021/api/admin/getallbanners'),
+        Uri.parse('https://api.simcurarx.com/api/admin/getallbanners'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -41,10 +43,10 @@ class _OrderMedicineCarouselWithAppTextState extends State<OrderMedicineCarousel
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         if (data['banners'] != null && data['banners'].isNotEmpty) {
           final List<String> images = [];
-          
+
           // Extract all images from all banners
           for (var banner in data['banners']) {
             if (banner['images'] != null) {
@@ -53,7 +55,7 @@ class _OrderMedicineCarouselWithAppTextState extends State<OrderMedicineCarousel
               }
             }
           }
-          
+
           setState(() {
             bannerImages = images;
             isLoading = false;

@@ -62,7 +62,7 @@
 
 //       final response = await http.get(
 //         Uri.parse(
-//             'http://31.97.206.144:7021/api/users/preodicorders/${currentUser!.id}'),
+//             'https://api.simcurarx.com/api/users/preodicorders/${currentUser!.id}'),
 //         headers: {
 //           'Content-Type': 'application/json',
 //           if (token != null) 'Authorization': 'Bearer $token',
@@ -818,7 +818,7 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
 
       final response = await http.get(
         Uri.parse(
-            'http://31.97.206.144:7021/api/users/preodicorders/${currentUser!.id}'),
+            'https://api.simcurarx.com/api/users/preodicorders/${currentUser!.id}'),
         headers: {
           'Content-Type': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',
@@ -858,7 +858,7 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
 
       final response = await http.put(
         Uri.parse(
-            'http://31.97.206.144:7021/api/users/cancelpreodicorder/${currentUser!.id}/$orderId'),
+            'https://api.simcurarx.com/api/users/cancelpreodicorder/${currentUser!.id}/$orderId'),
         headers: {
           'Content-Type': 'application/json',
           if (token != null) 'Authorization': 'Bearer $token',
@@ -1539,7 +1539,6 @@ class _PeriodicDetailState extends State<PeriodicDetail> {
                         ),
                       ),
                     ),
-
                   ),
                 ],
               ],

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:medical_user_app/view/login_screen.dart';
 
 class DeleteAccount extends StatefulWidget {
-  final String userId; 
+  final String userId;
 
   const DeleteAccount({super.key, required this.userId});
 
@@ -65,7 +65,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
       print('user id for delete account ${widget.userId}');
       final response = await http.delete(
         Uri.parse(
-            'http://31.97.206.144:7021/api/users/delete-user/${widget.userId}'),
+            'https://api.simcurarx.com/api/users/delete-user/${widget.userId}'),
         headers: {
           'Content-Type': 'application/json',
           // Add authorization header if needed
@@ -88,7 +88,6 @@ class _DeleteAccountState extends State<DeleteAccount> {
           ),
         );
 
-      
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoginScreen()),
           (route) => false,

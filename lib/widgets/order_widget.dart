@@ -88,7 +88,7 @@
 
 // // // // ---------------- API Service ----------------
 // // // class OrderStatusService {
-// // //   static const String baseUrl = 'http://31.97.206.144:7021/api/users';
+// // //   static const String baseUrl = 'https://api.simcurarx.com/api/users';
 
 // // //   static Future<OrderStatusResponse?> getOrderStatus(String userId) async {
 // // //     try {
@@ -878,8 +878,6 @@
 // //   //   }
 // //   // }
 
-
-
 // // //   Future<void> _loadOrderStatus() async {
 // // //   try {
 // // //     final data = await OrderStatusService.getOrderStatus(widget.userId);
@@ -927,15 +925,13 @@
 // // //   }
 // // // }
 
-
-
 // // // Future<void> _loadOrderStatus() async {
 // // //   try {
 // // //     final data = await OrderStatusService.getOrderStatus(widget.userId);
-    
+
 // // //     // Track if it was already delivered before this update
 // // //     final wasDelivered = _isDelivered();
-    
+
 // // //     setState(() {
 // // //       orderData = data;
 // // //       isLoading = false;
@@ -965,16 +961,13 @@
 // // //   }
 // // // }
 
-
-
-
 // // Future<void> _loadOrderStatus() async {
 // //   try {
 // //     final data = await OrderStatusService.getOrderStatus(widget.userId);
 // //         final prefs = await SharedPreferences.getInstance();
 // //     final dialogShownKey = 'order_delivered_dialog_shown_${widget.userId}';
 // //     final wasDialogAlreadyShown = prefs.getBool(dialogShownKey) ?? false;
-    
+
 // //     setState(() {
 // //       orderData = data;
 // //       isLoading = false;
@@ -1093,21 +1086,20 @@
 // //   //       .any((s) => s.contains('cancelled') || s.contains('canceled'));
 // //   // }
 
-
 // //   bool _isCancelled() {
 // //   if (orderData == null) return false;
-  
+
 // //   // Check both status and message fields for cancelled state
 // //   final statuses = orderData!.statusTimeline.map((s) => s.status.toLowerCase());
 // //   final messages = orderData!.statusTimeline.map((s) => s.message.toLowerCase());
-  
-// //   return statuses.any((s) => 
-// //       s.contains('cancelled') || 
+
+// //   return statuses.any((s) =>
+// //       s.contains('cancelled') ||
 // //       s.contains('canceled') ||
 // //       s == 'cancelled' ||
 // //       s == 'canceled'
-// //     ) || messages.any((m) => 
-// //       m.contains('cancelled') || 
+// //     ) || messages.any((m) =>
+// //       m.contains('cancelled') ||
 // //       m.contains('canceled')
 // //     );
 // // }
@@ -1758,24 +1750,6 @@
 // // //   }
 // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // ignore_for_file: deprecated_member_use
 
 // import 'dart:async';
@@ -2260,22 +2234,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
@@ -2355,7 +2313,8 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
           await _showOrderCompletedDialog(); // ✅ await so widget hides AFTER dialog closes
           if (mounted) {
             setState(() {
-              _hideWidget = true; // ✅ Hide widget only after dialog is dismissed
+              _hideWidget =
+                  true; // ✅ Hide widget only after dialog is dismissed
             });
           }
         }

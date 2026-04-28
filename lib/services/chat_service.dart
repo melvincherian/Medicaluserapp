@@ -7,14 +7,11 @@
 
 // // import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-
 // // class ChatService {
 
-// //   static const String baseUrl = 'http://31.97.206.144:7021';
+// //   static const String baseUrl = 'https://api.simcurarx.com';
 
 // //   late IO.Socket socket;
-
-  
 
 // //   // Singleton pattern
 
@@ -38,11 +35,7 @@
 
 // //       });
 
-      
-
 // //       socket.connect();
-
-      
 
 // //       socket.onConnect((_) {
 
@@ -50,15 +43,11 @@
 
 // //       });
 
-      
-
 // //       socket.onDisconnect((_) {
 
 // //         print('🔴 Socket disconnected');
 
 // //       });
-
-      
 
 // //       socket.onError((error) {
 
@@ -247,21 +236,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // chat_service.dart
 
 // import 'dart:convert';
@@ -270,9 +244,9 @@
 // import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // class ChatService {
-//   static const String baseUrl = 'http://31.97.206.144:7021';
+//   static const String baseUrl = 'https://api.simcurarx.com';
 //   late IO.Socket socket;
-  
+
 //   // Singleton pattern - Fixed
 //   static final ChatService _instance = ChatService._internal();
 //   static ChatService get instance => _instance;
@@ -286,17 +260,17 @@
 //         'transports': ['websocket'],
 //         'autoConnect': false,
 //       });
-      
+
 //       socket.connect();
-      
+
 //       socket.onConnect((_) {
 //         print('🟢 Socket connected: ${socket.id}');
 //       });
-      
+
 //       socket.onDisconnect((_) {
 //         print('🔴 Socket disconnected');
 //       });
-      
+
 //       socket.onError((error) {
 //         print('❌ Socket error: $error');
 //       });
@@ -317,7 +291,6 @@
 //       print('userdddddddddddddddddddddddddddddddddddddddddddd $userId');
 //             print('riderrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr $riderId');
 
-
 //       final url = Uri.parse('$baseUrl/api/users/sendMessage/$userId/$riderId');
 //             print('urlllllllllllllllllllllllllllllllllllllll $url');
 
@@ -334,8 +307,6 @@
 
 //       print('response status codeeeeeeeeeeeeeeeeeeeeeeeee${response.statusCode}');
 //             print('response bodyyyyyyyyyyyyyyyyyyyyyyyyyy${response.body}');
-
-
 
 //       if (response.statusCode == 201) {
 //         // Also emit via socket for real-time update
@@ -364,7 +335,7 @@
 //     try {
 //       final url = Uri.parse('$baseUrl/api/users/getChatHistory/$userId/$riderId');
 //       final response = await http.get(url);
-      
+
 //       if (response.statusCode == 200) {
 //         final data = jsonDecode(response.body);
 //         if (data['success'] == true) {
@@ -412,33 +383,13 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:medical_user_app/models/chat_model.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatService {
-  static const String baseUrl = 'http://31.97.206.144:7021';
+  static const String baseUrl = 'https://api.simcurarx.com';
   IO.Socket? socket;
   bool _isConnected = false;
 
@@ -507,8 +458,7 @@ class ChatService {
     required String senderType,
   }) async {
     try {
-      if(isConnected){
-
+      if (isConnected) {
         if (isConnected) {
           socket!.emit('sendMessage', {
             'riderId': riderId,
@@ -522,30 +472,31 @@ class ChatService {
           print('⚠ Socket not connected, message sent via API only');
         }
         return true;
-      }else{
+      } else {
         print('Sending message - User: $userId, Rider: $riderId');
 
-      final url = Uri.parse('$baseUrl/api/users/sendMessage/$userId/$riderId');
-      print('API URL: $url');
+        final url =
+            Uri.parse('$baseUrl/api/users/sendMessage/$userId/$riderId');
+        print('API URL: $url');
 
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'message': message,
-          'senderType': senderType,
-        }),
-      );
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'message': message,
+            'senderType': senderType,
+          }),
+        );
 
-      print('Response Status: ${response.statusCode}');
-      print('Response Body: ${response.body}');
+        print('Response Status: ${response.statusCode}');
+        print('Response Body: ${response.body}');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return true;
-      } else {
-        print('❌ Failed to send message: ${response.statusCode}');
-        return false;
-      }
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return true;
+        } else {
+          print('❌ Failed to send message: ${response.statusCode}');
+          return false;
+        }
       }
     } catch (e) {
       print('❌ Error sending message: $e');
@@ -559,14 +510,17 @@ class ChatService {
     required String riderId,
   }) async {
     try {
-      final url = Uri.parse('$baseUrl/api/users/getChatHistory/$userId/$riderId');
+      final url =
+          Uri.parse('$baseUrl/api/users/getChatHistory/$userId/$riderId');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {
           final List<dynamic> messagesJson = data['messages'];
-          return messagesJson.map((json) => ChatMessage.fromJson(json)).toList();
+          return messagesJson
+              .map((json) => ChatMessage.fromJson(json))
+              .toList();
         }
       }
       return [];

@@ -820,7 +820,7 @@
 
 // // // // //     try {
 // // // // //       final response = await http.get(
-// // // // //         Uri.parse('http://31.97.206.144:7021/api/admin/getcoupons'),
+// // // // //         Uri.parse('https://api.simcurarx.com/api/admin/getcoupons'),
 // // // // //         headers: {'Content-Type': 'application/json'},
 // // // // //       ).timeout(const Duration(seconds: 10));
 
@@ -1668,7 +1668,7 @@
 
 // // // //     try {
 // // // //       final response = await http.get(
-// // // //         Uri.parse('http://31.97.206.144:7021/api/admin/getcoupons'),
+// // // //         Uri.parse('https://api.simcurarx.com/api/admin/getcoupons'),
 // // // //         headers: {'Content-Type': 'application/json'},
 // // // //       ).timeout(const Duration(seconds: 10));
 
@@ -2795,32 +2795,6 @@
 // // // //   }
 // // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:intl/intl.dart';
 // import 'package:medical_user_app/providers/language_provider.dart';
@@ -2854,7 +2828,6 @@
 
 //   // Track loading state for each item
 //   Map<String, bool> loadingItems = {};
-  
 
 //   // Animation controller for smooth transitions
 //   late AnimationController _animationController;
@@ -2888,7 +2861,7 @@
 
 //     try {
 //       final response = await http.get(
-//         Uri.parse('http://31.97.206.144:7021/api/admin/getcoupons'),
+//         Uri.parse('https://api.simcurarx.com/api/admin/getcoupons'),
 //         headers: {'Content-Type': 'application/json'},
 //       ).timeout(const Duration(seconds: 10));
 
@@ -3505,12 +3478,12 @@
 //                         setState(() {
 //                           loadingItems[item.medicineId] = true;
 //                         });
-                        
+
 //                         await cartProvider.decreaseQuantity(item.medicineId);
-                        
+
 //                         // Add small delay for smoother UX
 //                         await Future.delayed(const Duration(milliseconds: 300));
-                        
+
 //                         if (mounted) {
 //                           setState(() {
 //                             loadingItems[item.medicineId] = false;
@@ -3566,12 +3539,12 @@
 //                         setState(() {
 //                           loadingItems[item.medicineId] = true;
 //                         });
-                        
+
 //                         await cartProvider.increaseQuantity(item.medicineId);
-                        
+
 //                         // Add small delay for smoother UX
 //                         await Future.delayed(const Duration(milliseconds: 300));
-                        
+
 //                         if (mounted) {
 //                           setState(() {
 //                             loadingItems[item.medicineId] = false;
@@ -4088,20 +4061,7 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
 ///////// New cart screen for fixed the amount mismatch issue////////////////////////
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -4168,7 +4128,7 @@ class _CartScreenState extends State<CartScreen>
 
     try {
       final response = await http.get(
-        Uri.parse('http://31.97.206.144:7021/api/admin/getcoupons'),
+        Uri.parse('https://api.simcurarx.com/api/admin/getcoupons'),
         headers: {'Content-Type': 'application/json'},
       ).timeout(const Duration(seconds: 10));
 
@@ -4793,8 +4753,7 @@ class _CartScreenState extends State<CartScreen>
                         // immediately after the provider finishes so the UI
                         // shows the correct updated value right away.
                         if (mounted) {
-                          setState(
-                              () => loadingItems[item.medicineId] = false);
+                          setState(() => loadingItems[item.medicineId] = false);
                         }
                       },
                 isDisabled: isItemLoading || item.quantity <= 1,
@@ -4842,8 +4801,7 @@ class _CartScreenState extends State<CartScreen>
                         await cartProvider.increaseQuantity(item.medicineId);
                         // FIX: removed artificial Future.delayed
                         if (mounted) {
-                          setState(
-                              () => loadingItems[item.medicineId] = false);
+                          setState(() => loadingItems[item.medicineId] = false);
                         }
                       },
                 isDisabled: isItemLoading,
@@ -4976,8 +4934,8 @@ class _CartScreenState extends State<CartScreen>
                               padding: EdgeInsets.all(12.0),
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : IconButton(
@@ -4997,8 +4955,7 @@ class _CartScreenState extends State<CartScreen>
                                 if (coupons.isEmpty) {
                                   fetchCoupons().then((_) {
                                     if (coupons.isNotEmpty) {
-                                      applyCoupon(
-                                          couponController.text.trim());
+                                      applyCoupon(couponController.text.trim());
                                     }
                                   });
                                 } else {
@@ -5025,8 +4982,8 @@ class _CartScreenState extends State<CartScreen>
                         fontSize: 14),
                   ),
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                 ),
               ),

@@ -40,7 +40,7 @@
 // // //       _token = token;
 
 // // //       final uri = Uri.parse(
-// // //         'http://31.97.206.144:7021/api/users/userprescriptions/${user.id}',
+// // //         'https://api.simcurarx.com/api/users/userprescriptions/${user.id}',
 // // //       );
 
 // // //       final response = await http.get(
@@ -81,7 +81,7 @@
 
 // // //     try {
 // // //       final uri = Uri.parse(
-// // //         'http://31.97.206.144:7021/api/users/users/$_userId/prescription/$prescriptionId/respond',
+// // //         'https://api.simcurarx.com/api/users/users/$_userId/prescription/$prescriptionId/respond',
 // // //       );
 
 // // //       final response = await http.post(
@@ -384,24 +384,6 @@
 // // //   }
 // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import 'package:flutter/material.dart';
 // // import 'package:http/http.dart' as http;
 // // import 'dart:convert';
@@ -444,7 +426,7 @@
 // //       _token = token;
 
 // //       final uri = Uri.parse(
-// //         'http://31.97.206.144:7021/api/users/prescription-previews/${user.id}',
+// //         'https://api.simcurarx.com/api/users/prescription-previews/${user.id}',
 // //       );
 
 // //       final response = await http.get(
@@ -486,7 +468,7 @@
 // //       final action = accept ? 'confirm' : 'reject';
 
 // //       final uri = Uri.parse(
-// //         'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+// //         'https://api.simcurarx.com/api/users/confirm-prescription-order/$_userId/$prescriptionId',
 // //       );
 
 // //       final response = await http.post(
@@ -802,23 +784,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 // import 'dart:convert';
@@ -861,7 +826,7 @@
 //       _token = token;
 
 //       final uri = Uri.parse(
-//         'http://31.97.206.144:7021/api/users/prescription-previews/${user.id}',
+//         'https://api.simcurarx.com/api/users/prescription-previews/${user.id}',
 //       );
 
 //       final response = await http.get(
@@ -903,7 +868,7 @@
 //   //     final action = accept ? 'confirm' : 'reject';
 
 //   //     final uri = Uri.parse(
-//   //       'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+//   //       'https://api.simcurarx.com/api/users/confirm-prescription-order/$_userId/$prescriptionId',
 //   //     );
 
 //   //     final response = await http.post(
@@ -944,8 +909,6 @@
 //   //   }
 //   // }
 
-
-
 // Future<void> _respondToPrescription(
 //     String prescriptionId, bool accept) async {
 //   setState(() => _isLoading = true);
@@ -954,7 +917,7 @@
 //     final action = accept ? 'confirm' : 'reject';
 
 //     final uri = Uri.parse(
-//       'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+//       'https://api.simcurarx.com/api/users/confirm-prescription-order/$_userId/$prescriptionId',
 //     );
 
 //     final response = await http.post(
@@ -1303,7 +1266,6 @@
 //                               style: const TextStyle(
 //                                   fontSize: 13, color: Colors.grey)),
 
-                                  
 //                                       Text('₹${item['price'] ?? 0}',
 //         style: const TextStyle(
 //             fontWeight: FontWeight.w600,
@@ -1453,42 +1415,7 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //////// New code for hiding the Accept and Reject after click on the Respond////////////////////
-
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -1535,7 +1462,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
       _token = token;
 
       final uri = Uri.parse(
-        'http://31.97.206.144:7021/api/users/prescription-previews/${user.id}',
+        'https://api.simcurarx.com/api/users/prescription-previews/${user.id}',
       );
 
       final response = await http.get(
@@ -1577,7 +1504,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
       final action = accept ? 'confirm' : 'reject';
 
       final uri = Uri.parse(
-        'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+        'https://api.simcurarx.com/api/users/confirm-prescription-order/$_userId/$prescriptionId',
       );
 
       final response = await http.post(
@@ -1714,8 +1641,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                     if (_isLoading)
                       Container(
                         color: Colors.black26,
-                        child:
-                            const Center(child: CircularProgressIndicator()),
+                        child: const Center(child: CircularProgressIndicator()),
                       ),
                   ],
                 ),
@@ -1820,8 +1746,8 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('Prescription',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 14)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 8),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -1835,8 +1761,8 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                         return Container(
                           height: 180,
                           color: Colors.grey[200],
-                          child: const Center(
-                              child: CircularProgressIndicator()),
+                          child:
+                              const Center(child: CircularProgressIndicator()),
                         );
                       },
                       errorBuilder: (_, __, ___) => Container(
@@ -1909,8 +1835,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
             // ── Order Items ──────────────────────────────────────────
             if (orderItems.isNotEmpty) ...[
               const Text('Order Items',
-                  style:
-                      TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
               const SizedBox(height: 8),
               ...orderItems.map((item) {
                 return Container(
@@ -1944,9 +1869,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                         Text('Dosage: ${item['dosage']}',
                             style: const TextStyle(
                                 fontSize: 12, color: Colors.grey)),
-                      if ((item['instructions'] ?? '')
-                          .toString()
-                          .isNotEmpty)
+                      if ((item['instructions'] ?? '').toString().isNotEmpty)
                         Text('Instructions: ${item['instructions']}',
                             style: const TextStyle(
                                 fontSize: 12, color: Colors.grey)),
@@ -1960,8 +1883,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
             // ── Delivery Address ─────────────────────────────────────
             if (deliveryAddress.isNotEmpty) ...[
               const Text('Delivery Address',
-                  style:
-                      TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
               const SizedBox(height: 6),
               Text(
                 [
@@ -1971,11 +1893,8 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                   deliveryAddress['state'],
                   deliveryAddress['pincode'],
                   deliveryAddress['country'],
-                ]
-                    .where((e) => e != null && e.toString().isNotEmpty)
-                    .join(', '),
-                style:
-                    const TextStyle(fontSize: 13, color: Colors.black87),
+                ].where((e) => e != null && e.toString().isNotEmpty).join(', '),
+                style: const TextStyle(fontSize: 13, color: Colors.black87),
               ),
               const SizedBox(height: 12),
             ],
@@ -1983,19 +1902,16 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
             // ── Notes ────────────────────────────────────────────────
             if (notes.isNotEmpty) ...[
               const Text('Notes',
-                  style:
-                      TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
               const SizedBox(height: 4),
               Text(notes,
-                  style:
-                      const TextStyle(fontSize: 13, color: Colors.black87)),
+                  style: const TextStyle(fontSize: 13, color: Colors.black87)),
               const SizedBox(height: 12),
             ],
 
             // ── Price Breakdown ──────────────────────────────────────
             const Text('Price Breakdown',
-                style:
-                    TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
             const SizedBox(height: 8),
             _buildAmountRow('Subtotal', '₹$subTotal'),
             _buildAmountRow('Delivery Charge', '₹$deliveryCharge'),
@@ -2011,8 +1927,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                 const Icon(Icons.payment, size: 16, color: Colors.grey),
                 const SizedBox(width: 6),
                 Text('$paymentMethod  •  $paymentStatus',
-                    style:
-                        const TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 12, color: Colors.grey)),
               ],
             ),
 
@@ -2053,8 +1968,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
-                      onPressed: () =>
-                          _confirmAndRespond(prescriptionId, true),
+                      onPressed: () => _confirmAndRespond(prescriptionId, true),
                     ),
                   ),
                 ],

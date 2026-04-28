@@ -700,7 +700,7 @@
 // // // // // // //   // Search medicines using the API
 // // // // // // //   Future<void> _searchMedicines(String medicineName) async {
 // // // // // // //     try {
-// // // // // // //       final url = Uri.parse('http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$medicineName');
+// // // // // // //       final url = Uri.parse('https://api.simcurarx.com/api/pharmacy/allmedicine?name=$medicineName');
 // // // // // // //       final response = await http.get(url);
 
 // // // // // // //       if (response.statusCode == 200) {
@@ -1508,7 +1508,7 @@
 // // // // // //   // Search medicines using the API
 // // // // // //   Future<void> _searchMedicines(String medicineName) async {
 // // // // // //     try {
-// // // // // //       final url = Uri.parse('http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$medicineName');
+// // // // // //       final url = Uri.parse('https://api.simcurarx.com/api/pharmacy/allmedicine?name=$medicineName');
 // // // // // //       final response = await http.get(url);
 
 // // // // // //       if (response.statusCode == 200) {
@@ -2284,7 +2284,7 @@
 // // // // // //   // Search medicines using the API
 // // // // // //   Future<void> _searchMedicines(String medicineName) async {
 // // // // // //     try {
-// // // // // //       final url = Uri.parse('http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$medicineName');
+// // // // // //       final url = Uri.parse('https://api.simcurarx.com/api/pharmacy/allmedicine?name=$medicineName');
 // // // // // //       final response = await http.get(url);
 
 // // // // // //       if (response.statusCode == 200) {
@@ -2833,7 +2833,6 @@
 // // // // // import 'dart:ui';
 // // // // // import 'dart:io';
 
-
 // // // // // class MedicineScannerScreen extends StatefulWidget {
 // // // // //   const MedicineScannerScreen({super.key});
 
@@ -3215,7 +3214,7 @@
 // // // // //     try {
 // // // // //       print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh$medicineName");
 // // // // //       final url = Uri.parse(
-// // // // //           'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$medicineName');
+// // // // //           'https://api.simcurarx.com/api/pharmacy/allmedicine?name=$medicineName');
 // // // // //       final response = await http.get(url);
 
 // // // // //       print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh${response.body}");
@@ -3807,19 +3806,6 @@
 // // // // //   }
 // // // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // // import 'package:flutter/material.dart';
 // // // import 'package:image_picker/image_picker.dart';
 // // // import 'package:image_cropper/image_cropper.dart';
@@ -4022,7 +4008,7 @@
 // // //       File imageToUpload = _croppedImage ?? _selectedImage!;
 
 // // //       // Create multipart request
-// // //       final uri = Uri.parse('http://31.97.206.144:7021/api/users/sendprescription/${user.id}');
+// // //       final uri = Uri.parse('https://api.simcurarx.com/api/users/sendprescription/${user.id}');
 // // //       final request = http.MultipartRequest('POST', uri);
 
 // // //       // Add the image file
@@ -4475,20 +4461,6 @@
 // // //   }
 // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import 'package:flutter/material.dart';
 // // import 'package:image_picker/image_picker.dart';
 // // import 'package:http/http.dart' as http;
@@ -4518,8 +4490,6 @@
 // //   late AnimationController _animationController;
 // //   late Animation<double> _animation;
 
-
-
 // //   @override
 // //   void initState() {
 // //     super.initState();
@@ -4541,12 +4511,12 @@
 // //     try {
 // //       final bytes = await imageFile.readAsBytes();
 // //       img.Image? originalImage = img.decodeImage(bytes);
-      
+
 // //       if (originalImage == null) return null;
 
 // //       // Get the smaller dimension to make a square
-// //       int size = originalImage.width < originalImage.height 
-// //           ? originalImage.width 
+// //       int size = originalImage.width < originalImage.height
+// //           ? originalImage.width
 // //           : originalImage.height;
 
 // //       // Calculate center crop coordinates
@@ -4565,9 +4535,9 @@
 // //       // Save the cropped image
 // //       final tempDir = Directory.systemTemp;
 // //       final croppedFile = File('${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.jpg');
-      
+
 // //       await croppedFile.writeAsBytes(img.encodeJpg(croppedImage, quality: 85));
-      
+
 // //       return croppedFile;
 // //     } catch (e) {
 // //       print('Error cropping image: $e');
@@ -4580,12 +4550,12 @@
 // //     try {
 // //       final bytes = await imageFile.readAsBytes();
 // //       img.Image? originalImage = img.decodeImage(bytes);
-      
+
 // //       if (originalImage == null) return null;
 
 // //       const double aspectRatio = 4.0 / 3.0; // Document ratio
 // //       int cropWidth, cropHeight;
-      
+
 // //       if (originalImage.width / originalImage.height > aspectRatio) {
 // //         cropHeight = originalImage.height;
 // //         cropWidth = (cropHeight * aspectRatio).round();
@@ -4607,9 +4577,9 @@
 
 // //       final tempDir = Directory.systemTemp;
 // //       final croppedFile = File('${tempDir.path}/cropped_doc_${DateTime.now().millisecondsSinceEpoch}.jpg');
-      
+
 // //       await croppedFile.writeAsBytes(img.encodeJpg(croppedImage, quality: 85));
-      
+
 // //       return croppedFile;
 // //     } catch (e) {
 // //       print('Error cropping image: $e');
@@ -4682,9 +4652,6 @@
 // //     }
 // //   }
 
-
-
-
 // //   // Show crop options
 // //   void _showCropOptions() {
 // //     if (_selectedImage == null) return;
@@ -4727,7 +4694,6 @@
 // //     );
 // //   }
 
-
 // //   Future<void> _applyCrop(CropType cropType) async {
 // //     if (_selectedImage == null) return;
 
@@ -4737,7 +4703,7 @@
 
 // //     try {
 // //       File? croppedFile;
-      
+
 // //       switch (cropType) {
 // //         case CropType.square:
 // //           croppedFile = await _cropImageToSquare(_selectedImage!);
@@ -4796,7 +4762,7 @@
 
 // //       File imageToUpload = _croppedImage ?? _selectedImage!;
 
-// //       final uri = Uri.parse('http://31.97.206.144:7021/api/users/sendprescription/${user.id}');
+// //       final uri = Uri.parse('https://api.simcurarx.com/api/users/sendprescription/${user.id}');
 // //       final request = http.MultipartRequest('POST', uri);
 
 // //       final imageFile = await http.MultipartFile.fromPath(
@@ -5005,7 +4971,7 @@
 // //                   child: Padding(
 // //                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
 // //                     child: GestureDetector(
-// //                       onTap: (_croppedImage == null && _selectedImage == null && !_isProcessing) 
+// //                       onTap: (_croppedImage == null && _selectedImage == null && !_isProcessing)
 // //                           ? _showImagePickerOptions : null,
 // //                       child: Container(
 // //                         width: double.infinity,
@@ -5220,21 +5186,6 @@
 
 // // enum CropType { square, document }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:http/http.dart' as http;
@@ -5363,7 +5314,7 @@
 //         return;
 //       }
 
-//       final uri = Uri.parse('http://31.97.206.144:7021/api/users/sendprescription/${user.id}');
+//       final uri = Uri.parse('https://api.simcurarx.com/api/users/sendprescription/${user.id}');
 //       final request = http.MultipartRequest('POST', uri);
 
 //       final imageFile = await http.MultipartFile.fromPath(
@@ -5550,8 +5501,8 @@
 //                         ),
 //                         IconButton(
 //                           icon: const Icon(Icons.crop, color: Colors.orange),
-//                           onPressed: _selectedImage != null 
-//                               ? () => _navigateToCropper(_selectedImage!) 
+//                           onPressed: _selectedImage != null
+//                               ? () => _navigateToCropper(_selectedImage!)
 //                               : null,
 //                           tooltip: 'Crop Image',
 //                         ),
@@ -5763,16 +5714,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -5786,7 +5727,8 @@ class PrescriptionUploadScreen extends StatefulWidget {
   const PrescriptionUploadScreen({super.key});
 
   @override
-  State<PrescriptionUploadScreen> createState() => _PrescriptionUploadScreenState();
+  State<PrescriptionUploadScreen> createState() =>
+      _PrescriptionUploadScreenState();
 }
 
 class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
@@ -5808,7 +5750,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
   @override
@@ -5902,7 +5845,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
         return;
       }
 
-      final uri = Uri.parse('http://31.97.206.144:7021/api/users/sendprescription/${user.id}');
+      final uri = Uri.parse(
+          'https://api.simcurarx.com/api/users/sendprescription/${user.id}');
       final request = http.MultipartRequest('POST', uri);
 
       final imageFile = await http.MultipartFile.fromPath(
@@ -5925,7 +5869,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
       final streamedResponse = await request.send().timeout(
         const Duration(seconds: 30),
         onTimeout: () {
-          throw Exception('Upload timeout. Please check your internet connection.');
+          throw Exception(
+              'Upload timeout. Please check your internet connection.');
         },
       );
       final response = await http.Response.fromStream(streamedResponse);
@@ -5951,7 +5896,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
             final errorData = json.decode(response.body);
             _showError(errorData['message'] ?? 'Failed to upload prescription');
           } catch (e) {
-            _showError('Failed to upload prescription. Status: ${response.statusCode}');
+            _showError(
+                'Failed to upload prescription. Status: ${response.statusCode}');
           }
         }
       }
@@ -6072,7 +6018,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
               children: [
                 const SizedBox(height: 30),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 18.0, vertical: 12.0),
                   child: Container(
                     height: 44,
                     width: 343,
@@ -6084,19 +6031,21 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.camera_alt, color: Colors.blue),
+                          icon:
+                              const Icon(Icons.camera_alt, color: Colors.blue),
                           onPressed: _takePhotoFromCamera,
                           tooltip: 'Take Photo',
                         ),
                         IconButton(
-                          icon: const Icon(Icons.photo_library, color: Colors.purple),
+                          icon: const Icon(Icons.photo_library,
+                              color: Colors.purple),
                           onPressed: _pickImageFromGallery,
                           tooltip: 'Choose from Gallery',
                         ),
                         IconButton(
                           icon: const Icon(Icons.crop, color: Colors.orange),
-                          onPressed: _selectedImage != null 
-                              ? () => _navigateToCropper(_selectedImage!) 
+                          onPressed: _selectedImage != null
+                              ? () => _navigateToCropper(_selectedImage!)
                               : null,
                           tooltip: 'Crop Image',
                         ),
@@ -6118,7 +6067,9 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: GestureDetector(
-                      onTap: _selectedImage == null ? _showImagePickerOptions : null,
+                      onTap: _selectedImage == null
+                          ? _showImagePickerOptions
+                          : null,
                       child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
@@ -6154,17 +6105,20 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                                       return Container(
                                         width: 280,
                                         height: 5,
-                                        margin: EdgeInsets.only(top: _animation.value * 50),
+                                        margin: EdgeInsets.only(
+                                            top: _animation.value * 50),
                                         decoration: BoxDecoration(
                                           gradient: LinearGradient(
                                             colors: [
-                                              Colors.blueAccent.withOpacity(0.7),
+                                              Colors.blueAccent
+                                                  .withOpacity(0.7),
                                               Colors.blue.withOpacity(0.7)
                                             ],
                                           ),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.blueAccent.withOpacity(0.5),
+                                              color: Colors.blueAccent
+                                                  .withOpacity(0.5),
                                               blurRadius: 12,
                                               spreadRadius: 2,
                                             ),
@@ -6197,18 +6151,17 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                                   ),
                                 ],
                               ),
-
                             _buildCorner(Alignment.topLeft),
                             _buildCorner(Alignment.topRight),
                             _buildCorner(Alignment.bottomLeft),
                             _buildCorner(Alignment.bottomRight),
-
                             if (_selectedImage != null)
                               Positioned(
                                 top: 16,
                                 right: 16,
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
                                     color: Colors.green.withOpacity(0.8),
                                     borderRadius: BorderRadius.circular(12),
@@ -6216,7 +6169,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon(Icons.check_circle, color: Colors.white, size: 16),
+                                      Icon(Icons.check_circle,
+                                          color: Colors.white, size: 16),
                                       SizedBox(width: 4),
                                       Text(
                                         'Ready',
@@ -6258,9 +6212,11 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.blue.shade600, width: 2),
+                        borderSide:
+                            BorderSide(color: Colors.blue.shade600, width: 2),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
                     ),
                   ),
                 ),
@@ -6286,7 +6242,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                             ),
                             child: const Text(
                               'Cancel',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ),
                         ),
@@ -6318,7 +6275,9 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen>
                                   )
                                 : const Text(
                                     'Upload',
-                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
                                   ),
                           ),
                         ),

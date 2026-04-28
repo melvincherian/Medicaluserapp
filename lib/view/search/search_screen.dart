@@ -6,7 +6,6 @@
 
 // // // // Model classes for the API response
 
-
 // // // class SearchScreen extends StatefulWidget {
 // // //   const SearchScreen({super.key});
 
@@ -38,7 +37,7 @@
 // // //   void _onSearchChanged() {
 // // //     // Cancel previous timer
 // // //     _debounceTimer?.cancel();
-    
+
 // // //     // Start new timer with 500ms delay
 // // //     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
 // // //       if (_searchController.text.isNotEmpty) {
@@ -60,8 +59,8 @@
 
 // // //     try {
 // // //       final encodedQuery = Uri.encodeComponent(query);
-// // //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$encodedQuery';
-      
+// // //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=$encodedQuery';
+
 // // //       final response = await http.get(
 // // //         Uri.parse(url),
 // // //         headers: {'Content-Type': 'application/json'},
@@ -70,7 +69,7 @@
 // // //       if (response.statusCode == 200) {
 // // //         final jsonResponse = json.decode(response.body);
 // // //         final apiResponse = ApiResponse.fromJson(jsonResponse);
-        
+
 // // //         setState(() {
 // // //           _medicines = apiResponse.medicines;
 // // //           _isLoading = false;
@@ -143,7 +142,7 @@
 // // //               ),
 // // //             ),
 // // //           ),
-          
+
 // // //           // Content Area
 // // //           Expanded(
 // // //             child: _buildContent(),
@@ -255,7 +254,7 @@
 
 // // //   Widget _buildMedicineCard(Medicine medicine) {
 // // //     final discount = ((medicine.mrp - medicine.price) / medicine.mrp * 100).round();
-    
+
 // // //     return Card(
 // // //       margin: const EdgeInsets.only(bottom: 16),
 // // //       elevation: 4,
@@ -299,7 +298,7 @@
 // // //                     ),
 // // //             ),
 // // //             const SizedBox(width: 16),
-            
+
 // // //             // Medicine Details
 // // //             Expanded(
 // // //               child: Column(
@@ -390,22 +389,6 @@
 // // //   }
 // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import 'dart:async';
 // // import 'dart:convert';
 
@@ -444,7 +427,7 @@
 // //   void _onSearchChanged() {
 // //     // Cancel previous timer
 // //     _debounceTimer?.cancel();
-    
+
 // //     // Start new timer with 500ms delay
 // //     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
 // //       if (_searchController.text.isNotEmpty) {
@@ -466,8 +449,8 @@
 
 // //     try {
 // //       final encodedQuery = Uri.encodeComponent(query);
-// //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$encodedQuery';
-      
+// //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=$encodedQuery';
+
 // //       final response = await http.get(
 // //         Uri.parse(url),
 // //         headers: {'Content-Type': 'application/json'},
@@ -476,7 +459,7 @@
 // //       if (response.statusCode == 200) {
 // //         final jsonResponse = json.decode(response.body);
 // //         final apiResponse = ApiResponse.fromJson(jsonResponse);
-        
+
 // //         setState(() {
 // //           _medicines = apiResponse.medicines;
 // //           _isLoading = false;
@@ -549,7 +532,7 @@
 // //               ),
 // //             ),
 // //           ),
-          
+
 // //           // Content Area
 // //           Expanded(
 // //             child: _buildContent(),
@@ -660,10 +643,10 @@
 // //   }
 
 // //   Widget _buildMedicineCard(Medicine medicine) {
-// //     final discount = medicine.mrp > 0 
+// //     final discount = medicine.mrp > 0
 // //         ? ((medicine.mrp - medicine.price) / medicine.mrp * 100).round()
 // //         : 0;
-    
+
 // //     return Card(
 // //       margin: const EdgeInsets.only(bottom: 16),
 // //       elevation: 4,
@@ -707,7 +690,7 @@
 // //                     ),
 // //             ),
 // //             const SizedBox(width: 16),
-            
+
 // //             // Medicine Details
 // //             Expanded(
 // //               child: Column(
@@ -802,21 +785,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import 'dart:async';
 // // import 'dart:convert';
 // // import 'package:flutter/material.dart';
@@ -858,7 +826,7 @@
 // //   void _onSearchChanged() {
 // //     // Cancel previous timer
 // //     _debounceTimer?.cancel();
-    
+
 // //     // Start new timer with 500ms delay
 // //     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
 // //       if (_searchController.text.isNotEmpty) {
@@ -880,8 +848,8 @@
 
 // //     try {
 // //       final encodedQuery = Uri.encodeComponent(query);
-// //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$encodedQuery';
-      
+// //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=$encodedQuery';
+
 // //       final response = await http.get(
 // //         Uri.parse(url),
 // //         headers: {'Content-Type': 'application/json'},
@@ -890,7 +858,7 @@
 // //       if (response.statusCode == 200) {
 // //         final jsonResponse = json.decode(response.body);
 // //         final apiResponse = ApiResponse.fromJson(jsonResponse);
-        
+
 // //         setState(() {
 // //           _medicines = apiResponse.medicines;
 // //           _isLoading = false;
@@ -1039,7 +1007,7 @@
 // //               ),
 // //             ),
 // //           ),
-          
+
 // //           // Content Area
 // //           Expanded(
 // //             child: _buildContent(),
@@ -1150,10 +1118,10 @@
 // //   }
 
 // //   Widget _buildMedicineCard(Medicine medicine) {
-// //     final discount = medicine.mrp > 0 
+// //     final discount = medicine.mrp > 0
 // //         ? ((medicine.mrp - medicine.price) / medicine.mrp * 100).round()
 // //         : 0;
-    
+
 // //     return Card(
 // //       margin: const EdgeInsets.only(bottom: 16),
 // //       elevation: 4,
@@ -1199,7 +1167,7 @@
 // //                         ),
 // //                 ),
 // //                 const SizedBox(width: 16),
-                
+
 // //                 // Medicine Details
 // //                 Expanded(
 // //                   child: Column(
@@ -1289,15 +1257,15 @@
 // //                 ),
 // //               ],
 // //             ),
-            
+
 // //             const SizedBox(height: 12),
-            
+
 // //             // Add to Cart Button
 // //             Consumer<CartProvider>(
 // //               builder: (context, cartProvider, child) {
 // //                 final isInCart = cartProvider.isInCart(medicine.medicineId);
 // //                 final isLoading = _loadingItems.contains(medicine.medicineId);
-                
+
 // //                 return SizedBox(
 // //                   width: double.infinity,
 // //                   child: ElevatedButton.icon(
@@ -1344,27 +1312,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import 'dart:async';
 // // import 'dart:convert';
 // // import 'package:flutter/material.dart';
@@ -1390,7 +1337,7 @@
 // //   bool _isLoading = false;
 // //   String? _errorMessage;
 // //   Set<String> _loadingItems = {}; // Track which items are being added to cart
-  
+
 // //   // Voice search related variables
 // //   late stt.SpeechToText _speechToText;
 // //   bool _isListening = false;
@@ -1455,7 +1402,7 @@
 // //         _isListening = true;
 // //         _lastWords = '';
 // //       });
-      
+
 // //       await _speechToText.listen(
 // //         onResult: (val) => setState(() {
 // //           _lastWords = val.recognizedWords;
@@ -1491,7 +1438,7 @@
 // //   void _onSearchChanged() {
 // //     // Cancel previous timer
 // //     _debounceTimer?.cancel();
-    
+
 // //     // Start new timer with 500ms delay
 // //     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
 // //       if (_searchController.text.isNotEmpty) {
@@ -1513,8 +1460,8 @@
 
 // //     try {
 // //       final encodedQuery = Uri.encodeComponent(query);
-// //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$encodedQuery';
-      
+// //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=$encodedQuery';
+
 // //       final response = await http.get(
 // //         Uri.parse(url),
 // //         headers: {'Content-Type': 'application/json'},
@@ -1523,7 +1470,7 @@
 // //       if (response.statusCode == 200) {
 // //         final jsonResponse = json.decode(response.body);
 // //         final apiResponse = ApiResponse.fromJson(jsonResponse);
-        
+
 // //         setState(() {
 // //           _medicines = apiResponse.medicines;
 // //           _isLoading = false;
@@ -1692,10 +1639,10 @@
 // //                     width: 50,
 // //                     height: 50,
 // //                     decoration: BoxDecoration(
-// //                       color: _isListening 
-// //                           ? Colors.red.shade400 
-// //                           : _speechEnabled 
-// //                               ? Colors.white 
+// //                       color: _isListening
+// //                           ? Colors.red.shade400
+// //                           : _speechEnabled
+// //                               ? Colors.white
 // //                               : Colors.grey.shade400,
 // //                       shape: BoxShape.circle,
 // //                       boxShadow: _isListening
@@ -1716,9 +1663,9 @@
 // //                     ),
 // //                     child: Icon(
 // //                       _isListening ? Icons.mic : Icons.mic_none,
-// //                       color: _isListening 
-// //                           ? Colors.white 
-// //                           : _speechEnabled 
+// //                       color: _isListening
+// //                           ? Colors.white
+// //                           : _speechEnabled
 // //                               ? const Color(0xFF5931DD)
 // //                               : Colors.grey.shade600,
 // //                       size: 24,
@@ -1728,7 +1675,7 @@
 // //               ],
 // //             ),
 // //           ),
-          
+
 // //           // Voice Recognition Status
 // //           if (_isListening)
 // //             Container(
@@ -1762,7 +1709,7 @@
 // //                 ],
 // //               ),
 // //             ),
-          
+
 // //           // Content Area
 // //           Expanded(
 // //             child: _buildContent(),
@@ -1881,10 +1828,10 @@
 // //   }
 
 // //   Widget _buildMedicineCard(Medicine medicine) {
-// //     final discount = medicine.mrp > 0 
+// //     final discount = medicine.mrp > 0
 // //         ? ((medicine.mrp - medicine.price) / medicine.mrp * 100).round()
 // //         : 0;
-    
+
 // //     return Card(
 // //       margin: const EdgeInsets.only(bottom: 16),
 // //       elevation: 4,
@@ -1930,7 +1877,7 @@
 // //                         ),
 // //                 ),
 // //                 const SizedBox(width: 16),
-                
+
 // //                 // Medicine Details
 // //                 Expanded(
 // //                   child: Column(
@@ -2020,15 +1967,15 @@
 // //                 ),
 // //               ],
 // //             ),
-            
+
 // //             const SizedBox(height: 12),
-            
+
 // //             // Add to Cart Button
 // //             Consumer<CartProvider>(
 // //               builder: (context, cartProvider, child) {
 // //                 final isInCart = cartProvider.isInCart(medicine.medicineId);
 // //                 final isLoading = _loadingItems.contains(medicine.medicineId);
-                
+
 // //                 return SizedBox(
 // //                   width: double.infinity,
 // //                   child: ElevatedButton.icon(
@@ -2076,17 +2023,6 @@
 // //   }
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -2112,7 +2048,7 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _isLoading = false;
   String? _errorMessage;
   Set<String> _loadingItems = {}; // Track which items are being added to cart
-  
+
   // Voice search related variables
   late stt.SpeechToText _speechToText;
   bool _isListening = false;
@@ -2177,7 +2113,7 @@ class _SearchScreenState extends State<SearchScreen> {
         _isListening = true;
         _lastWords = '';
       });
-      
+
       await _speechToText.listen(
         onResult: (val) => setState(() {
           _lastWords = val.recognizedWords;
@@ -2213,7 +2149,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void _onSearchChanged() {
     // Cancel previous timer
     _debounceTimer?.cancel();
-    
+
     // Start new timer with 500ms delay
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
       if (_searchController.text.isNotEmpty) {
@@ -2235,8 +2171,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
     try {
       final encodedQuery = Uri.encodeComponent(query);
-      final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=$encodedQuery';
-      
+      final url =
+          'https://api.simcurarx.com/api/pharmacy/allmedicine?name=$encodedQuery';
+
       final response = await http.get(
         Uri.parse(url),
         headers: {'Content-Type': 'application/json'},
@@ -2245,14 +2182,15 @@ class _SearchScreenState extends State<SearchScreen> {
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final apiResponse = ApiResponse.fromJson(jsonResponse);
-        
+
         setState(() {
           _medicines = apiResponse.medicines;
           _isLoading = false;
         });
       } else {
         setState(() {
-          _errorMessage = 'Failed to load medicines. Status: ${response.statusCode}';
+          _errorMessage =
+              'Failed to load medicines. Status: ${response.statusCode}';
           _isLoading = false;
         });
       }
@@ -2299,14 +2237,18 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text('Search Medicines',style: TextStyle(fontWeight:FontWeight.bold ),),
+        title: Text(
+          'Search Medicines',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color(0xFF5931DD),
-
         foregroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: Icon(Icons.arrow_back_ios)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(Icons.arrow_back_ios)),
         actions: [
           // Cart Icon with Badge
           Consumer<CartProvider>(
@@ -2318,7 +2260,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const CartScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const CartScreen()),
                       );
                     },
                   ),
@@ -2359,8 +2302,7 @@ class _SearchScreenState extends State<SearchScreen> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF5931DD)
-,
+              color: const Color(0xFF5931DD),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.3),
@@ -2413,10 +2355,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 //     width: 50,
                 //     height: 50,
                 //     decoration: BoxDecoration(
-                //       color: _isListening 
-                //           ? Colors.red.shade400 
-                //           : _speechEnabled 
-                //               ? Colors.white 
+                //       color: _isListening
+                //           ? Colors.red.shade400
+                //           : _speechEnabled
+                //               ? Colors.white
                 //               : Colors.grey.shade400,
                 //       shape: BoxShape.circle,
                 //       boxShadow: _isListening
@@ -2437,9 +2379,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 //     ),
                 //     child: Icon(
                 //       _isListening ? Icons.mic : Icons.mic_none,
-                //       color: _isListening 
-                //           ? Colors.white 
-                //           : _speechEnabled 
+                //       color: _isListening
+                //           ? Colors.white
+                //           : _speechEnabled
                 //               ? const Color(0xFF5931DD)
                 //               : Colors.grey.shade600,
                 //       size: 24,
@@ -2449,7 +2391,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ],
             ),
           ),
-          
+
           // Voice Recognition Status
           if (_isListening)
             Container(
@@ -2477,13 +2419,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     height: 12,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.red.shade400),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Colors.red.shade400),
                     ),
                   ),
                 ],
               ),
             ),
-          
+
           // Content Area
           Expanded(
             child: _buildContent(),
@@ -2602,10 +2545,10 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildMedicineCard(Medicine medicine) {
-    final discount = medicine.mrp > 0 
+    final discount = medicine.mrp > 0
         ? ((medicine.mrp - medicine.price) / medicine.mrp * 100).round()
         : 0;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 4,
@@ -2651,7 +2594,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                 ),
                 const SizedBox(width: 16),
-                
+
                 // Medicine Details
                 Expanded(
                   child: Column(
@@ -2709,37 +2652,41 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Add to Cart Button
             Consumer<CartProvider>(
               builder: (context, cartProvider, child) {
                 final isInCart = cartProvider.isInCart(medicine.medicineId);
                 final isLoading = _loadingItems.contains(medicine.medicineId);
-                
+
                 return SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: isLoading ? null : () {
-                      if (isInCart) {
-                        // Navigate to cart if item is already in cart
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const CartScreen()),
-                        );
-                      } else {
-                        // Add to cart if item is not in cart
-                        _addToCart(medicine.medicineId, medicine.name);
-                      }
-                    },
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            if (isInCart) {
+                              // Navigate to cart if item is already in cart
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const CartScreen()),
+                              );
+                            } else {
+                              // Add to cart if item is not in cart
+                              _addToCart(medicine.medicineId, medicine.name);
+                            }
+                          },
                     icon: isLoading
                         ? const SizedBox(
                             width: 16,
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
                         : Icon(
@@ -2755,7 +2702,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isInCart ? Colors.green : const Color(0xFF5931DD),
+                      backgroundColor:
+                          isInCart ? Colors.green : const Color(0xFF5931DD),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -2941,7 +2889,7 @@ class _SearchScreenState extends State<SearchScreen> {
 //     try {
 //       final encodedQuery = Uri.encodeComponent(query);
 //       // Updated API endpoint
-//       final url = 'http://31.97.206.144:7021/api/pharmacy/searchmedicine?search=$encodedQuery';
+//       final url = 'https://api.simcurarx.com/api/pharmacy/searchmedicine?search=$encodedQuery';
       
 //       final response = await http.get(
 //         Uri.parse(url),

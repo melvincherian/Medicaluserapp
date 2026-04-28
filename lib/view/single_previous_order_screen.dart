@@ -36,7 +36,7 @@
 
 //     try {
 //       final url =
-//           "http://31.97.206.144:7021/api/users/singlepreviousorder/${widget.userId}/${widget.orderId}";
+//           "https://api.simcurarx.com/api/users/singlepreviousorder/${widget.userId}/${widget.orderId}";
 
 //       final response = await http.get(Uri.parse(url));
 
@@ -265,20 +265,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -303,7 +289,7 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
   Map<String, dynamic>? order;
   bool isLoading = true;
   String? errorMessage;
-  
+
   late AnimationController _fadeController;
   late AnimationController _slideController;
   late Animation<double> _fadeAnimation;
@@ -321,7 +307,7 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
-    
+
     _slideController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -359,7 +345,7 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
 
     try {
       final url =
-          "http://31.97.206.144:7021/api/users/singlepreviousorder/${widget.userId}/${widget.orderId}";
+          "https://api.simcurarx.com/api/users/singlepreviousorder/${widget.userId}/${widget.orderId}";
 
       final response = await http.get(Uri.parse(url));
 
@@ -435,7 +421,7 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
     final double endInterval = (0.3 + (0.1 * index)).clamp(0.2, 1.0);
     final double fadeStartInterval = (0.05 * index).clamp(0.0, 0.7);
     final double fadeEndInterval = (0.25 + (0.05 * index)).clamp(0.1, 1.0);
-    
+
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(0, 0.3),
@@ -514,7 +500,8 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF1565C0)),
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(Color(0xFF1565C0)),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -565,7 +552,8 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                   ? const Center(
                       child: Text(
                         "No order found",
-                        style: TextStyle(fontSize: 16, color: Color(0xFF757575)),
+                        style:
+                            TextStyle(fontSize: 16, color: Color(0xFF757575)),
                       ),
                     )
                   : SingleChildScrollView(
@@ -584,12 +572,15 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    getStatusColor(order!['status']).withOpacity(0.1),
-                                    getStatusColor(order!['status']).withOpacity(0.05),
+                                    getStatusColor(order!['status'])
+                                        .withOpacity(0.1),
+                                    getStatusColor(order!['status'])
+                                        .withOpacity(0.05),
                                   ],
                                 ),
                                 border: Border.all(
-                                  color: getStatusColor(order!['status']).withOpacity(0.3),
+                                  color: getStatusColor(order!['status'])
+                                      .withOpacity(0.3),
                                   width: 1,
                                 ),
                               ),
@@ -604,7 +595,9 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         borderRadius: BorderRadius.circular(12),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: getStatusColor(order!['status']).withOpacity(0.3),
+                                            color:
+                                                getStatusColor(order!['status'])
+                                                    .withOpacity(0.3),
                                             blurRadius: 8,
                                             offset: const Offset(0, 2),
                                           ),
@@ -619,14 +612,18 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                     const SizedBox(width: 16),
                                     Expanded(
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            order!['status'].toString().toUpperCase(),
+                                            order!['status']
+                                                .toString()
+                                                .toUpperCase(),
                                             style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.bold,
-                                              color: getStatusColor(order!['status']),
+                                              color: getStatusColor(
+                                                  order!['status']),
                                             ),
                                           ),
                                           const SizedBox(height: 4),
@@ -640,14 +637,16 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         ],
                                       ),
                                     ),
-                                    SizedBox(width: 15,),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
                                     Container(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 15,
                                         vertical: 8,
                                       ),
                                       decoration: BoxDecoration(
-                                        color:   Color(0xFF1565C0),
+                                        color: Color(0xFF1565C0),
                                         borderRadius: BorderRadius.circular(20),
                                         boxShadow: [
                                           BoxShadow(
@@ -672,9 +671,7 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                             ),
                           ),
 
-
-
-                                _buildAnimatedCard(
+                          _buildAnimatedCard(
                             index: 2,
                             child: Container(
                               decoration: BoxDecoration(
@@ -697,7 +694,8 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                       ),
                                       child: const Icon(
                                         Icons.medical_services,
-                                        color: Color.fromARGB(255, 252, 252, 252),
+                                        color:
+                                            Color.fromARGB(255, 252, 252, 252),
                                         size: 20,
                                       ),
                                     ),
@@ -716,9 +714,8 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                             ),
                           ),
 
-
-
-                          ...List.generate(order!['orderItems'].length, (index) {
+                          ...List.generate(order!['orderItems'].length,
+                              (index) {
                             final item = order!['orderItems'][index];
                             final medicine = item['medicineId'];
                             return _buildAnimatedCard(
@@ -741,17 +738,20 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         width: 70,
                                         height: 70,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           color: Colors.grey[100],
                                         ),
                                         child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           child: medicine['images'] != null &&
                                                   medicine['images'].isNotEmpty
                                               ? Image.network(
                                                   medicine['images'][0],
                                                   fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) =>
+                                                  errorBuilder: (context, error,
+                                                          stackTrace) =>
                                                       const Icon(
                                                     Icons.medical_services,
                                                     size: 30,
@@ -766,11 +766,12 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         ),
                                       ),
                                       const SizedBox(width: 16),
-                                      
+
                                       // Medicine Details
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               medicine['name'],
@@ -795,19 +796,25 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                             Row(
                                               children: [
                                                 Container(
-                                                  padding: const EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                     horizontal: 8,
                                                     vertical: 4,
                                                   ),
                                                   decoration: BoxDecoration(
-                                                    color: const Color(0xFF4CAF50).withOpacity(0.1),
-                                                    borderRadius: BorderRadius.circular(6),
+                                                    color:
+                                                        const Color(0xFF4CAF50)
+                                                            .withOpacity(0.1),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            6),
                                                   ),
                                                   child: Text(
                                                     "Qty: ${item['quantity']}",
                                                     style: const TextStyle(
                                                       fontSize: 12,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       color: Color(0xFF1565C0),
                                                     ),
                                                   ),
@@ -817,7 +824,7 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                           ],
                                         ),
                                       ),
-                                      
+
                                       // Price
                                       // Container(
                                       //   padding: const EdgeInsets.symmetric(
@@ -866,8 +873,10 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFF1565C0).withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(8),
+                                            color: const Color(0xFF1565C0)
+                                                .withOpacity(0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                           child: const Icon(
                                             Icons.location_on,
@@ -914,10 +923,8 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                           ),
 
                           // Items Header
-                    
 
                           // Order Items
-                          
 
                           // Payment & Notes
                           _buildAnimatedCard(
@@ -942,8 +949,10 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: const Color(0xFFFF9800).withOpacity(0.1),
-                                            borderRadius: BorderRadius.circular(8),
+                                            color: const Color(0xFFFF9800)
+                                                .withOpacity(0.1),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
                                           ),
                                           child: const Icon(
                                             Icons.payment,
@@ -970,7 +979,8 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Row(
                                             children: [

@@ -1,5 +1,5 @@
 class ApiConstants {
-  static const String baseUrl = 'http://31.97.206.144:7021/api';
+  static const String baseUrl = 'https://api.simcurarx.com/api';
 
   static const String register = '$baseUrl/users/register';
   static const String login = '$baseUrl/users/login';
@@ -7,15 +7,15 @@ class ApiConstants {
   static const String categoryBase = '$baseUrl/category';
   static const String allCategories = '$categoryBase/allcategories';
 
-  static const String orderstatus='$baseUrl/users/order-status/:userId';
+  static const String orderstatus = '$baseUrl/users/order-status/:userId';
 
-  static const String userLocationapi='$baseUrl/users/add-location';
+  static const String userLocationapi = '$baseUrl/users/add-location';
 
+  static const String deletenotification =
+      '$baseUrl/users/:userId/notifications/:notificationId';
 
-  static const String deletenotification='$baseUrl/users/:userId/notifications/:notificationId';
+  static const String perioidicplan = '$baseUrl/users/periodic-order/:userId';
 
-  static const String perioidicplan='$baseUrl/users/periodic-order/:userId';
-  
   // static const String allMedicines = '$baseUrl/pharmacy/allmedicine';
 
   static String getMedicinesByCategory(String categoryName) =>
@@ -53,7 +53,6 @@ class ApiConstants {
 
   static const String deletePreviousOrder =
       '$baseUrl/users/deleteorders/:userId/:orderId';
-  
 
   static const String getNotifications = '$baseUrl/users/notifications/:userId';
 
@@ -77,9 +76,7 @@ class ApiConstants {
 
   static const getuserprescription = '$baseUrl/users/userprescriptions/:userId';
 
+  static const reorderapi = '$baseUrl/users/reorder/:userId/:orderId';
 
-  static const reorderapi='$baseUrl/users/reorder/:userId/:orderId';
-
-  static const deleteallnotification='$baseUrl/users/:userId/bulk';
-
+  static const deleteallnotification = '$baseUrl/users/:userId/bulk';
 }

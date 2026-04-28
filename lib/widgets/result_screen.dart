@@ -40,7 +40,7 @@
 
 // //       final token = await SharedPreferencesHelper.getToken();
 // //       final response = await http.get(
-// //         Uri.parse('http://31.97.206.144:7021/api/pharmacy/getallpjarmacy'),
+// //         Uri.parse('https://api.simcurarx.com/api/pharmacy/getallpjarmacy'),
 // //         headers: {
 // //           'Content-Type': 'application/json',
 // //           if (token != null && token.isNotEmpty)
@@ -91,7 +91,7 @@
 // //     }
 
 // //     final uri = Uri.parse(
-// //         'http://31.97.206.144:7021/api/users/sendprescription/${user.id}/${_selectedPharmacy!.id}');
+// //         'https://api.simcurarx.com/api/users/sendprescription/${user.id}/${_selectedPharmacy!.id}');
 // //     final request = http.MultipartRequest('POST', uri);
 
 // //     print('Upload URL: $uri');
@@ -1341,7 +1341,6 @@ class _ResultScreenState extends State<ResultScreen> {
               provider.successMessage ?? 'Prescription uploaded successfully!'),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 3),
-          
         ),
       );
       Navigator.pushAndRemoveUntil(

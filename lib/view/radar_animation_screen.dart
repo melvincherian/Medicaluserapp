@@ -424,19 +424,6 @@
 // // //   bool shouldRepaint(covariant RadarPainter oldDelegate) => true;
 // // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // import 'dart:async';
 // // import 'package:flutter/material.dart';
 // // import 'dart:math';
@@ -469,7 +456,7 @@
 // //     with SingleTickerProviderStateMixin {
 // //   late AnimationController _controller;
 // //   ui.Image? _mapImage;
-  
+
 // //   // Order status tracking
 // //   Timer? _orderStatusTimer;
 // //   OrderModel? _currentOrder;
@@ -537,21 +524,21 @@
 
 // //     try {
 // //       debugPrint('Fetching order status for order: ${widget.orderId}');
-      
+
 // //       final orders = await OrderService.getCurrentOrders(_userId!);
-      
+
 // //       if (mounted) {
 // //         // Find the specific order by ID
 // //         final order = orders.where((o) => o.id == widget.orderId).firstOrNull;
-        
+
 // //         if (order != null) {
 // //           setState(() {
 // //             _currentOrder = order;
 // //             _orderStatus = order.status.toLowerCase();
 // //           });
-          
+
 // //           debugPrint('Order status updated: $_orderStatus');
-          
+
 // //           // Check if order is completed or delivered
 // //           if (_orderStatus == 'delivered' || _orderStatus == 'completed') {
 // //             _orderStatusTimer?.cancel();
@@ -562,7 +549,7 @@
 // //           // Try to check if order moved to previous orders (completed/cancelled)
 // //           final previousOrders = await OrderService.getPreviousOrders(_userId!);
 // //           final previousOrder = previousOrders.where((o) => o.id == widget.orderId).firstOrNull;
-          
+
 // //           if (previousOrder != null && mounted) {
 // //             setState(() {
 // //               _currentOrder = previousOrder;
@@ -1084,32 +1071,6 @@
 // //   bool shouldRepaint(covariant RadarPainter oldDelegate) => true;
 // // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -1144,7 +1105,7 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   ui.Image? _mapImage;
-  
+
   // Order status tracking
   Timer? _orderStatusTimer;
   OrderStatusResponse? orderData;
@@ -1228,32 +1189,35 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
 
   bool _isDelivered() {
     if (orderData == null) return false;
-    final statuses = orderData!.statusTimeline.map((s) => s.status.toLowerCase());
-    return statuses.any((s) => s.contains('delivered') || s.contains('completed'));
+    final statuses =
+        orderData!.statusTimeline.map((s) => s.status.toLowerCase());
+    return statuses
+        .any((s) => s.contains('delivered') || s.contains('completed'));
   }
 
   bool _isCancelled() {
     if (orderData == null) return false;
-    
-    final statuses = orderData!.statusTimeline.map((s) => s.status.toLowerCase());
-    final messages = orderData!.statusTimeline.map((s) => s.message.toLowerCase());
-    
-    return statuses.any((s) => 
-        s.contains('cancelled') || 
-        s.contains('canceled') ||
-        s == 'cancelled' ||
-        s == 'canceled'
-      ) || messages.any((m) => 
-        m.contains('cancelled') || 
-        m.contains('canceled')
-      );
+
+    final statuses =
+        orderData!.statusTimeline.map((s) => s.status.toLowerCase());
+    final messages =
+        orderData!.statusTimeline.map((s) => s.message.toLowerCase());
+
+    return statuses.any((s) =>
+            s.contains('cancelled') ||
+            s.contains('canceled') ||
+            s == 'cancelled' ||
+            s == 'canceled') ||
+        messages.any((m) => m.contains('cancelled') || m.contains('canceled'));
   }
 
   int get currentStep {
     if (orderData?.statusTimeline.isEmpty ?? true) return 1;
 
-    final allStatuses = orderData!.statusTimeline.map((s) => s.status.toLowerCase()).toList();
-    final allmsg = orderData!.statusTimeline.map((s) => s.message.toLowerCase()).toList();
+    final allStatuses =
+        orderData!.statusTimeline.map((s) => s.status.toLowerCase()).toList();
+    final allmsg =
+        orderData!.statusTimeline.map((s) => s.message.toLowerCase()).toList();
 
     // Step 5: Delivered
     if (allStatuses.any((status) =>
@@ -1353,8 +1317,8 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
   //           color: isActive ? null : Colors.white.withOpacity(0.2),
   //           borderRadius: BorderRadius.circular(24),
   //           border: Border.all(
-  //             color: isActive 
-  //                 ? Colors.white 
+  //             color: isActive
+  //                 ? Colors.white
   //                 : Colors.white.withOpacity(0.3),
   //             width: 2.5,
   //           ),
@@ -1403,82 +1367,78 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
   //   );
   // }
 
-
-
   Widget _buildStepItem({
-  required IconData icon,
-  required String label,
-  required bool isActive,
-}) {
-  return Flexible(
-    child: Column(
-      children: [
-        Container(
-          width: 40,  // Reduced from 48
-          height: 40, // Reduced from 48
-          decoration: BoxDecoration(
-            gradient: isActive
-                ? LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Colors.white.withOpacity(0.9),
-                      Colors.white.withOpacity(0.7),
-                    ],
-                  )
-                : null,
-            color: isActive ? null : Colors.white.withOpacity(0.2),
-            borderRadius: BorderRadius.circular(20), // Reduced from 24
-            border: Border.all(
-              color: isActive 
-                  ? Colors.white 
-                  : Colors.white.withOpacity(0.3),
-              width: 2,  // Reduced from 2.5
-            ),
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.5),
-                      blurRadius: 12,
-                      spreadRadius: 2,
-                      offset: Offset(0, 4),
-                    ),
-                  ]
-                : [],
-          ),
-          child: Icon(
-            icon,
-            color: isActive ? Color(0xFF667eea) : Colors.white60,
-            size: 20,  // Reduced from 24
-          ),
-        ),
-        const SizedBox(height: 6),  // Reduced from 8
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 9,  // Reduced from 10
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
-              color: isActive ? Colors.white : Colors.white60,
-              height: 1.2,  // Reduced from 1.3
-              shadows: isActive
+    required IconData icon,
+    required String label,
+    required bool isActive,
+  }) {
+    return Flexible(
+      child: Column(
+        children: [
+          Container(
+            width: 40, // Reduced from 48
+            height: 40, // Reduced from 48
+            decoration: BoxDecoration(
+              gradient: isActive
+                  ? LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withOpacity(0.9),
+                        Colors.white.withOpacity(0.7),
+                      ],
+                    )
+                  : null,
+              color: isActive ? null : Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20), // Reduced from 24
+              border: Border.all(
+                color: isActive ? Colors.white : Colors.white.withOpacity(0.3),
+                width: 2, // Reduced from 2.5
+              ),
+              boxShadow: isActive
                   ? [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.3),
-                        offset: Offset(0, 1),
-                        blurRadius: 2,
+                      BoxShadow(
+                        color: Colors.white.withOpacity(0.5),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                        offset: Offset(0, 4),
                       ),
                     ]
                   : [],
             ),
+            child: Icon(
+              icon,
+              color: isActive ? Color(0xFF667eea) : Colors.white60,
+              size: 20, // Reduced from 24
+            ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+          const SizedBox(height: 6), // Reduced from 8
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 9, // Reduced from 10
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w500,
+                color: isActive ? Colors.white : Colors.white60,
+                height: 1.2, // Reduced from 1.3
+                shadows: isActive
+                    ? [
+                        Shadow(
+                          color: Colors.black.withOpacity(0.3),
+                          offset: Offset(0, 1),
+                          blurRadius: 2,
+                        ),
+                      ]
+                    : [],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1565,11 +1525,13 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                 padding: const EdgeInsets.all(20),
                                 child: Column(
                                   children: [
-                                    Icon(Icons.info_outline, color: Colors.white70, size: 40),
+                                    Icon(Icons.info_outline,
+                                        color: Colors.white70, size: 40),
                                     const SizedBox(height: 12),
                                     Text(
                                       'No active orders',
-                                      style: TextStyle(color: Colors.white, fontSize: 16),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
                                     ),
                                   ],
                                 ),
@@ -1577,7 +1539,8 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                             : ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: BackdropFilter(
-                                  filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                  filter: ui.ImageFilter.blur(
+                                      sigmaX: 10, sigmaY: 10),
                                   child: Container(
                                     padding: const EdgeInsets.all(20),
                                     decoration: BoxDecoration(
@@ -1596,7 +1559,8 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                       ),
                                     ),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         // Header Section
                                         Row(
@@ -1608,36 +1572,50 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   colors: [
-                                                    Colors.white.withOpacity(0.3),
-                                                    Colors.white.withOpacity(0.1),
+                                                    Colors.white
+                                                        .withOpacity(0.3),
+                                                    Colors.white
+                                                        .withOpacity(0.1),
                                                   ],
                                                 ),
-                                                borderRadius: BorderRadius.circular(16),
+                                                borderRadius:
+                                                    BorderRadius.circular(16),
                                                 border: Border.all(
-                                                  color: Colors.white.withOpacity(0.3),
+                                                  color: Colors.white
+                                                      .withOpacity(0.3),
                                                   width: 2,
                                                 ),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: Colors.black.withOpacity(0.1),
+                                                    color: Colors.black
+                                                        .withOpacity(0.1),
                                                     blurRadius: 10,
                                                     offset: Offset(0, 4),
                                                   ),
                                                 ],
                                               ),
                                               child: ClipRRect(
-                                                borderRadius: BorderRadius.circular(14),
-                                                child: orderData!.medicines.isNotEmpty &&
-                                                        orderData!.medicines.first.images.isNotEmpty
+                                                borderRadius:
+                                                    BorderRadius.circular(14),
+                                                child: orderData!.medicines
+                                                            .isNotEmpty &&
+                                                        orderData!
+                                                            .medicines
+                                                            .first
+                                                            .images
+                                                            .isNotEmpty
                                                     ? Image.network(
-                                                        orderData!.medicines.first.images.first,
+                                                        orderData!.medicines
+                                                            .first.images.first,
                                                         fit: BoxFit.cover,
-                                                        errorBuilder: (context, error, stackTrace) =>
+                                                        errorBuilder: (context,
+                                                                error,
+                                                                stackTrace) =>
                                                             Icon(
-                                                              Icons.local_pharmacy,
-                                                              color: Colors.white,
-                                                              size: 35,
-                                                            ),
+                                                          Icons.local_pharmacy,
+                                                          color: Colors.white,
+                                                          size: 35,
+                                                        ),
                                                       )
                                                     : Icon(
                                                         Icons.local_pharmacy,
@@ -1649,7 +1627,8 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                             const SizedBox(width: 16),
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -1697,32 +1676,44 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                                   const Text(
                                                     'Order Tracking',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 20,
                                                       color: Colors.white,
                                                       letterSpacing: 0.5,
                                                     ),
                                                   ),
                                                   const SizedBox(height: 4),
-                                                  if (orderData?.statusTimeline.isNotEmpty ?? false)
+                                                  if (orderData?.statusTimeline
+                                                          .isNotEmpty ??
+                                                      false)
                                                     Container(
-                                                      padding: EdgeInsets.symmetric(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
                                                         horizontal: 8,
                                                         vertical: 4,
                                                       ),
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white.withOpacity(0.2),
-                                                        borderRadius: BorderRadius.circular(8),
+                                                        color: Colors.white
+                                                            .withOpacity(0.2),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
                                                       ),
                                                       child: Text(
-                                                        orderData!.statusTimeline.last.message,
+                                                        orderData!
+                                                            .statusTimeline
+                                                            .last
+                                                            .message,
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           color: Colors.white,
-                                                          fontWeight: FontWeight.w500,
+                                                          fontWeight:
+                                                              FontWeight.w500,
                                                         ),
                                                         maxLines: 2,
-                                                        overflow: TextOverflow.ellipsis,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
                                                 ],
@@ -1731,17 +1722,18 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                           ],
                                         ),
                                         const SizedBox(height: 24),
-                                        
+
                                         // Enhanced Progress Bar
                                         CustomProgressBar(
                                           currentStep: currentStep,
                                           totalSteps: 5,
                                         ),
                                         const SizedBox(height: 20),
-                                        
+
                                         // Status Steps with enhanced styling
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             _buildStepItem(
                                               icon: Icons.shopping_cart_rounded,
@@ -1759,7 +1751,8 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
                                               isActive: currentStep >= 3,
                                             ),
                                             _buildStepItem(
-                                              icon: Icons.local_shipping_rounded,
+                                              icon:
+                                                  Icons.local_shipping_rounded,
                                               label: 'Out for\nDelivery',
                                               isActive: currentStep >= 4,
                                             ),
@@ -1854,7 +1847,7 @@ class _RadarAnimationScreenState extends State<RadarAnimationScreen>
 class CustomProgressBar extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
-  
+
   const CustomProgressBar({
     Key? key,
     required this.currentStep,
@@ -1864,7 +1857,7 @@ class CustomProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double progressPercentage = currentStep / totalSteps;
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -1887,13 +1880,14 @@ class CustomProgressBar extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Progress line - Dynamic width with gradient and glow
           Positioned(
             left: 0,
             child: Container(
               height: 12,
-              width: (MediaQuery.of(context).size.width - 80) * progressPercentage,
+              width:
+                  (MediaQuery.of(context).size.width - 80) * progressPercentage,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
@@ -1922,14 +1916,14 @@ class CustomProgressBar extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Step indicators with enhanced styling
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(totalSteps, (index) {
               bool isCompleted = index < currentStep;
               bool isCurrent = index == currentStep - 1;
-              
+
               return Container(
                 width: 28,
                 height: 28,
@@ -1945,15 +1939,15 @@ class CustomProgressBar extends StatelessWidget {
                   color: isCompleted ? null : Colors.white.withOpacity(0.3),
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isCompleted 
-                        ? Colors.white 
+                    color: isCompleted
+                        ? Colors.white
                         : Colors.white.withOpacity(0.4),
                     width: 2.5,
                   ),
                   boxShadow: [
                     if (isCompleted)
                       BoxShadow(
-                        color: isCurrent 
+                        color: isCurrent
                             ? Colors.greenAccent.withOpacity(0.8)
                             : Colors.greenAccent.withOpacity(0.4),
                         blurRadius: isCurrent ? 15 : 8,
@@ -1971,7 +1965,9 @@ class CustomProgressBar extends StatelessWidget {
                   child: Icon(
                     Icons.check_rounded,
                     size: 18,
-                    color: isCompleted ? Colors.white : Colors.white.withOpacity(0.5),
+                    color: isCompleted
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.5),
                     shadows: isCompleted
                         ? [
                             Shadow(
@@ -2073,7 +2069,7 @@ class OrderStatusResponse {
 
 // ---------------- API Service ----------------
 class OrderStatusService {
-  static const String baseUrl = 'http://31.97.206.144:7021/api/users';
+  static const String baseUrl = 'https://api.simcurarx.com/api/users';
 
   static Future<OrderStatusResponse?> getOrderStatus(String userId) async {
     try {
@@ -2083,9 +2079,6 @@ class OrderStatusService {
           'Content-Type': 'application/json',
         },
       );
-
-  
-
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -2140,8 +2133,7 @@ class LoadingBarPainter extends CustomPainter {
     canvas.drawRRect(barRect, borderPaint);
 
     // Inner background (dark gray)
-    final backgroundPaint = Paint()
-      ..color = const Color(0xFF2a2a2a);
+    final backgroundPaint = Paint()..color = const Color(0xFF2a2a2a);
 
     canvas.drawRRect(
       RRect.fromRectAndRadius(
@@ -2252,7 +2244,8 @@ class RadarPainter extends CustomPainter {
 
     // Clip to circle for map background
     canvas.save();
-    canvas.clipPath(Path()..addOval(Rect.fromCircle(center: center, radius: radius)));
+    canvas.clipPath(
+        Path()..addOval(Rect.fromCircle(center: center, radius: radius)));
 
     if (mapImage != null) {
       // Draw actual map image

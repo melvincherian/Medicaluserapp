@@ -12,7 +12,7 @@ import 'dart:typed_data';
 
 class InvoiceScreen extends StatefulWidget {
   final String? orderId;
-  
+
   const InvoiceScreen({super.key, this.orderId});
 
   @override
@@ -45,14 +45,15 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
 
       final userId = user.id;
       final orderIdToUse = widget.orderId ?? _orderDetails?['_id'];
-      
+
       if (orderIdToUse == null) {
         throw Exception('Order ID not provided');
       }
 
       // Fetch invoice data from API
       final response = await http.get(
-        Uri.parse('http://31.97.206.144:7021/api/users/generate-invoice/$userId/$orderIdToUse'),
+        Uri.parse(
+            'https://api.simcurarx.com/api/users/generate-invoice/$userId/$orderIdToUse'),
         headers: {
           'Content-Type': 'application/json',
           // Add authorization header if needed
@@ -60,11 +61,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         },
       );
 
-
-
       print('response status codeeeeeeeeeeeeeeeeeeeeee ${response.statusCode}');
-            print('response bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy ${response.body}');
-
+      print('response bodyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -96,23 +94,23 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             // Header
             _buildHeader(),
             pw.SizedBox(height: 20),
-            
+
             // Invoice Details
             _buildInvoiceDetails(),
             pw.SizedBox(height: 20),
-            
+
             // Customer Details
             _buildCustomerDetails(),
             pw.SizedBox(height: 20),
-            
+
             // Order Items
             _buildOrderItems(),
             pw.SizedBox(height: 20),
-            
+
             // Total Summary
             _buildTotalSummary(),
             pw.SizedBox(height: 30),
-            
+
             // Footer
             _buildFooter(),
           ];
@@ -181,7 +179,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   // pw.Widget _buildInvoiceDetails() {
   //   final createdAt = _orderDetails?['createdAt'];
   //   String formattedDate = 'N/A';
-    
+
   //   if (createdAt != null) {
   //     try {
   //       formattedDate = DateTime.parse(createdAt.toString()).toString().split(' ')[0];
@@ -235,66 +233,71 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //   );
   // }
 
-
-
   pw.Widget _buildInvoiceDetails() {
-  final orderDate = _orderDetails?['orderDate'];
-  String formattedDate = 'N/A';
-  
-  if (orderDate != null) {
-    try {
-      formattedDate = DateTime.parse(orderDate.toString()).toString().split(' ')[0];
-    } catch (e) {
-      print('Error parsing date: $e');
-      formattedDate = 'N/A';
-    }
-  }
+    final orderDate = _orderDetails?['orderDate'];
+    String formattedDate = 'N/A';
 
-  return pw.Container(
-    padding: const pw.EdgeInsets.all(15),
-    decoration: pw.BoxDecoration(
-      border: pw.Border.all(color: PdfColors.grey300),
-      borderRadius: pw.BorderRadius.circular(5),
-    ),
-    child: pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      children: [
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text('Order ID:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            pw.Text(_orderDetails?['orderId']?.toString().substring(0, 12) ?? 'N/A'),
-            pw.SizedBox(height: 5),
-            pw.Text('Order Date:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            pw.Text(formattedDate),
-          ],
-        ),
-        pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.end,
-          children: [
-            pw.Text('Payment Status:', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            pw.Container(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: pw.BoxDecoration(
-                color: _getStatusColor(_orderDetails?['paymentStatus']?.toString()),
-                borderRadius: pw.BorderRadius.circular(3),
+    if (orderDate != null) {
+      try {
+        formattedDate =
+            DateTime.parse(orderDate.toString()).toString().split(' ')[0];
+      } catch (e) {
+        print('Error parsing date: $e');
+        formattedDate = 'N/A';
+      }
+    }
+
+    return pw.Container(
+      padding: const pw.EdgeInsets.all(15),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(5),
+      ),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Order ID:',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Text(_orderDetails?['orderId']?.toString().substring(0, 12) ??
+                  'N/A'),
+              pw.SizedBox(height: 5),
+              pw.Text('Order Date:',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Text(formattedDate),
+            ],
+          ),
+          pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.end,
+            children: [
+              pw.Text('Payment Status:',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+              pw.Container(
+                padding:
+                    const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: pw.BoxDecoration(
+                  color: _getStatusColor(
+                      _orderDetails?['paymentStatus']?.toString()),
+                  borderRadius: pw.BorderRadius.circular(3),
+                ),
+                child: pw.Text(
+                  _orderDetails?['paymentStatus']?.toString() ?? 'Unknown',
+                  style: pw.TextStyle(color: PdfColors.white, fontSize: 10),
+                ),
               ),
-              child: pw.Text(
-                _orderDetails?['paymentStatus']?.toString() ?? 'Unknown',
-                style: pw.TextStyle(color: PdfColors.white, fontSize: 10),
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   // pw.Widget _buildCustomerDetails() {
   //   final user = _orderDetails?['userId'];
   //   final address = _orderDetails?['deliveryAddress'];
-    
+
   //   return pw.Container(
   //     padding: const pw.EdgeInsets.all(15),
   //     decoration: pw.BoxDecoration(
@@ -304,13 +307,13 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //     child: pw.Column(
   //       crossAxisAlignment: pw.CrossAxisAlignment.start,
   //       children: [
-  //         pw.Text('Customer Details', 
+  //         pw.Text('Customer Details',
   //           style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
   //         pw.SizedBox(height: 10),
   //         pw.Text('Name: ${user?['name']?.toString() ?? 'N/A'}'),
   //         pw.Text('Mobile: ${user?['mobile']?.toString() ?? 'N/A'}'),
   //         pw.SizedBox(height: 10),
-  //         pw.Text('Delivery Address:', 
+  //         pw.Text('Delivery Address:',
   //           style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
   //         if (address != null) ...[
   //           pw.Text('${address['house']?.toString() ?? ''}, ${address['street']?.toString() ?? ''}'),
@@ -323,44 +326,44 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //   );
   // }
 
-
   pw.Widget _buildCustomerDetails() {
-  final customer = _orderDetails?['customer'];
-  final rider = _orderDetails?['rider'];
-  
-  return pw.Container(
-    padding: const pw.EdgeInsets.all(15),
-    decoration: pw.BoxDecoration(
-      border: pw.Border.all(color: PdfColors.grey300),
-      borderRadius: pw.BorderRadius.circular(5),
-    ),
-    child: pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.Text('Customer Details', 
-          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-        pw.SizedBox(height: 10),
-        pw.Text('Name: ${customer?['name']?.toString() ?? 'N/A'}'),
-        pw.Text('Phone: ${customer?['phone']?.toString() ?? 'N/A'}'),
-        pw.SizedBox(height: 10),
-        if (rider != null) ...[
-          pw.Text('Rider Details:', 
-            style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-          pw.Text('Rider: ${rider['name']?.toString() ?? 'N/A'}'),
-          pw.Text('Phone: ${rider['phone']?.toString() ?? 'N/A'}'),
+    final customer = _orderDetails?['customer'];
+    final rider = _orderDetails?['rider'];
+
+    return pw.Container(
+      padding: const pw.EdgeInsets.all(15),
+      decoration: pw.BoxDecoration(
+        border: pw.Border.all(color: PdfColors.grey300),
+        borderRadius: pw.BorderRadius.circular(5),
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text('Customer Details',
+              style:
+                  pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          pw.SizedBox(height: 10),
+          pw.Text('Name: ${customer?['name']?.toString() ?? 'N/A'}'),
+          pw.Text('Phone: ${customer?['phone']?.toString() ?? 'N/A'}'),
+          pw.SizedBox(height: 10),
+          if (rider != null) ...[
+            pw.Text('Rider Details:',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+            pw.Text('Rider: ${rider['name']?.toString() ?? 'N/A'}'),
+            pw.Text('Phone: ${rider['phone']?.toString() ?? 'N/A'}'),
+          ],
         ],
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
   // pw.Widget _buildOrderItems() {
   //   final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
-    
+
   //   return pw.Column(
   //     crossAxisAlignment: pw.CrossAxisAlignment.start,
   //     children: [
-  //       pw.Text('Order Items', 
+  //       pw.Text('Order Items',
   //         style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
   //       pw.SizedBox(height: 10),
   //       pw.Table(
@@ -388,7 +391,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //             final quantity = _safeParseInt(item['quantity']) ?? 1;
   //             final price = _safeParseInt(medicine?['price']) ?? 0;
   //             final total = quantity * price;
-              
+
   //             return pw.TableRow(
   //               children: [
   //                 _buildTableCell('${medicine?['name']?.toString() ?? 'Unknown'}\n${medicine?['description']?.toString() ?? ''}'),
@@ -404,50 +407,48 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //   );
   // }
 
-
-
-
   pw.Widget _buildOrderItems() {
-  final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
-  
-  return pw.Column(
-    crossAxisAlignment: pw.CrossAxisAlignment.start,
-    children: [
-      pw.Text('Order Items', 
-        style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-      pw.SizedBox(height: 10),
-      pw.Table(
-        border: pw.TableBorder.all(color: PdfColors.grey300),
-        columnWidths: {
-          0: const pw.FlexColumnWidth(3),
-          1: const pw.FlexColumnWidth(1),
-          2: const pw.FlexColumnWidth(2),
-        },
-        children: [
-          // Header
-          pw.TableRow(
-            decoration: const pw.BoxDecoration(color: PdfColors.grey200),
-            children: [
-              _buildTableCell('Medicine', isHeader: true),
-              _buildTableCell('Qty', isHeader: true),
-              _buildTableCell('Pharmacy', isHeader: true),
-            ],
-          ),
-          // Items
-          ...items.map((item) {
-            return pw.TableRow(
+    final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
+
+    return pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text('Order Items',
+            style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+        pw.SizedBox(height: 10),
+        pw.Table(
+          border: pw.TableBorder.all(color: PdfColors.grey300),
+          columnWidths: {
+            0: const pw.FlexColumnWidth(3),
+            1: const pw.FlexColumnWidth(1),
+            2: const pw.FlexColumnWidth(2),
+          },
+          children: [
+            // Header
+            pw.TableRow(
+              decoration: const pw.BoxDecoration(color: PdfColors.grey200),
               children: [
-                _buildTableCell(item['medicineName']?.toString() ?? 'Unknown'),
-                _buildTableCell(item['quantity']?.toString() ?? '1'),
-                _buildTableCell(item['pharmacy']?.toString() ?? 'N/A'),
+                _buildTableCell('Medicine', isHeader: true),
+                _buildTableCell('Qty', isHeader: true),
+                _buildTableCell('Pharmacy', isHeader: true),
               ],
-            );
-          }).toList(),
-        ],
-      ),
-    ],
-  );
-}
+            ),
+            // Items
+            ...items.map((item) {
+              return pw.TableRow(
+                children: [
+                  _buildTableCell(
+                      item['medicineName']?.toString() ?? 'Unknown'),
+                  _buildTableCell(item['quantity']?.toString() ?? '1'),
+                  _buildTableCell(item['pharmacy']?.toString() ?? 'N/A'),
+                ],
+              );
+            }).toList(),
+          ],
+        ),
+      ],
+    );
+  }
 
   pw.Widget _buildTableCell(String text, {bool isHeader = false}) {
     return pw.Container(
@@ -488,9 +489,9 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //               pw.Row(
   //                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
   //                 children: [
-  //                   pw.Text('Total Amount:', 
+  //                   pw.Text('Total Amount:',
   //                     style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
-  //                   pw.Text('₹$totalAmount', 
+  //                   pw.Text('₹$totalAmount',
   //                     style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
   //                 ],
   //               ),
@@ -502,45 +503,45 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //   );
   // }
 
-
   pw.Widget _buildTotalSummary() {
-  final deliveryCharge = _safeParseInt(_orderDetails?['deliveryCharge']) ?? 0;
-  final totalAmount = _safeParseInt(_orderDetails?['totalAmount']) ?? 0;
-  final subtotal = totalAmount - deliveryCharge; // Calculate subtotal
+    final deliveryCharge = _safeParseInt(_orderDetails?['deliveryCharge']) ?? 0;
+    final totalAmount = _safeParseInt(_orderDetails?['totalAmount']) ?? 0;
+    final subtotal = totalAmount - deliveryCharge; // Calculate subtotal
 
-  return pw.Container(
-    width: 200,
-    child: pw.Column(
-      crossAxisAlignment: pw.CrossAxisAlignment.end,
-      children: [
-        pw.Container(
-          padding: const pw.EdgeInsets.all(15),
-          decoration: pw.BoxDecoration(
-            border: pw.Border.all(color: PdfColors.grey300),
-            borderRadius: pw.BorderRadius.circular(5),
+    return pw.Container(
+      width: 200,
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.end,
+        children: [
+          pw.Container(
+            padding: const pw.EdgeInsets.all(15),
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(color: PdfColors.grey300),
+              borderRadius: pw.BorderRadius.circular(5),
+            ),
+            child: pw.Column(
+              children: [
+                _buildSummaryRow('Subtotal:', '$subtotal'),
+                // _buildSummaryRow('Delivery Charge:', '$deliveryCharge'),
+                pw.Divider(color: PdfColors.grey400),
+                pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Text('Total Amount:',
+                        style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold, fontSize: 14)),
+                    pw.Text('$totalAmount',
+                        style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold, fontSize: 14)),
+                  ],
+                ),
+              ],
+            ),
           ),
-          child: pw.Column(
-            children: [
-              _buildSummaryRow('Subtotal:', '$subtotal'),
-              // _buildSummaryRow('Delivery Charge:', '$deliveryCharge'),
-              pw.Divider(color: PdfColors.grey400),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text('Total Amount:', 
-                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
-                  pw.Text('$totalAmount', 
-                    style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 14)),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 
   pw.Widget _buildSummaryRow(String label, String value) {
     return pw.Padding(
@@ -548,8 +549,8 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       child: pw.Row(
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
-          pw.Text(label, style:const pw.TextStyle(fontSize: 12)),
-          pw.Text(value, style:const pw.TextStyle(fontSize: 12)),
+          pw.Text(label, style: const pw.TextStyle(fontSize: 12)),
+          pw.Text(value, style: const pw.TextStyle(fontSize: 12)),
         ],
       ),
     );
@@ -596,7 +597,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   int _getTotalItemsAmount() {
     final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
     int total = 0;
-    
+
     for (var item in items) {
       try {
         final medicine = item['medicineId'];
@@ -607,7 +608,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
         print('Error calculating item total: $e');
       }
     }
-    
+
     return total;
   }
 
@@ -634,7 +635,10 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Invoice',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 26),),
+        title: const Text(
+          'Invoice',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+        ),
         backgroundColor: Color(0xFF5931DD),
         foregroundColor: Colors.white,
         centerTitle: true,
@@ -651,11 +655,15 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
               onTap: () {
                 Navigator.pop(context);
               },
-              child: const Icon(Icons.arrow_back_ios_new, size: 18,color: Colors.black,),
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                size: 18,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
-        actions:const [
+        actions: const [
           // if (_orderDetails != null)
           //   IconButton(
           //     icon: const Icon(Icons.download),
@@ -670,7 +678,6 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
           //   ),
         ],
       ),
-      
       body: _buildBody(),
     );
   }
@@ -767,7 +774,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Action Buttons
           Row(
             children: [
@@ -806,7 +813,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   // Widget _buildPreviewContent() {
   //   final user = _orderDetails?['userId'];
   //   final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
-    
+
   //   return Column(
   //     crossAxisAlignment: CrossAxisAlignment.start,
   //     children: [
@@ -838,41 +845,40 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
   //   );
   // }
 
-
-
   Widget _buildPreviewContent() {
-  final customer = _orderDetails?['customer'];
-  final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
-  
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Order ID: ${_orderDetails?['orderId']?.toString().substring(0, 12) ?? 'N/A'}',
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      Text('Customer: ${customer?['name'] ?? 'N/A'}'),
-      Text('Total Amount: ₹${_orderDetails?['totalAmount'] ?? 0}'),
-      Text('Payment Status: ${_orderDetails?['paymentStatus'] ?? 'Unknown'}'),
-      const SizedBox(height: 12),
-      Text(
-        'Items (${items.length}):',
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      ...items.take(3).map((item) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 16, top: 4),
-          child: Text('• ${item['medicineName'] ?? 'Unknown'} (Qty: ${item['quantity']} - ${item['pharmacy'] ?? 'N/A'})'),
-        );
-      }).toList(),
-      if (items.length > 3)
-        Padding(
-          padding: const EdgeInsets.only(left: 16, top: 4),
-          child: Text('... and ${items.length - 3} more items'),
+    final customer = _orderDetails?['customer'];
+    final items = _orderDetails?['orderItems'] as List<dynamic>? ?? [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Order ID: ${_orderDetails?['orderId']?.toString().substring(0, 12) ?? 'N/A'}',
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-    ],
-  );
-}
+        Text('Customer: ${customer?['name'] ?? 'N/A'}'),
+        Text('Total Amount: ₹${_orderDetails?['totalAmount'] ?? 0}'),
+        Text('Payment Status: ${_orderDetails?['paymentStatus'] ?? 'Unknown'}'),
+        const SizedBox(height: 12),
+        Text(
+          'Items (${items.length}):',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        ...items.take(3).map((item) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 16, top: 4),
+            child: Text(
+                '• ${item['medicineName'] ?? 'Unknown'} (Qty: ${item['quantity']} - ${item['pharmacy'] ?? 'N/A'})'),
+          );
+        }).toList(),
+        if (items.length > 3)
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 4),
+            child: Text('... and ${items.length - 3} more items'),
+          ),
+      ],
+    );
+  }
 
   Future<void> _previewPDF() async {
     try {
@@ -886,27 +892,30 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       );
 
       final pdfData = await _generatePDF();
-      
+
       // Hide loading indicator
       Navigator.of(context).pop();
-      
+
       // Try to use Printing.layoutPdf, fallback to share if not supported
       try {
         await Printing.layoutPdf(
           onLayout: (_) => pdfData,
-          name: 'Invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}',
+          name:
+              'Invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}',
         );
       } catch (previewError) {
         print('Preview not supported, falling back to share: $previewError');
         // If preview is not supported, directly share the PDF
         await Printing.sharePdf(
           bytes: pdfData,
-          filename: 'invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}.pdf',
+          filename:
+              'invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}.pdf',
         );
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('PDF preview not supported on this platform. PDF has been shared instead.'),
+            content: Text(
+                'PDF preview not supported on this platform. PDF has been shared instead.'),
             backgroundColor: Colors.orange,
           ),
         );
@@ -916,7 +925,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       print('PDF Preview Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -940,16 +949,17 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       );
 
       final pdfData = await _generatePDF();
-      
+
       // Hide loading indicator
       Navigator.of(context).pop();
-      
+
       try {
         await Printing.sharePdf(
           bytes: pdfData,
-          filename: 'invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}.pdf',
+          filename:
+              'invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}.pdf',
         );
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('PDF ready for download/sharing!'),
@@ -966,7 +976,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       print('PDF Download Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -990,14 +1000,15 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       );
 
       final pdfData = await _generatePDF();
-      
+
       // Hide loading indicator
       Navigator.of(context).pop();
-      
+
       try {
         await Printing.sharePdf(
           bytes: pdfData,
-          filename: 'invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}.pdf',
+          filename:
+              'invoice_${_orderDetails?['_id']?.toString().substring(0, 8) ?? 'unknown'}.pdf',
         );
       } catch (shareError) {
         print('Share not supported: $shareError');
@@ -1008,7 +1019,7 @@ class _InvoiceScreenState extends State<InvoiceScreen> {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop();
       }
-      
+
       print('PDF Share Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -4,27 +4,25 @@ import 'package:http/http.dart' as http;
 import 'package:medical_user_app/models/pharmacy_category_model.dart';
 
 class PharmacyService {
-  static const String baseUrl = 'http://31.97.206.144:7021/api';
-  
+  static const String baseUrl = 'https://api.simcurarx.com/api';
+
   // Get medicines from a specific pharmacy with optional category filter
   Future<PharmacyMedicinesResponse> getMedicinesByPharmacy({
     required String pharmacyId,
     String? category,
   }) async {
-
     print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk$category');
     try {
       String url = '$baseUrl/pharmacy/getmedicines/$pharmacyId';
 
       print('ttttttttttttttttttttttttttttttttttttttt$url');
-      
+
       if (category != null && category.isNotEmpty) {
         url += '?category=$category';
       }
 
-
       print('daaaaaaaaaaaaaaaaaaaaataaaaaaaaaaaaaaaaaaa$url');
-      
+
       final response = await http.get(
         Uri.parse(url),
         headers: {
@@ -35,8 +33,7 @@ class PharmacyService {
         const Duration(seconds: 30),
       );
 
-print('response status codeeeeeeeeeeeeeeeeeeeee${response.body}');
-
+      print('response status codeeeeeeeeeeeeeeeeeeeee${response.body}');
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonData = json.decode(response.body);
@@ -86,12 +83,18 @@ print('response status codeeeeeeeeeeeeeeeeeeeee${response.body}');
   }) async {
     try {
       final response = await getMedicinesByPharmacy(pharmacyId: pharmacyId);
-      
+
       // Filter medicines based on search query
       final filteredMedicines = response.medicines.where((medicine) {
-        return medicine.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-               medicine.description.toLowerCase().contains(searchQuery.toLowerCase()) ||
-               medicine.categoryName.toLowerCase().contains(searchQuery.toLowerCase());
+        return medicine.name
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase()) ||
+            medicine.description
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase()) ||
+            medicine.categoryName
+                .toLowerCase()
+                .contains(searchQuery.toLowerCase());
       }).toList();
 
       return PharmacyMedicinesResponse(
@@ -110,12 +113,12 @@ print('response status codeeeeeeeeeeeeeeeeeeeee${response.body}');
   Future<List<String>> getAvailableCategories(String pharmacyId) async {
     try {
       final response = await getAllMedicinesByPharmacy(pharmacyId);
-      
+
       final categories = <String>{};
       for (final medicine in response.medicines) {
         categories.add(medicine.categoryName);
       }
-      
+
       return categories.toList()..sort();
     } catch (e) {
       rethrow;
@@ -134,7 +137,7 @@ print('response status codeeeeeeeeeeeeeeeeeeeee${response.body}');
         pharmacyId: pharmacyId,
         category: category,
       );
-      
+
       final filteredMedicines = response.medicines.where((medicine) {
         return medicine.price >= minPrice && medicine.price <= maxPrice;
       }).toList();

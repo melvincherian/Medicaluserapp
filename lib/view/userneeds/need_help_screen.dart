@@ -30,7 +30,7 @@ class _NeedHelpScreenState extends State<NeedHelpScreen> {
       });
 
       final response = await http.get(
-        Uri.parse('http://31.97.206.144:7021/api/admin/userfaq'),
+        Uri.parse('https://api.simcurarx.com/api/admin/userfaq'),
       );
 
       if (response.statusCode == 200) {

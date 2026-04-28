@@ -529,7 +529,7 @@
 // import 'package:http/http.dart' as http;
 
 // class _OrderStatusApi {
-//   static const String _base = 'http://31.97.206.144:7021/api/users';
+//   static const String _base = 'https://api.simcurarx.com/api/users';
 
 //   static Future<String?> latestStatus(String orderId) async {
 //     try {
@@ -1121,7 +1121,7 @@
 // import 'package:http/http.dart' as http;
 
 // class _OrderStatusApi {
-//   static const String _base = 'http://31.97.206.144:7021/api/users';
+//   static const String _base = 'https://api.simcurarx.com/api/users';
 
 //   static Future<String?> latestStatus(String orderId) async {
 //     try {

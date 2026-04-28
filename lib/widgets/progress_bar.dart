@@ -3,7 +3,7 @@
 // class CustomProgressBar extends StatelessWidget {
 //   final int currentStep;
 //   final int totalSteps;
-  
+
 //   const CustomProgressBar({
 //     Key? key,
 //     required this.currentStep,
@@ -14,7 +14,7 @@
 //   Widget build(BuildContext context) {
 //     // Calculate progress percentage based on current step
 //     double progressPercentage = currentStep / totalSteps;
-    
+
 //     return Container(
 //       width: double.infinity,
 //       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -30,7 +30,7 @@
 //               borderRadius: BorderRadius.circular(2),
 //             ),
 //           ),
-          
+
 //           // Progress line - NOW DYNAMIC!
 //           Positioned(
 //             left: 0,
@@ -47,20 +47,20 @@
 //               ),
 //             ),
 //           ),
-          
+
 //           // Step indicators
 //           Row(
 //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //             children: List.generate(totalSteps, (index) {
 //               bool isCompleted = index < currentStep;
 //               bool isCurrent = index == currentStep - 1;
-              
+
 //               return Container(
 //                 width: 24,
 //                 height: 24,
 //                 decoration: BoxDecoration(
-//                   color: isCompleted ? 
-//                     (isCurrent ? Colors.indigo.shade500 : Colors.blue.shade400) : 
+//                   color: isCompleted ?
+//                     (isCurrent ? Colors.indigo.shade500 : Colors.blue.shade400) :
 //                     Colors.white,
 //                   shape: BoxShape.circle,
 //                   border: Border.all(
@@ -91,20 +91,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -114,7 +100,7 @@ import 'package:http/http.dart' as http;
 class CustomProgressBar extends StatelessWidget {
   final int currentStep;
   final int totalSteps;
-  
+
   const CustomProgressBar({
     Key? key,
     required this.currentStep,
@@ -124,7 +110,7 @@ class CustomProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double progressPercentage = currentStep / totalSteps;
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -140,13 +126,14 @@ class CustomProgressBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Progress line - Dynamic width
           Positioned(
             left: 0,
             child: Container(
               height: 10,
-              width: (MediaQuery.of(context).size.width - 32) * progressPercentage,
+              width:
+                  (MediaQuery.of(context).size.width - 32) * progressPercentage,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.blue.shade400, Colors.indigo.shade500],
@@ -157,24 +144,27 @@ class CustomProgressBar extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Step indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(totalSteps, (index) {
               bool isCompleted = index < currentStep;
               bool isCurrent = index == currentStep - 1;
-              
+
               return Container(
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: isCompleted ? 
-                    (isCurrent ? Colors.indigo.shade500 : Colors.blue.shade400) : 
-                    Colors.white,
+                  color: isCompleted
+                      ? (isCurrent
+                          ? Colors.indigo.shade500
+                          : Colors.blue.shade400)
+                      : Colors.white,
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isCompleted ? Colors.transparent : Colors.grey.shade300,
+                    color:
+                        isCompleted ? Colors.transparent : Colors.grey.shade300,
                     width: 1,
                   ),
                   boxShadow: [
@@ -282,7 +272,7 @@ class OrderStatusResponse {
 
 // ---------------- API Service ----------------
 class OrderStatusService {
-  static const String baseUrl = 'http://31.97.206.144:7021/api/users';
+  static const String baseUrl = 'https://api.simcurarx.com/api/users';
 
   static Future<OrderStatusResponse?> getOrderStatus(String userId) async {
     try {

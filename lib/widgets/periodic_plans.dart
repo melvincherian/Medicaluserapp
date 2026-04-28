@@ -657,7 +657,7 @@
 // // //         return false;
 // // //       }
 
-// // //       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+// // //       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 // // //       final response = await http.put(
 // // //         Uri.parse(url),
@@ -1011,7 +1011,7 @@
 
 // // //     try {
 // // //       final token = await SharedPreferencesHelper.getToken();
-// // //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
+// // //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
 
 // // //       final response = await http.get(
 // // //         Uri.parse(url),
@@ -1055,7 +1055,7 @@
 // // //         return;
 // // //       }
 
-// // //       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+// // //       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 // // //       final response = await http.put(
 // // //         Uri.parse(url),
@@ -1597,7 +1597,7 @@
 // // //         return false;
 // // //       }
 
-// // //       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+// // //       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 // // //       final response = await http.put(
 // // //         Uri.parse(url),
@@ -1858,7 +1858,7 @@
 
 // // //     try {
 // // //       final token = await SharedPreferencesHelper.getToken();
-// // //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
+// // //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
 
 // // //       final response = await http.get(
 // // //         Uri.parse(url),
@@ -1903,7 +1903,7 @@
 // // //         return;
 // // //       }
 
-// // //       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+// // //       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 // // //       final response = await http.put(
 // // //         Uri.parse(url),
@@ -2573,7 +2573,7 @@
 // //         return false;
 // //       }
 
-// //       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+// //       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 // //       final response = await http.put(
 // //         Uri.parse(url),
@@ -2835,7 +2835,7 @@
 
 // //     try {
 // //       final token = await SharedPreferencesHelper.getToken();
-// //       final url = 'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
+// //       final url = 'https://api.simcurarx.com/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
 
 // //       final response = await http.get(
 // //         Uri.parse(url),
@@ -2880,7 +2880,7 @@
 // //         return;
 // //       }
 
-// //       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+// //       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 // //       final response = await http.put(
 // //         Uri.parse(url),
@@ -3556,9 +3556,6 @@
 // //   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 // // }
 
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:intl/intl.dart';
@@ -3680,8 +3677,7 @@
 //       }
 
 //       final url =
-//           'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
-
+//           'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 //           print('hhhhvvvvvvvvvvvvvvvvvvvvvvvvvvv$url');
 
@@ -3695,7 +3691,6 @@
 //           'isActive': true,
 //         }),
 //       );
-
 
 //       print('response statussssssssssssssssssssssssss codeeeeeeeeeeeeeeeeeeee${response.statusCode}');
 
@@ -3713,9 +3708,6 @@
 //     }
 //   }
 
-
-
-
 //   // In your PeriodicMedsPlanCardSimple widget
 // Future<Map<String, dynamic>?> _fetchCurrentPlanData() async {
 //   try {
@@ -3727,7 +3719,7 @@
 //       return null;
 //     }
 
-//     final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+//     final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 //     final response = await http.get(
 //       Uri.parse(url),
@@ -3912,7 +3904,7 @@
 //                         onPressed: () {
 
 //                           Navigator.push(context, MaterialPageRoute(builder: (context)=>const PeriodicDetail()));
-                       
+
 //                           // _showMedicineDetailsModal(context);
 //                         },
 //                         style: OutlinedButton.styleFrom(
@@ -3992,7 +3984,7 @@
 //     try {
 //       final token = await SharedPreferencesHelper.getToken();
 //       final url =
-//           'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
+//           'https://api.simcurarx.com/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
 
 //       final response = await http.get(
 //         Uri.parse(url),
@@ -4038,7 +4030,7 @@
 //       }
 
 //       final url =
-//           'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+//           'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 //       final response = await http.put(
 //         Uri.parse(url),
@@ -4678,29 +4670,6 @@
 //   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -4820,10 +4789,8 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
         return false;
       }
 
-
-
-      final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
-
+      final url =
+          'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
       print('urrrrlllllllllllllllllllllllllllll$url');
 
@@ -4856,7 +4823,6 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
     }
   }
 
-
   // Future<Map<String, dynamic>?> _fetchCurrentPlanData() async {
   //   try {
   //     final user = await SharedPreferencesHelper.getUser();
@@ -4867,7 +4833,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
   //       return null;
   //     }
 
-  //     final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+  //     final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
   //     final response = await http.get(
   //       Uri.parse(url),
@@ -4906,10 +4872,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      bool _isCheckingPharmacy = false;
-
-
-      
+    bool _isCheckingPharmacy = false;
 
     return Container(
       width: double.infinity,
@@ -5017,7 +4980,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const  Color(0xFF5931DD),
+                          backgroundColor: const Color(0xFF5931DD),
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
@@ -5041,7 +5004,8 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const PeriodicDetail()));
+                                  builder: (context) =>
+                                      const PeriodicDetail()));
                         },
                         style: OutlinedButton.styleFrom(
                           side: const BorderSide(color: Color(0xFF5931DD)),
@@ -5115,8 +5079,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 //       }
 
 //       final url =
-//           'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
-
+//           'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 //           print('uuuuuurllllllllllllllllllllllllllll$url');
 
@@ -5127,7 +5090,6 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 //           'Authorization': 'Bearer $token',
 //         },
 //       );
-
 
 //        print('status codeeeeeeeeeeeeeeeeeeeeeeeeeeeeee ${response.statusCode}');
 //               print('response bodyyyyyyyyyyyyyyyyyyyy ${response.statusCode}');
@@ -5179,7 +5141,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 //     try {
 //       final token = await SharedPreferencesHelper.getToken();
 //       final url =
-//           'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
+//           'https://api.simcurarx.com/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
 
 //       final response = await http.get(
 //         Uri.parse(url),
@@ -5228,7 +5190,7 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 //       }
 
 //       // Use the correct endpoint
-//       final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+//       final url = 'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
 //       print('Updating plan status to: $isActive');
 //       print('URL: $url');
@@ -5884,17 +5846,6 @@ class PeriodicMedsPlanCardSimple extends StatelessWidget {
 //   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 // }
 
-
-
-
-
-
-
-
-
-
-
-
 class MedicineDetailsModalWithSearch extends StatefulWidget {
   final bool showAfterActivation;
   final List<Medicine>? previouslySelectedMedicines; // Add this parameter
@@ -5923,13 +5874,13 @@ class _MedicineDetailsModalWithSearchState
   void initState() {
     super.initState();
     _loadCurrentPlanStatus();
-    
+
     // Load previously selected medicines if available
     if (widget.previouslySelectedMedicines != null) {
-      _selectedMedicines = List<Medicine>.from(widget.previouslySelectedMedicines!);
+      _selectedMedicines =
+          List<Medicine>.from(widget.previouslySelectedMedicines!);
     }
   }
-  
 
   // Load current plan status from API
   Future<void> _loadCurrentPlanStatus() async {
@@ -5945,7 +5896,7 @@ class _MedicineDetailsModalWithSearchState
       }
 
       final url =
-          'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+          'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
       print('uuuuuurllllllllllllllllllllllllllll$url');
 
@@ -6007,7 +5958,7 @@ class _MedicineDetailsModalWithSearchState
     try {
       final token = await SharedPreferencesHelper.getToken();
       final url =
-          'http://31.97.206.144:7021/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
+          'https://api.simcurarx.com/api/pharmacy/allmedicine?name=${Uri.encodeComponent(query)}';
 
       final response = await http.get(
         Uri.parse(url),
@@ -6055,7 +6006,8 @@ class _MedicineDetailsModalWithSearchState
         return;
       }
 
-      final url = 'http://31.97.206.144:7021/api/users/periodicmedsplan/${user.id}';
+      final url =
+          'https://api.simcurarx.com/api/users/periodicmedsplan/${user.id}';
 
       print('Updating plan status to: $isActive');
       print('URL: $url');
@@ -6452,174 +6404,177 @@ class _MedicineDetailsModalWithSearchState
   // }
 
   Widget _buildSearchResults() {
-  return Column(
-    children: [
-      Expanded(
-        child: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: _searchResults.length,
-          itemBuilder: (context, index) {
-            final medicine = _searchResults[index];
-            final isSelected = _isMedicineSelected(medicine);
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: _searchResults.length,
+            itemBuilder: (context, index) {
+              final medicine = _searchResults[index];
+              final isSelected = _isMedicineSelected(medicine);
 
-            return Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: isSelected
-                    ? const BorderSide(color: Color(0xFF5931DD), width: 2)
-                    : BorderSide.none,
-              ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: () => _toggleMedicineSelection(medicine),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: isSelected,
-                        onChanged: (value) => _toggleMedicineSelection(medicine),
-                        activeColor: const Color(0xFF5931DD),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: medicine.images.isNotEmpty
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  medicine.images.first,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return const Icon(
-                                      Icons.medication,
-                                      color: Color(0xFF5931DD),
-                                      size: 40,
-                                    );
-                                  },
-                                ),
-                              )
-                            : const Icon(
-                                Icons.medication,
-                                color: Color(0xFF5931DD),
-                                size: 40,
-                              ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              medicine.name,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              medicine.description,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              children: [
-                                Text(
-                                  '₹${medicine.mrp}',
-                                  style: const TextStyle(
-                                    color: Color(0xFF5931DD),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              medicine.pharmacy.name,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 11,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Icon(
-                        isSelected ? Icons.check_circle : Icons.add_circle_outline,
-                        color: const Color(0xFF5931DD),
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-      // Fixed Continue Button at the bottom
-      if (_selectedMedicines.isNotEmpty)
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 10,
-                offset: const Offset(0, -3),
-              ),
-            ],
-          ),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                _searchController.clear();
-                setState(() {
-                  _searchResults = [];
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5931DD),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
+              return Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
+                  side: isSelected
+                      ? const BorderSide(color: Color(0xFF5931DD), width: 2)
+                      : BorderSide.none,
                 ),
-              ),
-              child: Text(
-                _selectedMedicines.length == 1
-                    ? 'Continue with Selected Medicine'
-                    : 'Continue with ${_selectedMedicines.length} Medicines',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => _toggleMedicineSelection(medicine),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: isSelected,
+                          onChanged: (value) =>
+                              _toggleMedicineSelection(medicine),
+                          activeColor: const Color(0xFF5931DD),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: medicine.images.isNotEmpty
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    medicine.images.first,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.medication,
+                                        color: Color(0xFF5931DD),
+                                        size: 40,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.medication,
+                                  color: Color(0xFF5931DD),
+                                  size: 40,
+                                ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                medicine.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                medicine.description,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 12,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Text(
+                                    '₹${medicine.mrp}',
+                                    style: const TextStyle(
+                                      color: Color(0xFF5931DD),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                medicine.pharmacy.name,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          isSelected
+                              ? Icons.check_circle
+                              : Icons.add_circle_outline,
+                          color: const Color(0xFF5931DD),
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        // Fixed Continue Button at the bottom
+        if (_selectedMedicines.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  blurRadius: 10,
+                  offset: const Offset(0, -3),
+                ),
+              ],
+            ),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  _searchController.clear();
+                  setState(() {
+                    _searchResults = [];
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF5931DD),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: Text(
+                  _selectedMedicines.length == 1
+                      ? 'Continue with Selected Medicine'
+                      : 'Continue with ${_selectedMedicines.length} Medicines',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-    ],
-  );
-}
+      ],
+    );
+  }
 
   Widget _buildSelectedMedicines() {
     return Column(
@@ -6764,7 +6719,8 @@ class _MedicineDetailsModalWithSearchState
                                     : null,
                             medicationsList: medicationsList,
                             mrp: _selectedMedicines.first.mrp.toString(),
-                            selectedMedicines: _selectedMedicines, // Pass the selected medicines
+                            selectedMedicines:
+                                _selectedMedicines, // Pass the selected medicines
                           ),
                         ),
                       );
@@ -6839,7 +6795,6 @@ class _MedicineDetailsModalWithSearchState
     super.dispose();
   }
 }
-
 
 class CurvedClipper extends CustomClipper<Path> {
   @override
