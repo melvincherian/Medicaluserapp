@@ -2303,7 +2303,6 @@ class _OrderStatusWidgetState extends State<OrderStatusWidget> {
   String? error;
   Timer? _timer;
 
-  // ✅ Controls widget visibility — only true AFTER dialog is dismissed
   bool _hideWidget = false;
 
   @override

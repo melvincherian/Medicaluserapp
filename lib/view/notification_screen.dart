@@ -1707,8 +1707,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:provider/provider.dart';
@@ -2133,7 +2131,8 @@ class _NotificationCard extends StatelessWidget {
                   isActive: step >= 3),
               _StepItem(
                   icon: Icons.local_shipping,
-                  label: 'Out for\nDelivery',
+                  // label: 'Out for\nDelivery',
+                  label: 'PickedUp',
                   isActive: step >= 4),
               // _StepItem(
               //     icon: Icons.check_circle,

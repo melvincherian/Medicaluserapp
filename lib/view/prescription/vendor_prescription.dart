@@ -1,3 +1,407 @@
+// // // import 'package:flutter/material.dart';
+// // // import 'package:http/http.dart' as http;
+// // // import 'dart:convert';
+// // // import 'package:medical_user_app/models/user_model.dart';
+// // // import 'package:medical_user_app/utils/shared_preferences_helper.dart';
+
+// // // class GetVendorPrescription extends StatefulWidget {
+// // //   const GetVendorPrescription({super.key});
+
+// // //   @override
+// // //   State<GetVendorPrescription> createState() => _GetVendorPrescriptionState();
+// // // }
+
+// // // class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
+// // //   bool _isLoading = false;
+// // //   bool _isFetching = true;
+// // //   List<Map<String, dynamic>> _prescriptions = [];
+// // //   String? _userId;
+// // //   String? _token;
+
+// // //   @override
+// // //   void initState() {
+// // //     super.initState();
+// // //     _loadPrescriptions();
+// // //   }
+
+// // //   Future<void> _loadPrescriptions() async {
+// // //     setState(() => _isFetching = true);
+
+// // //     try {
+// // //       final User? user = await SharedPreferencesHelper.getUser();
+// // //       final String? token = await SharedPreferencesHelper.getToken();
+
+// // //       if (user == null || token == null) {
+// // //         _showSnackBar('Session expired. Please log in again.', isError: true);
+// // //         return;
+// // //       }
+
+// // //       _userId = user.id;
+// // //       _token = token;
+
+// // //       final uri = Uri.parse(
+// // //         'http://31.97.206.144:7021/api/users/userprescriptions/${user.id}',
+// // //       );
+
+// // //       final response = await http.get(
+// // //         uri,
+// // //         headers: {
+// // //           'Content-Type': 'application/json',
+// // //           'Authorization': 'Bearer $token',
+// // //         },
+// // //       );
+
+// // //       final responseData = jsonDecode(response.body);
+
+// // //       print(
+// // //           'Response status code for get user prescriptionnnnnnnnnnnn ${response.statusCode}');
+// // //       print(
+// // //           'Response  booooooooooooooody for get user prescriptionnnnnnnnnnnn ${response.body}');
+
+// // //       if (response.statusCode == 200 && responseData['success'] == true) {
+// // //         setState(() {
+// // //           _prescriptions =
+// // //               List<Map<String, dynamic>>.from(responseData['prescriptions']);
+// // //         });
+// // //       } else {
+// // //         _showSnackBar(
+// // //             responseData['message'] ?? 'Failed to fetch prescriptions.',
+// // //             isError: true);
+// // //       }
+// // //     } catch (e) {
+// // //       _showSnackBar('Network error: $e', isError: true);
+// // //     } finally {
+// // //       if (mounted) setState(() => _isFetching = false);
+// // //     }
+// // //   }
+
+// // //   Future<void> _respondToPrescription(
+// // //       String prescriptionId, bool accept) async {
+// // //     setState(() => _isLoading = true);
+
+// // //     try {
+// // //       final uri = Uri.parse(
+// // //         'http://31.97.206.144:7021/api/users/users/$_userId/prescription/$prescriptionId/respond',
+// // //       );
+
+// // //       final response = await http.post(
+// // //         uri,
+// // //         headers: {
+// // //           'Content-Type': 'application/json',
+// // //           'Authorization': 'Bearer $_token',
+// // //         },
+// // //         body: jsonEncode({'accept': accept}),
+// // //       );
+
+// // //       final responseData = jsonDecode(response.body);
+
+// // //       print(
+// // //           'Response status code for get aaaaaaaaaceeeeeeeept prescriptionnnnnnnnnnnn ${response.statusCode}');
+// // //       print(
+// // //           'Response  booooooooooooooody for aaaaaaaaaceeeeeeeept user prescriptionnnnnnnnnnnn ${response.body}');
+// // //       print('prescriptionnnnnnnnnnnnnn iddddddddddddd $prescriptionId');
+// // //       print('submitted dataaaaaaaaaaaa $accept');
+
+// // //       if (response.statusCode == 200 && responseData['success'] == true) {
+// // //         _showSnackBar(
+// // //           accept
+// // //               ? 'Prescription accepted successfully!'
+// // //               : 'Prescription rejected.',
+// // //           isError: false,
+// // //         );
+// // //         await _loadPrescriptions(); // Refresh the list
+// // //       } else {
+// // //         _showSnackBar(responseData['message'] ?? 'Something went wrong.',
+// // //             isError: true);
+// // //       }
+// // //     } catch (e) {
+// // //       _showSnackBar('Network error: $e', isError: true);
+// // //     } finally {
+// // //       if (mounted) setState(() => _isLoading = false);
+// // //     }
+// // //   }
+
+// // //   void _showSnackBar(String message, {required bool isError}) {
+// // //     if (!mounted) return;
+// // //     ScaffoldMessenger.of(context).showSnackBar(
+// // //       SnackBar(
+// // //         content: Text(message),
+// // //         backgroundColor: isError ? Colors.red : Colors.green,
+// // //         behavior: SnackBarBehavior.floating,
+// // //       ),
+// // //     );
+// // //   }
+
+// // //   void _confirmAndRespond(String prescriptionId, bool accept) {
+// // //     showDialog(
+// // //       context: context,
+// // //       builder: (ctx) => AlertDialog(
+// // //         title: Text(accept ? 'Accept Quote' : 'Reject Quote'),
+// // //         content: Text(
+// // //           accept
+// // //               ? 'Are you sure you want to accept this quote?'
+// // //               : 'Are you sure you want to reject this prescription quote?',
+// // //         ),
+// // //         actions: [
+// // //           TextButton(
+// // //             onPressed: () => Navigator.pop(ctx),
+// // //             child: const Text('Cancel'),
+// // //           ),
+// // //           ElevatedButton(
+// // //             style: ElevatedButton.styleFrom(
+// // //               backgroundColor: accept ? Colors.green : Colors.red,
+// // //               foregroundColor: Colors.white,
+// // //             ),
+// // //             onPressed: () {
+// // //               Navigator.pop(ctx);
+// // //               _respondToPrescription(prescriptionId, accept);
+// // //             },
+// // //             child: Text(accept ? 'Accept' : 'Reject'),
+// // //           ),
+// // //         ],
+// // //       ),
+// // //     );
+// // //   }
+
+// // //   @override
+// // //   Widget build(BuildContext context) {
+// // //     return Scaffold(
+// // //       appBar: AppBar(
+// // //         title: Text(
+// // //           'My Prescriptions',
+// // //           style: TextStyle(fontWeight: FontWeight.bold),
+// // //         ),
+// // //         centerTitle: true,
+// // //         actions: [
+// // //           IconButton(
+// // //             icon: const Icon(Icons.refresh),
+// // //             onPressed: _loadPrescriptions,
+// // //           ),
+// // //         ],
+// // //       ),
+// // //       body: _isFetching
+// // //           ? const Center(child: CircularProgressIndicator())
+// // //           : _prescriptions.isEmpty
+// // //               ? const Center(child: Text('No prescriptions found.'))
+// // //               : Stack(
+// // //                   children: [
+// // //                     ListView.builder(
+// // //                       padding: const EdgeInsets.all(16),
+// // //                       itemCount: _prescriptions.length,
+// // //                       itemBuilder: (context, index) {
+// // //                         final prescription = _prescriptions[index];
+// // //                         return _buildPrescriptionCard(prescription);
+// // //                       },
+// // //                     ),
+// // //                     if (_isLoading)
+// // //                       const ColoredBox(
+// // //                         color: Colors.black26,
+// // //                         child: Center(child: CircularProgressIndicator()),
+// // //                       ),
+// // //                   ],
+// // //                 ),
+// // //     );
+// // //   }
+
+// // //   Widget _buildPrescriptionCard(Map<String, dynamic> prescription) {
+// // //     final prescriptionId =
+// // //         prescription['prescriptionId'] ?? prescription['_id'];
+// // //     final pharmacy = prescription['pharmacy'] as Map<String, dynamic>?;
+// // //     final status = prescription['status'] ?? 'Pending';
+// // //     final proposedAmount = prescription['proposedAmount'];
+// // //     final deliveryCharge = prescription['deliveryCharge'];
+// // //     final platformFee = prescription['platformFee'];
+// // //     final totalAmount = prescription['totalAmount'];
+// // //     final proposedDescription = prescription['proposedDescription'];
+// // //     final prescriptionUrl = prescription['prescriptionUrl'];
+
+// // //     final bool canRespond = status == 'QuoteAccepted';
+
+// // //     return Card(
+// // //       margin: const EdgeInsets.only(bottom: 16),
+// // //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+// // //       child: Padding(
+// // //         padding: const EdgeInsets.all(16),
+// // //         child: Column(
+// // //           crossAxisAlignment: CrossAxisAlignment.start,
+// // //           children: [
+// // //             // Prescription image
+// // //             if (prescriptionUrl != null)
+// // //               ClipRRect(
+// // //                 borderRadius: BorderRadius.circular(10),
+// // //                 child: Image.network(
+// // //                   prescriptionUrl,
+// // //                   width: double.infinity,
+// // //                   height: 180,
+// // //                   fit: BoxFit.cover,
+// // //                   errorBuilder: (_, __, ___) => Container(
+// // //                     height: 180,
+// // //                     color: Colors.grey[200],
+// // //                     child: const Center(child: Icon(Icons.image_not_supported)),
+// // //                   ),
+// // //                 ),
+// // //               ),
+
+// // //             const SizedBox(height: 12),
+
+// // //             // Status chip
+// // //             Align(
+// // //               alignment: Alignment.center,
+// // //               child: Chip(
+// // //                 label: Text(status),
+// // //                 backgroundColor: _statusColor(status).withOpacity(0.15),
+// // //                 labelStyle: TextStyle(
+// // //                   color: _statusColor(status),
+// // //                   fontWeight: FontWeight.w600,
+// // //                 ),
+// // //               ),
+// // //             ),
+
+// // //             const SizedBox(height: 12),
+
+// // //             // Pharmacy info
+// // //             if (pharmacy != null) ...[
+// // //               ListTile(
+// // //                 contentPadding: EdgeInsets.zero,
+// // //                 leading: pharmacy['image'] != null
+// // //                     ? ClipRRect(
+// // //                         borderRadius: BorderRadius.circular(8),
+// // //                         child: Image.network(
+// // //                           pharmacy['image'],
+// // //                           width: 48,
+// // //                           height: 48,
+// // //                           fit: BoxFit.cover,
+// // //                         ),
+// // //                       )
+// // //                     : const Icon(Icons.local_pharmacy),
+// // //                 title: Text(
+// // //                   pharmacy['name'] ?? '',
+// // //                   style: const TextStyle(fontWeight: FontWeight.w600),
+// // //                 ),
+// // //                 subtitle: Text(pharmacy['address'] ?? ''),
+// // //               ),
+// // //               const Divider(),
+// // //             ],
+
+// // //             // Proposed description
+// // //             if (proposedDescription != null &&
+// // //                 (proposedDescription as String).isNotEmpty) ...[
+// // //               const Text('Items',
+// // //                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+// // //               const SizedBox(height: 6),
+// // //               Text(proposedDescription, style: const TextStyle(fontSize: 14)),
+// // //               const SizedBox(height: 12),
+// // //             ],
+
+// // //             // Amount breakdown
+// // //             if (proposedAmount != null) ...[
+// // //               const Text('Quote Breakdown',
+// // //                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+// // //               const SizedBox(height: 8),
+// // //               _buildAmountRow('Medicine amount', '₹$proposedAmount'),
+// // //               if (deliveryCharge != null)
+// // //                 _buildAmountRow('Delivery charge', '₹$deliveryCharge'),
+// // //               if (platformFee != null)
+// // //                 _buildAmountRow('Platform fee', '₹$platformFee'),
+// // //               const Divider(),
+// // //               _buildAmountRow('Total', '₹${totalAmount ?? proposedAmount}',
+// // //                   isBold: true),
+// // //               const SizedBox(height: 16),
+// // //             ],
+
+// // //             // Accept / Reject buttons — only shown when canRespond
+// // //             if (canRespond)
+// // //               Row(
+// // //                 children: [
+// // //                   Expanded(
+// // //                     child: OutlinedButton(
+// // //                       style: OutlinedButton.styleFrom(
+// // //                         foregroundColor: Colors.red,
+// // //                         side: const BorderSide(color: Colors.red),
+// // //                         padding: const EdgeInsets.symmetric(vertical: 14),
+// // //                         shape: RoundedRectangleBorder(
+// // //                             borderRadius: BorderRadius.circular(10)),
+// // //                       ),
+// // //                       onPressed: () =>
+// // //                           _confirmAndRespond(prescriptionId, false),
+// // //                       child: const Text('Reject',
+// // //                           style: TextStyle(
+// // //                               fontSize: 15, fontWeight: FontWeight.w600)),
+// // //                     ),
+// // //                   ),
+// // //                   const SizedBox(width: 12),
+// // //                   Expanded(
+// // //                     child: ElevatedButton(
+// // //                       style: ElevatedButton.styleFrom(
+// // //                         backgroundColor: Colors.green,
+// // //                         foregroundColor: Colors.white,
+// // //                         padding: const EdgeInsets.symmetric(vertical: 14),
+// // //                         shape: RoundedRectangleBorder(
+// // //                             borderRadius: BorderRadius.circular(10)),
+// // //                       ),
+// // //                       onPressed: () => _confirmAndRespond(prescriptionId, true),
+// // //                       child: const Text('Accept',
+// // //                           style: TextStyle(
+// // //                               fontSize: 15, fontWeight: FontWeight.w600)),
+// // //                     ),
+// // //                   ),
+// // //                 ],
+// // //               ),
+// // //           ],
+// // //         ),
+// // //       ),
+// // //     );
+// // //   }
+
+// // //   Widget _buildAmountRow(String label, String value, {bool isBold = false}) {
+// // //     final style = TextStyle(
+// // //       fontSize: 14,
+// // //       fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
+// // //     );
+// // //     return Padding(
+// // //       padding: const EdgeInsets.symmetric(vertical: 4),
+// // //       child: Row(
+// // //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// // //         children: [
+// // //           Text(label, style: style),
+// // //           Text(value, style: style),
+// // //         ],
+// // //       ),
+// // //     );
+// // //   }
+
+// // //   Color _statusColor(String status) {
+// // //     switch (status) {
+// // //       case 'QuoteAccepted':
+// // //         return Colors.green;
+// // //       case 'Pending':
+// // //         return Colors.orange;
+// // //       case 'Rejected':
+// // //         return Colors.red;
+// // //       default:
+// // //         return Colors.grey;
+// // //     }
+// // //   }
+// // // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // // import 'package:flutter/material.dart';
 // // import 'package:http/http.dart' as http;
 // // import 'dart:convert';
@@ -40,7 +444,7 @@
 // //       _token = token;
 
 // //       final uri = Uri.parse(
-// //         'http://31.97.206.144:7021/api/users/userprescriptions/${user.id}',
+// //         'http://31.97.206.144:7021/api/users/prescription-previews/${user.id}',
 // //       );
 
 // //       final response = await http.get(
@@ -53,20 +457,19 @@
 
 // //       final responseData = jsonDecode(response.body);
 
-// //       print(
-// //           'Response status code for get user prescriptionnnnnnnnnnnn ${response.statusCode}');
-// //       print(
-// //           'Response  booooooooooooooody for get user prescriptionnnnnnnnnnnn ${response.body}');
+// //       print('Response status [prescription-previews]: ${response.statusCode}');
+// //       print('Response body [prescription-previews]: ${response.body}');
 
 // //       if (response.statusCode == 200 && responseData['success'] == true) {
 // //         setState(() {
 // //           _prescriptions =
-// //               List<Map<String, dynamic>>.from(responseData['prescriptions']);
+// //               List<Map<String, dynamic>>.from(responseData['previews'] ?? []);
 // //         });
 // //       } else {
 // //         _showSnackBar(
-// //             responseData['message'] ?? 'Failed to fetch prescriptions.',
-// //             isError: true);
+// //           responseData['message'] ?? 'Failed to fetch prescriptions.',
+// //           isError: true,
+// //         );
 // //       }
 // //     } catch (e) {
 // //       _showSnackBar('Network error: $e', isError: true);
@@ -80,8 +483,10 @@
 // //     setState(() => _isLoading = true);
 
 // //     try {
+// //       final action = accept ? 'confirm' : 'reject';
+
 // //       final uri = Uri.parse(
-// //         'http://31.97.206.144:7021/api/users/users/$_userId/prescription/$prescriptionId/respond',
+// //         'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
 // //       );
 
 // //       final response = await http.post(
@@ -90,29 +495,30 @@
 // //           'Content-Type': 'application/json',
 // //           'Authorization': 'Bearer $_token',
 // //         },
-// //         body: jsonEncode({'accept': accept}),
+// //         body: jsonEncode({'action': action}),
 // //       );
 
 // //       final responseData = jsonDecode(response.body);
 
 // //       print(
-// //           'Response status code for get aaaaaaaaaceeeeeeeept prescriptionnnnnnnnnnnn ${response.statusCode}');
-// //       print(
-// //           'Response  booooooooooooooody for aaaaaaaaaceeeeeeeept user prescriptionnnnnnnnnnnn ${response.body}');
-// //       print('prescriptionnnnnnnnnnnnnn iddddddddddddd $prescriptionId');
-// //       print('submitted dataaaaaaaaaaaa $accept');
+// //           'Response status [confirm-prescription-order]: ${response.statusCode}');
+// //       print('Response body [confirm-prescription-order]: ${response.body}');
+// //       print('Prescription ID: $prescriptionId');
+// //       print('Action submitted: $action');
 
 // //       if (response.statusCode == 200 && responseData['success'] == true) {
 // //         _showSnackBar(
 // //           accept
-// //               ? 'Prescription accepted successfully!'
+// //               ? 'Prescription confirmed successfully!'
 // //               : 'Prescription rejected.',
 // //           isError: false,
 // //         );
-// //         await _loadPrescriptions(); // Refresh the list
+// //         await _loadPrescriptions();
 // //       } else {
-// //         _showSnackBar(responseData['message'] ?? 'Something went wrong.',
-// //             isError: true);
+// //         _showSnackBar(
+// //           responseData['message'] ?? 'Something went wrong.',
+// //           isError: true,
+// //         );
 // //       }
 // //     } catch (e) {
 // //       _showSnackBar('Network error: $e', isError: true);
@@ -167,7 +573,7 @@
 // //   Widget build(BuildContext context) {
 // //     return Scaffold(
 // //       appBar: AppBar(
-// //         title: Text(
+// //         title: const Text(
 // //           'My Prescriptions',
 // //           style: TextStyle(fontWeight: FontWeight.bold),
 // //         ),
@@ -286,8 +692,10 @@
 // //             // Proposed description
 // //             if (proposedDescription != null &&
 // //                 (proposedDescription as String).isNotEmpty) ...[
-// //               const Text('Items',
-// //                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+// //               const Text(
+// //                 'Items',
+// //                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+// //               ),
 // //               const SizedBox(height: 6),
 // //               Text(proposedDescription, style: const TextStyle(fontSize: 14)),
 // //               const SizedBox(height: 12),
@@ -295,8 +703,10 @@
 
 // //             // Amount breakdown
 // //             if (proposedAmount != null) ...[
-// //               const Text('Quote Breakdown',
-// //                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+// //               const Text(
+// //                 'Quote Breakdown',
+// //                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+// //               ),
 // //               const SizedBox(height: 8),
 // //               _buildAmountRow('Medicine amount', '₹$proposedAmount'),
 // //               if (deliveryCharge != null)
@@ -304,8 +714,11 @@
 // //               if (platformFee != null)
 // //                 _buildAmountRow('Platform fee', '₹$platformFee'),
 // //               const Divider(),
-// //               _buildAmountRow('Total', '₹${totalAmount ?? proposedAmount}',
-// //                   isBold: true),
+// //               _buildAmountRow(
+// //                 'Total',
+// //                 '₹${totalAmount ?? proposedAmount}',
+// //                 isBold: true,
+// //               ),
 // //               const SizedBox(height: 16),
 // //             ],
 
@@ -324,9 +737,11 @@
 // //                       ),
 // //                       onPressed: () =>
 // //                           _confirmAndRespond(prescriptionId, false),
-// //                       child: const Text('Reject',
-// //                           style: TextStyle(
-// //                               fontSize: 15, fontWeight: FontWeight.w600)),
+// //                       child: const Text(
+// //                         'Reject',
+// //                         style: TextStyle(
+// //                             fontSize: 15, fontWeight: FontWeight.w600),
+// //                       ),
 // //                     ),
 // //                   ),
 // //                   const SizedBox(width: 12),
@@ -339,10 +754,13 @@
 // //                         shape: RoundedRectangleBorder(
 // //                             borderRadius: BorderRadius.circular(10)),
 // //                       ),
-// //                       onPressed: () => _confirmAndRespond(prescriptionId, true),
-// //                       child: const Text('Accept',
-// //                           style: TextStyle(
-// //                               fontSize: 15, fontWeight: FontWeight.w600)),
+// //                       onPressed: () =>
+// //                           _confirmAndRespond(prescriptionId, true),
+// //                       child: const Text(
+// //                         'Accept',
+// //                         style: TextStyle(
+// //                             fontSize: 15, fontWeight: FontWeight.w600),
+// //                       ),
 // //                     ),
 // //                   ),
 // //                 ],
@@ -383,7 +801,6 @@
 // //     }
 // //   }
 // // }
-
 
 
 
@@ -478,55 +895,109 @@
 //     }
 //   }
 
-//   Future<void> _respondToPrescription(
-//       String prescriptionId, bool accept) async {
-//     setState(() => _isLoading = true);
+//   // Future<void> _respondToPrescription(
+//   //     String prescriptionId, bool accept) async {
+//   //   setState(() => _isLoading = true);
 
-//     try {
-//       final action = accept ? 'confirm' : 'reject';
+//   //   try {
+//   //     final action = accept ? 'confirm' : 'reject';
 
-//       final uri = Uri.parse(
-//         'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+//   //     final uri = Uri.parse(
+//   //       'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+//   //     );
+
+//   //     final response = await http.post(
+//   //       uri,
+//   //       headers: {
+//   //         'Content-Type': 'application/json',
+//   //         'Authorization': 'Bearer $_token',
+//   //       },
+//   //       body: jsonEncode({'action': action}),
+//   //     );
+
+//   //     final responseData = jsonDecode(response.body);
+
+//   //     print(
+//   //         'Response status [confirm-prescription-order]: ${response.statusCode}');
+//   //     print('Response body [confirm-prescription-order]: ${response.body}');
+//   //     print('Prescription ID: $prescriptionId');
+//   //     print('Action submitted: $action');
+
+//   //     if (response.statusCode == 200 && responseData['success'] == true) {
+//   //       _showSnackBar(
+//   //         accept
+//   //             ? 'Prescription confirmed successfully!'
+//   //             : 'Prescription rejected.',
+//   //         isError: false,
+//   //       );
+//   //       await _loadPrescriptions();
+//   //     } else {
+//   //       _showSnackBar(
+//   //         responseData['message'] ?? 'Something went wrong.',
+//   //         isError: true,
+//   //       );
+//   //     }
+//   //   } catch (e) {
+//   //     _showSnackBar('Network error: $e', isError: true);
+//   //   } finally {
+//   //     if (mounted) setState(() => _isLoading = false);
+//   //   }
+//   // }
+
+
+
+// Future<void> _respondToPrescription(
+//     String prescriptionId, bool accept) async {
+//   setState(() => _isLoading = true);
+
+//   try {
+//     final action = accept ? 'confirm' : 'reject';
+
+//     final uri = Uri.parse(
+//       'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
+//     );
+
+//     final response = await http.post(
+//       uri,
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'Authorization': 'Bearer $_token',
+//       },
+//       body: jsonEncode({'action': action}),
+//     );
+
+//     final responseData = jsonDecode(response.body);
+
+//     print('Response status [confirm-prescription-order]: ${response.statusCode}');
+//     print('Response body [confirm-prescription-order]: ${response.body}');
+//     print('Prescription ID: $prescriptionId');
+//     print('Action submitted: $action');
+
+//     if (response.statusCode == 200 && responseData['success'] == true) {
+//       // ✅ Show snackbar FIRST before reloading the list
+//       _showSnackBar(
+//         accept
+//             ? 'Prescription confirmed successfully!'
+//             : 'Prescription rejected.',
+//         isError: false,
 //       );
 
-//       final response = await http.post(
-//         uri,
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': 'Bearer $_token',
-//         },
-//         body: jsonEncode({'action': action}),
+//       // ✅ Small delay so snackbar mounts before widget tree changes
+//       await Future.delayed(const Duration(milliseconds: 300));
+
+//       if (mounted) await _loadPrescriptions();
+//     } else {
+//       _showSnackBar(
+//         responseData['message'] ?? 'Something went wrong.',
+//         isError: true,
 //       );
-
-//       final responseData = jsonDecode(response.body);
-
-//       print(
-//           'Response status [confirm-prescription-order]: ${response.statusCode}');
-//       print('Response body [confirm-prescription-order]: ${response.body}');
-//       print('Prescription ID: $prescriptionId');
-//       print('Action submitted: $action');
-
-//       if (response.statusCode == 200 && responseData['success'] == true) {
-//         _showSnackBar(
-//           accept
-//               ? 'Prescription confirmed successfully!'
-//               : 'Prescription rejected.',
-//           isError: false,
-//         );
-//         await _loadPrescriptions();
-//       } else {
-//         _showSnackBar(
-//           responseData['message'] ?? 'Something went wrong.',
-//           isError: true,
-//         );
-//       }
-//     } catch (e) {
-//       _showSnackBar('Network error: $e', isError: true);
-//     } finally {
-//       if (mounted) setState(() => _isLoading = false);
 //     }
+//   } catch (e) {
+//     _showSnackBar('Network error: $e', isError: true);
+//   } finally {
+//     if (mounted) setState(() => _isLoading = false);
 //   }
-
+// }
 //   void _showSnackBar(String message, {required bool isError}) {
 //     if (!mounted) return;
 //     ScaffoldMessenger.of(context).showSnackBar(
@@ -542,11 +1013,11 @@
 //     showDialog(
 //       context: context,
 //       builder: (ctx) => AlertDialog(
-//         title: Text(accept ? 'Accept Quote' : 'Reject Quote'),
+//         title: Text(accept ? 'Accept Order' : 'Reject Order'),
 //         content: Text(
 //           accept
-//               ? 'Are you sure you want to accept this quote?'
-//               : 'Are you sure you want to reject this prescription quote?',
+//               ? 'Are you sure you want to accept this order?'
+//               : 'Are you sure you want to reject this prescription order?',
 //         ),
 //         actions: [
 //           TextButton(
@@ -574,7 +1045,7 @@
 //     return Scaffold(
 //       appBar: AppBar(
 //         title: const Text(
-//           'My Prescriptions',
+//           'Prescription Orders',
 //           style: TextStyle(fontWeight: FontWeight.bold),
 //         ),
 //         centerTitle: true,
@@ -588,183 +1059,376 @@
 //       body: _isFetching
 //           ? const Center(child: CircularProgressIndicator())
 //           : _prescriptions.isEmpty
-//               ? const Center(child: Text('No prescriptions found.'))
+//               ? const Center(
+//                   child: Column(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: [
+//                       Icon(Icons.inbox_outlined, size: 64, color: Colors.grey),
+//                       SizedBox(height: 12),
+//                       Text(
+//                         'No pending prescription orders.',
+//                         style: TextStyle(color: Colors.grey, fontSize: 16),
+//                       ),
+//                     ],
+//                   ),
+//                 )
 //               : Stack(
 //                   children: [
 //                     ListView.builder(
 //                       padding: const EdgeInsets.all(16),
 //                       itemCount: _prescriptions.length,
 //                       itemBuilder: (context, index) {
-//                         final prescription = _prescriptions[index];
-//                         return _buildPrescriptionCard(prescription);
+//                         return _buildPrescriptionCard(_prescriptions[index]);
 //                       },
 //                     ),
 //                     if (_isLoading)
-//                       const ColoredBox(
+//                       Container(
 //                         color: Colors.black26,
-//                         child: Center(child: CircularProgressIndicator()),
+//                         child: const Center(child: CircularProgressIndicator()),
 //                       ),
 //                   ],
 //                 ),
 //     );
 //   }
 
-//   Widget _buildPrescriptionCard(Map<String, dynamic> prescription) {
-//     final prescriptionId =
-//         prescription['prescriptionId'] ?? prescription['_id'];
-//     final pharmacy = prescription['pharmacy'] as Map<String, dynamic>?;
-//     final status = prescription['status'] ?? 'Pending';
-//     final proposedAmount = prescription['proposedAmount'];
-//     final deliveryCharge = prescription['deliveryCharge'];
-//     final platformFee = prescription['platformFee'];
-//     final totalAmount = prescription['totalAmount'];
-//     final proposedDescription = prescription['proposedDescription'];
-//     final prescriptionUrl = prescription['prescriptionUrl'];
+//   Widget _buildPrescriptionCard(Map<String, dynamic> item) {
+//     // ✅ Correctly reading from the nested `orderPreview` object
+//     final orderPreview = item['orderPreview'] as Map<String, dynamic>? ?? {};
+//     final prescriptionId = item['prescriptionId'] ?? '';
+//     final message = item['message'] ?? '';
+//     final timestamp = item['timestamp'] ?? '';
+//     final isRead = item['read'] ?? false;
 
-//     final bool canRespond = status == 'QuoteAccepted';
+//     final pharmacyName = orderPreview['pharmacyName'] ?? 'Unknown Pharmacy';
+//     final pharmacyImage = orderPreview['pharmacyImage'];
+//     final pharmacyAddress = orderPreview['pharmacyAddress'] ?? '';
+//     final pharmacyPhone = orderPreview['pharmacyPhone'] ?? '';
+//     final prescriptionUrl = orderPreview['prescriptionUrl'];
+//     final paymentMethod = orderPreview['paymentMethod'] ?? '';
+//     final paymentStatus = orderPreview['paymentStatus'] ?? '';
+//     final notes = orderPreview['notes'] ?? '';
+//     final subTotal = orderPreview['subTotal'] ?? 0;
+//     final platformFee = orderPreview['platformFee'] ?? 0;
+//     final deliveryCharge = orderPreview['deliveryCharge'] ?? 0;
+//     final totalAmount = orderPreview['totalAmount'] ?? 0;
+//     final orderItems =
+//         List<Map<String, dynamic>>.from(orderPreview['orderItems'] ?? []);
+//     final deliveryAddress =
+//         orderPreview['deliveryAddress'] as Map<String, dynamic>? ?? {};
+
+//     // Format timestamp
+//     String formattedTime = '';
+//     try {
+//       final dt = DateTime.parse(timestamp).toLocal();
+//       formattedTime =
+//           '${dt.day}/${dt.month}/${dt.year}  ${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
+//     } catch (_) {}
 
 //     return Card(
-//       margin: const EdgeInsets.only(bottom: 16),
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+//       margin: const EdgeInsets.only(bottom: 20),
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+//       elevation: 3,
 //       child: Padding(
 //         padding: const EdgeInsets.all(16),
 //         child: Column(
 //           crossAxisAlignment: CrossAxisAlignment.start,
 //           children: [
-//             // Prescription image
-//             if (prescriptionUrl != null)
-//               ClipRRect(
+//             // ── Notification Banner ──────────────────────────────────
+//             Container(
+//               padding: const EdgeInsets.all(12),
+//               decoration: BoxDecoration(
+//                 color: Colors.blue.shade50,
 //                 borderRadius: BorderRadius.circular(10),
-//                 child: Image.network(
-//                   prescriptionUrl,
-//                   width: double.infinity,
-//                   height: 180,
-//                   fit: BoxFit.cover,
-//                   errorBuilder: (_, __, ___) => Container(
-//                     height: 180,
-//                     color: Colors.grey[200],
-//                     child: const Center(child: Icon(Icons.image_not_supported)),
-//                   ),
-//                 ),
 //               ),
-
-//             const SizedBox(height: 12),
-
-//             // Status chip
-//             Align(
-//               alignment: Alignment.center,
-//               child: Chip(
-//                 label: Text(status),
-//                 backgroundColor: _statusColor(status).withOpacity(0.15),
-//                 labelStyle: TextStyle(
-//                   color: _statusColor(status),
-//                   fontWeight: FontWeight.w600,
-//                 ),
+//               child: Row(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Icon(Icons.notifications_active,
+//                       color: Colors.blue, size: 20),
+//                   const SizedBox(width: 8),
+//                   Expanded(
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Text(
+//                           message,
+//                           style: const TextStyle(
+//                               fontSize: 13, color: Colors.black87),
+//                         ),
+//                         if (formattedTime.isNotEmpty) ...[
+//                           const SizedBox(height: 4),
+//                           Text(
+//                             formattedTime,
+//                             style: const TextStyle(
+//                                 fontSize: 11, color: Colors.grey),
+//                           ),
+//                         ],
+//                       ],
+//                     ),
+//                   ),
+//                   if (!isRead)
+//                     Container(
+//                       width: 8,
+//                       height: 8,
+//                       decoration: const BoxDecoration(
+//                         color: Colors.blue,
+//                         shape: BoxShape.circle,
+//                       ),
+//                     ),
+//                 ],
 //               ),
 //             ),
 
-//             const SizedBox(height: 12),
+//             const SizedBox(height: 14),
 
-//             // Pharmacy info
-//             if (pharmacy != null) ...[
-//               ListTile(
-//                 contentPadding: EdgeInsets.zero,
-//                 leading: pharmacy['image'] != null
-//                     ? ClipRRect(
-//                         borderRadius: BorderRadius.circular(8),
-//                         child: Image.network(
-//                           pharmacy['image'],
-//                           width: 48,
-//                           height: 48,
-//                           fit: BoxFit.cover,
+//             // ── Prescription Image ───────────────────────────────────
+//             if (prescriptionUrl != null && prescriptionUrl.isNotEmpty)
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text('Prescription',
+//                       style: TextStyle(
+//                           fontWeight: FontWeight.w600, fontSize: 14)),
+//                   const SizedBox(height: 8),
+//                   ClipRRect(
+//                     borderRadius: BorderRadius.circular(10),
+//                     child: Image.network(
+//                       prescriptionUrl,
+//                       width: double.infinity,
+//                       height: 180,
+//                       fit: BoxFit.cover,
+//                       loadingBuilder: (context, child, loadingProgress) {
+//                         if (loadingProgress == null) return child;
+//                         return Container(
+//                           height: 180,
+//                           color: Colors.grey[200],
+//                           child: const Center(
+//                               child: CircularProgressIndicator()),
+//                         );
+//                       },
+//                       errorBuilder: (_, __, ___) => Container(
+//                         height: 180,
+//                         decoration: BoxDecoration(
+//                           color: Colors.grey[200],
+//                           borderRadius: BorderRadius.circular(10),
 //                         ),
-//                       )
-//                     : const Icon(Icons.local_pharmacy),
-//                 title: Text(
-//                   pharmacy['name'] ?? '',
-//                   style: const TextStyle(fontWeight: FontWeight.w600),
-//                 ),
-//                 subtitle: Text(pharmacy['address'] ?? ''),
+//                         child: const Center(
+//                             child: Icon(Icons.image_not_supported,
+//                                 size: 48, color: Colors.grey)),
+//                       ),
+//                     ),
+//                   ),
+//                   const SizedBox(height: 14),
+//                 ],
 //               ),
-//               const Divider(),
+
+//             // ── Pharmacy Info ────────────────────────────────────────
+//             Row(
+//               children: [
+//                 ClipRRect(
+//                   borderRadius: BorderRadius.circular(10),
+//                   child: pharmacyImage != null && pharmacyImage.isNotEmpty
+//                       ? Image.network(
+//                           pharmacyImage,
+//                           width: 56,
+//                           height: 56,
+//                           fit: BoxFit.cover,
+//                           errorBuilder: (_, __, ___) => Container(
+//                             width: 56,
+//                             height: 56,
+//                             color: Colors.grey[200],
+//                             child: const Icon(Icons.local_pharmacy,
+//                                 color: Colors.grey),
+//                           ),
+//                         )
+//                       : Container(
+//                           width: 56,
+//                           height: 56,
+//                           color: Colors.grey[200],
+//                           child: const Icon(Icons.local_pharmacy,
+//                               color: Colors.grey),
+//                         ),
+//                 ),
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(pharmacyName,
+//                           style: const TextStyle(
+//                               fontWeight: FontWeight.bold, fontSize: 16)),
+//                       if (pharmacyAddress.isNotEmpty)
+//                         Text(pharmacyAddress,
+//                             style: const TextStyle(
+//                                 fontSize: 12, color: Colors.grey)),
+//                       if (pharmacyPhone.isNotEmpty)
+//                         Text('📞 $pharmacyPhone',
+//                             style: const TextStyle(
+//                                 fontSize: 12, color: Colors.grey)),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+
+//             const Divider(height: 24),
+
+//             // ── Order Items ──────────────────────────────────────────
+//             if (orderItems.isNotEmpty) ...[
+//               const Text('Order Items',
+//                   style:
+//                       TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+//               const SizedBox(height: 8),
+//               ...orderItems.map((item) {
+//                 return Container(
+//                   margin: const EdgeInsets.only(bottom: 8),
+//                   padding: const EdgeInsets.all(10),
+//                   decoration: BoxDecoration(
+//                     color: Colors.grey.shade50,
+//                     borderRadius: BorderRadius.circular(8),
+//                     border: Border.all(color: Colors.grey.shade200),
+//                   ),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                         children: [
+//                           Text(item['name'] ?? '',
+//                               style: const TextStyle(
+//                                   fontWeight: FontWeight.w600,
+//                                   fontSize: 14)),
+
+//                           Text('Qty: ${item['quantity'] ?? 1}',
+//                               style: const TextStyle(
+//                                   fontSize: 13, color: Colors.grey)),
+
+                                  
+//                                       Text('₹${item['price'] ?? 0}',
+//         style: const TextStyle(
+//             fontWeight: FontWeight.w600,
+//             fontSize: 14,
+//             color: Colors.black87)),
+//                         ],
+//                       ),
+//                       if ((item['dosage'] ?? '').toString().isNotEmpty)
+//                         Text('Dosage: ${item['dosage']}',
+//                             style: const TextStyle(
+//                                 fontSize: 12, color: Colors.grey)),
+//                       if ((item['instructions'] ?? '')
+//                           .toString()
+//                           .isNotEmpty)
+//                         Text('Instructions: ${item['instructions']}',
+//                             style: const TextStyle(
+//                                 fontSize: 12, color: Colors.grey)),
+//                     ],
+//                   ),
+//                 );
+//               }),
+//               const SizedBox(height: 8),
 //             ],
 
-//             // Proposed description
-//             if (proposedDescription != null &&
-//                 (proposedDescription as String).isNotEmpty) ...[
-//               const Text(
-//                 'Items',
-//                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-//               ),
+//             // ── Delivery Address ─────────────────────────────────────
+//             if (deliveryAddress.isNotEmpty) ...[
+//               const Text('Delivery Address',
+//                   style:
+//                       TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
 //               const SizedBox(height: 6),
-//               Text(proposedDescription, style: const TextStyle(fontSize: 14)),
+//               Text(
+//                 [
+//                   deliveryAddress['house'],
+//                   deliveryAddress['street'],
+//                   deliveryAddress['city'],
+//                   deliveryAddress['state'],
+//                   deliveryAddress['pincode'],
+//                   deliveryAddress['country'],
+//                 ]
+//                     .where((e) => e != null && e.toString().isNotEmpty)
+//                     .join(', '),
+//                 style:
+//                     const TextStyle(fontSize: 13, color: Colors.black87),
+//               ),
 //               const SizedBox(height: 12),
 //             ],
 
-//             // Amount breakdown
-//             if (proposedAmount != null) ...[
-//               const Text(
-//                 'Quote Breakdown',
-//                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
-//               ),
-//               const SizedBox(height: 8),
-//               _buildAmountRow('Medicine amount', '₹$proposedAmount'),
-//               if (deliveryCharge != null)
-//                 _buildAmountRow('Delivery charge', '₹$deliveryCharge'),
-//               if (platformFee != null)
-//                 _buildAmountRow('Platform fee', '₹$platformFee'),
-//               const Divider(),
-//               _buildAmountRow(
-//                 'Total',
-//                 '₹${totalAmount ?? proposedAmount}',
-//                 isBold: true,
-//               ),
-//               const SizedBox(height: 16),
+//             // ── Notes ────────────────────────────────────────────────
+//             if (notes.isNotEmpty) ...[
+//               const Text('Notes',
+//                   style:
+//                       TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+//               const SizedBox(height: 4),
+//               Text(notes,
+//                   style:
+//                       const TextStyle(fontSize: 13, color: Colors.black87)),
+//               const SizedBox(height: 12),
 //             ],
 
-//             // Accept / Reject buttons — only shown when canRespond
-//             if (canRespond)
-//               Row(
-//                 children: [
-//                   Expanded(
-//                     child: OutlinedButton(
-//                       style: OutlinedButton.styleFrom(
-//                         foregroundColor: Colors.red,
-//                         side: const BorderSide(color: Colors.red),
-//                         padding: const EdgeInsets.symmetric(vertical: 14),
-//                         shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(10)),
-//                       ),
-//                       onPressed: () =>
-//                           _confirmAndRespond(prescriptionId, false),
-//                       child: const Text(
-//                         'Reject',
+//             // ── Price Breakdown ──────────────────────────────────────
+//             const Text('Price Breakdown',
+//                 style:
+//                     TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+//             const SizedBox(height: 8),
+//             _buildAmountRow('Subtotal', '₹$subTotal'),
+//             _buildAmountRow('Delivery Charge', '₹$deliveryCharge'),
+//             _buildAmountRow('Platform Fee', '₹$platformFee'),
+//             const Divider(height: 16),
+//             _buildAmountRow('Total Amount', '₹$totalAmount', isBold: true),
+
+//             const SizedBox(height: 10),
+
+//             // ── Payment Info ─────────────────────────────────────────
+//             Row(
+//               children: [
+//                 const Icon(Icons.payment, size: 16, color: Colors.grey),
+//                 const SizedBox(width: 6),
+//                 Text('$paymentMethod  •  $paymentStatus',
+//                     style:
+//                         const TextStyle(fontSize: 12, color: Colors.grey)),
+//               ],
+//             ),
+
+//             const SizedBox(height: 16),
+
+//             // ── Accept / Reject Buttons ──────────────────────────────
+//             Row(
+//               children: [
+//                 Expanded(
+//                   child: OutlinedButton.icon(
+//                     icon: const Icon(Icons.close, size: 18),
+//                     label: const Text('Reject',
 //                         style: TextStyle(
-//                             fontSize: 15, fontWeight: FontWeight.w600),
-//                       ),
+//                             fontSize: 15, fontWeight: FontWeight.w600)),
+//                     style: OutlinedButton.styleFrom(
+//                       foregroundColor: Colors.red,
+//                       side: const BorderSide(color: Colors.red),
+//                       padding: const EdgeInsets.symmetric(vertical: 14),
+//                       shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(10)),
 //                     ),
+//                     onPressed: () =>
+//                         _confirmAndRespond(prescriptionId, false),
 //                   ),
-//                   const SizedBox(width: 12),
-//                   Expanded(
-//                     child: ElevatedButton(
-//                       style: ElevatedButton.styleFrom(
-//                         backgroundColor: Colors.green,
-//                         foregroundColor: Colors.white,
-//                         padding: const EdgeInsets.symmetric(vertical: 14),
-//                         shape: RoundedRectangleBorder(
-//                             borderRadius: BorderRadius.circular(10)),
-//                       ),
-//                       onPressed: () =>
-//                           _confirmAndRespond(prescriptionId, true),
-//                       child: const Text(
-//                         'Accept',
+//                 ),
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: ElevatedButton.icon(
+//                     icon: const Icon(Icons.check, size: 18),
+//                     label: const Text('Accept',
 //                         style: TextStyle(
-//                             fontSize: 15, fontWeight: FontWeight.w600),
-//                       ),
+//                             fontSize: 15, fontWeight: FontWeight.w600)),
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: Colors.green,
+//                       foregroundColor: Colors.white,
+//                       padding: const EdgeInsets.symmetric(vertical: 14),
+//                       shape: RoundedRectangleBorder(
+//                           borderRadius: BorderRadius.circular(10)),
 //                     ),
+//                     onPressed: () =>
+//                         _confirmAndRespond(prescriptionId, true),
 //                   ),
-//                 ],
-//               ),
+//                 ),
+//               ],
+//             ),
 //           ],
 //         ),
 //       ),
@@ -777,7 +1441,7 @@
 //       fontWeight: isBold ? FontWeight.w700 : FontWeight.w400,
 //     );
 //     return Padding(
-//       padding: const EdgeInsets.symmetric(vertical: 4),
+//       padding: const EdgeInsets.symmetric(vertical: 3),
 //       child: Row(
 //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //         children: [
@@ -786,19 +1450,6 @@
 //         ],
 //       ),
 //     );
-//   }
-
-//   Color _statusColor(String status) {
-//     switch (status) {
-//       case 'QuoteAccepted':
-//         return Colors.green;
-//       case 'Pending':
-//         return Colors.orange;
-//       case 'Rejected':
-//         return Colors.red;
-//       default:
-//         return Colors.grey;
-//     }
 //   }
 // }
 
@@ -817,6 +1468,26 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////// New code for hiding the Accept and Reject after click on the Respond////////////////////
 
 
 import 'package:flutter/material.dart';
@@ -838,6 +1509,9 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
   List<Map<String, dynamic>> _prescriptions = [];
   String? _userId;
   String? _token;
+
+  // ✅ Track which prescriptions have already been acted upon
+  final Set<String> _actedPrescriptionIds = {};
 
   @override
   void initState() {
@@ -895,109 +1569,65 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
     }
   }
 
-  // Future<void> _respondToPrescription(
-  //     String prescriptionId, bool accept) async {
-  //   setState(() => _isLoading = true);
+  Future<void> _respondToPrescription(
+      String prescriptionId, bool accept) async {
+    setState(() => _isLoading = true);
 
-  //   try {
-  //     final action = accept ? 'confirm' : 'reject';
+    try {
+      final action = accept ? 'confirm' : 'reject';
 
-  //     final uri = Uri.parse(
-  //       'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
-  //     );
-
-  //     final response = await http.post(
-  //       uri,
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer $_token',
-  //       },
-  //       body: jsonEncode({'action': action}),
-  //     );
-
-  //     final responseData = jsonDecode(response.body);
-
-  //     print(
-  //         'Response status [confirm-prescription-order]: ${response.statusCode}');
-  //     print('Response body [confirm-prescription-order]: ${response.body}');
-  //     print('Prescription ID: $prescriptionId');
-  //     print('Action submitted: $action');
-
-  //     if (response.statusCode == 200 && responseData['success'] == true) {
-  //       _showSnackBar(
-  //         accept
-  //             ? 'Prescription confirmed successfully!'
-  //             : 'Prescription rejected.',
-  //         isError: false,
-  //       );
-  //       await _loadPrescriptions();
-  //     } else {
-  //       _showSnackBar(
-  //         responseData['message'] ?? 'Something went wrong.',
-  //         isError: true,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     _showSnackBar('Network error: $e', isError: true);
-  //   } finally {
-  //     if (mounted) setState(() => _isLoading = false);
-  //   }
-  // }
-
-
-
-Future<void> _respondToPrescription(
-    String prescriptionId, bool accept) async {
-  setState(() => _isLoading = true);
-
-  try {
-    final action = accept ? 'confirm' : 'reject';
-
-    final uri = Uri.parse(
-      'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
-    );
-
-    final response = await http.post(
-      uri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $_token',
-      },
-      body: jsonEncode({'action': action}),
-    );
-
-    final responseData = jsonDecode(response.body);
-
-    print('Response status [confirm-prescription-order]: ${response.statusCode}');
-    print('Response body [confirm-prescription-order]: ${response.body}');
-    print('Prescription ID: $prescriptionId');
-    print('Action submitted: $action');
-
-    if (response.statusCode == 200 && responseData['success'] == true) {
-      // ✅ Show snackbar FIRST before reloading the list
-      _showSnackBar(
-        accept
-            ? 'Prescription confirmed successfully!'
-            : 'Prescription rejected.',
-        isError: false,
+      final uri = Uri.parse(
+        'http://31.97.206.144:7021/api/users/confirm-prescription-order/$_userId/$prescriptionId',
       );
 
-      // ✅ Small delay so snackbar mounts before widget tree changes
-      await Future.delayed(const Duration(milliseconds: 300));
-
-      if (mounted) await _loadPrescriptions();
-    } else {
-      _showSnackBar(
-        responseData['message'] ?? 'Something went wrong.',
-        isError: true,
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_token',
+        },
+        body: jsonEncode({'action': action}),
       );
+
+      final responseData = jsonDecode(response.body);
+
+      print(
+          'Response status [confirm-prescription-order]: ${response.statusCode}');
+      print('Response body [confirm-prescription-order]: ${response.body}');
+      print('Prescription ID: $prescriptionId');
+      print('Action submitted: $action');
+
+      if (response.statusCode == 200 && responseData['success'] == true) {
+        // ✅ Immediately mark this prescription as acted upon so buttons hide instantly
+        setState(() {
+          _actedPrescriptionIds.add(prescriptionId);
+        });
+
+        // ✅ Show snackbar after buttons are hidden
+        _showSnackBar(
+          accept
+              ? 'Prescription confirmed successfully!'
+              : 'Prescription rejected.',
+          isError: false,
+        );
+
+        // ✅ Small delay so snackbar mounts before widget tree changes
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        if (mounted) await _loadPrescriptions();
+      } else {
+        _showSnackBar(
+          responseData['message'] ?? 'Something went wrong.',
+          isError: true,
+        );
+      }
+    } catch (e) {
+      _showSnackBar('Network error: $e', isError: true);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
-  } catch (e) {
-    _showSnackBar('Network error: $e', isError: true);
-  } finally {
-    if (mounted) setState(() => _isLoading = false);
   }
-}
+
   void _showSnackBar(String message, {required bool isError}) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -1084,7 +1714,8 @@ Future<void> _respondToPrescription(
                     if (_isLoading)
                       Container(
                         color: Colors.black26,
-                        child: const Center(child: CircularProgressIndicator()),
+                        child:
+                            const Center(child: CircularProgressIndicator()),
                       ),
                   ],
                 ),
@@ -1092,7 +1723,6 @@ Future<void> _respondToPrescription(
   }
 
   Widget _buildPrescriptionCard(Map<String, dynamic> item) {
-    // ✅ Correctly reading from the nested `orderPreview` object
     final orderPreview = item['orderPreview'] as Map<String, dynamic>? ?? {};
     final prescriptionId = item['prescriptionId'] ?? '';
     final message = item['message'] ?? '';
@@ -1115,6 +1745,9 @@ Future<void> _respondToPrescription(
         List<Map<String, dynamic>>.from(orderPreview['orderItems'] ?? []);
     final deliveryAddress =
         orderPreview['deliveryAddress'] as Map<String, dynamic>? ?? {};
+
+    // ✅ Check if this prescription has already been acted upon
+    final bool alreadyActed = _actedPrescriptionIds.contains(prescriptionId);
 
     // Format timestamp
     String formattedTime = '';
@@ -1296,19 +1929,15 @@ Future<void> _respondToPrescription(
                         children: [
                           Text(item['name'] ?? '',
                               style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14)),
-
+                                  fontWeight: FontWeight.w600, fontSize: 14)),
                           Text('Qty: ${item['quantity'] ?? 1}',
                               style: const TextStyle(
                                   fontSize: 13, color: Colors.grey)),
-
-                                  
-                                      Text('₹${item['price'] ?? 0}',
-        style: const TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-            color: Colors.black87)),
+                          Text('₹${item['price'] ?? 0}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: Colors.black87)),
                         ],
                       ),
                       if ((item['dosage'] ?? '').toString().isNotEmpty)
@@ -1389,46 +2018,65 @@ Future<void> _respondToPrescription(
 
             const SizedBox(height: 16),
 
-            // ── Accept / Reject Buttons ──────────────────────────────
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.close, size: 18),
-                    label: const Text('Reject',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600)),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: const BorderSide(color: Colors.red),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+            // ── Accept / Reject Buttons OR Submitted Banner ──────────
+            if (!alreadyActed) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.close, size: 18),
+                      label: const Text('Reject',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () =>
+                          _confirmAndRespond(prescriptionId, false),
                     ),
-                    onPressed: () =>
-                        _confirmAndRespond(prescriptionId, false),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.check, size: 18),
-                    label: const Text('Accept',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.check, size: 18),
+                      label: const Text('Accept',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      onPressed: () =>
+                          _confirmAndRespond(prescriptionId, true),
                     ),
-                    onPressed: () =>
-                        _confirmAndRespond(prescriptionId, true),
                   ),
+                ],
+              ),
+            ] else ...[
+              // ✅ Shown after accept/reject while list reloads
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                alignment: Alignment.center,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.check_circle, color: Colors.green, size: 18),
+                    SizedBox(width: 6),
+                    Text(
+                      'Response submitted',
+                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ],
         ),
       ),
