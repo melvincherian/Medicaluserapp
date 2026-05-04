@@ -2179,6 +2179,11 @@ class _SearchScreenState extends State<SearchScreen> {
         headers: {'Content-Type': 'application/json'},
       );
 
+      print(
+          'Response status code for medicine search result ${response.statusCode}');
+      print(
+          'Response bodyyyyyyyyyyy for medicine search result ${response.body}');
+
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final apiResponse = ApiResponse.fromJson(jsonResponse);

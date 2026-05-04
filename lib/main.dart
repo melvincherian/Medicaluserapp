@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/providers/add_query_provider.dart';
 import 'package:medical_user_app/providers/address_provider.dart';
@@ -19,11 +18,10 @@ import 'package:medical_user_app/providers/prescription_provider.dart';
 import 'package:medical_user_app/providers/profile_provider.dart';
 import 'package:medical_user_app/providers/services_provider.dart';
 import 'package:medical_user_app/providers/theame_provider.dart';
+import 'package:medical_user_app/providers/vendor_prescription_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:medical_user_app/view/splash_screen.dart';
 import 'package:medical_user_app/providers/auth_provider.dart';
-
-
 
 // Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
 //   await Firebase.initializeApp();
@@ -68,6 +66,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => LocationProvider()),
         ChangeNotifierProvider(create: (context) => PharmacyMedicineProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        ChangeNotifierProvider(
+            create: (context) => PrescriptionPreviewProvider()),
 
         // Add more providers here as needed
       ],
@@ -93,9 +93,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-

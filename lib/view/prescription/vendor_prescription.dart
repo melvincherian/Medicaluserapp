@@ -1560,7 +1560,7 @@ class _GetVendorPrescriptionState extends State<GetVendorPrescription> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
+        backgroundColor: isError ? Colors.green : Colors.green,
         behavior: SnackBarBehavior.floating,
       ),
     );

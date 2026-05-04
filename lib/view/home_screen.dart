@@ -6687,9 +6687,6 @@
 //   }
 // }
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:medical_user_app/models/medicine_model.dart';
 import 'package:medical_user_app/models/user_model.dart';
@@ -6700,6 +6697,7 @@ import 'package:medical_user_app/providers/medicine_provider.dart';
 import 'package:medical_user_app/providers/notification_provider.dart';
 import 'package:medical_user_app/providers/profile_provider.dart';
 import 'package:medical_user_app/providers/services_provider.dart';
+import 'package:medical_user_app/providers/vendor_prescription_provider.dart';
 import 'package:medical_user_app/utils/shared_preferences_helper.dart';
 import 'package:medical_user_app/view/category_screen.dart';
 import 'package:medical_user_app/view/checkout_screen.dart';
@@ -6716,6 +6714,7 @@ import 'package:medical_user_app/widgets/custom_appbar.dart';
 import 'package:medical_user_app/widgets/desclaimer_dialog_widget.dart';
 import 'package:medical_user_app/widgets/order_widget.dart';
 import 'package:medical_user_app/widgets/periodic_plans.dart' hide Pharmacy;
+import 'package:medical_user_app/widgets/prescription_popup_widget.dart';
 import 'package:medical_user_app/widgets/previous_order.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart' hide RefreshIndicator;
@@ -6761,18 +6760,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int _currentMedicineIndex = 0;
 
   List<String> _medicinePlaceholders = ['Search medicine...'];
-  // final List<String> _medicinePlaceholders = [
-  //   'dolo',
-  //   'paracetamol',
-  //   'aspirin',
-  //   'crocin',
-  //   'vitamin c',
-  //   'amoxicillin',
-  //   'ibuprofen',
-  //   'cetirizine',
-  //   'azithromycin',
-  //   'omeprazole',
-  // ];
   String _currentPlaceholder = 'dolo';
 
   @override
@@ -6873,6 +6860,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     // Load location after userId is available
     if (userId != null) {
       await _handleCurrentLocation();
+    }
+
+    await context.read<PrescriptionPreviewProvider>().init();
+    if (mounted) {
+      checkAndShowPrescriptionPopup(context);
+    }
+  }
+
+  void checkAndShowPrescriptionPopup(BuildContext context) {
+    final provider =
+        Provider.of<PrescriptionPreviewProvider>(context, listen: false);
+    if (provider.hasPreviews) {
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (context.mounted) {
+          showPrescriptionOrderPopup(context, provider.previews.first);
+        }
+      });
     }
   }
 
@@ -7011,6 +7015,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             .read<NotificationProvider>()
             .loadNotifications(userId.toString());
         await _handleCurrentLocation();
+      }
+
+      await context.read<PrescriptionPreviewProvider>().init();
+      if (mounted) {
+        checkAndShowPrescriptionPopup(context);
       }
     } catch (e) {
       print('Error during refresh: $e');
@@ -8399,7 +8408,7 @@ class _MedicineDetailsModalState extends State<MedicineDetailsModal> {
                       Row(
                         children: [
                           const Icon(
-                            Icons.location_on, 
+                            Icons.location_on,
                             size: 14,
                             color: Color.fromARGB(255, 87, 106, 245),
                           ),
