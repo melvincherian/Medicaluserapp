@@ -29,7 +29,9 @@ import 'package:medical_user_app/providers/auth_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp();
+  }
 
   print('🔔 Background message received!');
   print('📌 Message ID: ${message.messageId}');
@@ -37,27 +39,24 @@ Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
   print('🕐 Sent time: ${message.sentTime}');
 
   if (message.notification != null) {
-    print('📣 Notification Title: ${message.notification!.title}');
-    print('📣 Notification Body: ${message.notification!.body}');
+    print('📣 Title: ${message.notification!.title}');
+    print('📣 Body: ${message.notification!.body}');
   } else {
-    print('⚠️ No notification payload (data-only message)');
+    print('⚠️ Data-only message');
   }
-  print("Background message: ${message.messageId}");
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // ✅ Register background handler FIRST — before anything else
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+
   await Firebase.initializeApp();
-
   await LocalNotificationService.init();
-
   await FCMService().initialize();
 
   print('✅ Firebase & FCM initialized successfully');
-
-  // Background handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
 
   runApp(const MyApp());
 }
