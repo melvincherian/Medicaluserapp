@@ -1560,39 +1560,93 @@ class _OrdersHistoryScreenState extends State<OrdersHistoryScreen> {
   }
 
   // Helper methods for status styling
+  // IconData _getStatusIcon(String status) {
+  //   switch (status.toLowerCase()) {
+  //     case 'pending':
+  //       return Icons.access_time;
+  //     case 'confirmed':
+  //       return Icons.check_circle_outline;
+  //     case 'processing':
+  //       return Icons.local_shipping;
+  //     case 'delivered':
+  //       return Icons.check_circle;
+  //     case 'cancelled':
+  //       return Icons.cancel;
+  //     default:
+  //       return Icons.help_outline;
+  //   }
+  // }
+
+
+
   IconData _getStatusIcon(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return Icons.access_time;
-      case 'confirmed':
-        return Icons.check_circle_outline;
-      case 'processing':
-        return Icons.local_shipping;
-      case 'delivered':
-        return Icons.check_circle;
-      case 'cancelled':
-        return Icons.cancel;
-      default:
-        return Icons.help_outline;
-    }
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return Icons.access_time;
+    case 'confirmed':
+    case 'accepted':
+      return Icons.check_circle_outline;
+    case 'processing':
+    case 'rider assigned':
+    case 'rider accepted':
+    case 'reassigned':
+      return Icons.local_shipping;
+    case 'pickedup':
+    case 'picked up':
+      return Icons.inventory;
+    case 'delivered':
+    case 'completed':    // ← ADD THIS
+      return Icons.check_circle;
+    case 'cancelled':
+      return Icons.cancel;
+    default:
+      return Icons.help_outline;
   }
+}
+
+  // Color _getStatusColor(String status) {
+  //   switch (status.toLowerCase()) {
+  //     case 'pending':
+  //       return Colors.orange;
+  //     case 'confirmed':
+  //       return Colors.blue;
+  //     case 'processing':
+  //       return Colors.purple;
+  //     case 'delivered':
+  //       return Colors.green;
+  //     case 'cancelled':
+  //       return Colors.red;
+  //     default:
+  //       return Colors.grey;
+  //   }
+  // }
+
+
 
   Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return Colors.orange;
-      case 'confirmed':
-        return Colors.blue;
-      case 'processing':
-        return Colors.purple;
-      case 'delivered':
-        return Colors.green;
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return Colors.orange;
+    case 'confirmed':
+    case 'accepted':
+      return Colors.blue;
+    case 'processing':
+    case 'rider assigned':
+    case 'rider accepted':
+    case 'reassigned':
+      return Colors.purple;
+    case 'pickedup':
+    case 'picked up':
+      return Colors.indigo;
+    case 'delivered':
+    case 'completed':    // ← ADD THIS
+      return Colors.green;
+    case 'cancelled':
+      return Colors.red;
+    default:
+      return Colors.grey;
   }
+}
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year}';

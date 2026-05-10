@@ -143,89 +143,166 @@ class OrderService {
   }
 
   // Get previous/completed orders with improved error handling
-  static Future<List<OrderModel>> getPreviousOrders(String userId) async {
-    try {
-      print('$_logTag: Fetching previous orders for user: $userId');
+  // static Future<List<OrderModel>> getPreviousOrders(String userId) async {
+  //   try {
+  //     print('$_logTag: Fetching previous orders for user: $userId');
 
-      final token = await SharedPreferencesHelper.getToken();
-      if (token == null || token.isEmpty) {
-        print('$_logTag: No auth token found');
-        return [];
-      }
+  //     final token = await SharedPreferencesHelper.getToken();
+  //     if (token == null || token.isEmpty) {
+  //       print('$_logTag: No auth token found');
+  //       return [];
+  //     }
 
 
-      print('user iddddddddddddddddddddddddd $userId');
+  //     print('user iddddddddddddddddddddddddd $userId');
 
-      final url = ApiConstants.previousOrder.replaceAll(':userId', userId);
-      print('$_logTag: API URL: $url');
+  //     final url = ApiConstants.previousOrder.replaceAll(':userId', userId);
+  //     print('$_logTag: API URL: $url');
 
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
+  //     final response = await http.get(
+  //       Uri.parse(url),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': 'Bearer $token',
+  //       },
+  //     );
 
-      print('$_logTag: Response status: ${response.statusCode}');
-      print('$_logTag: Response body: ${response.body}');
+  //     print('$_logTag: Response status: ${response.statusCode}');
+  //     print('$_logTag: Response body: ${response.body}');
 
-      if (response.statusCode == 200) {
-        final dynamic responseData = json.decode(response.body);
-        List<dynamic>? ordersData;
+  //     if (response.statusCode == 200) {
+  //       final dynamic responseData = json.decode(response.body);
+  //       List<dynamic>? ordersData;
         
-        if (responseData is Map<String, dynamic>) {
-          final data = responseData;
-          if (data.containsKey('orders')) {
-            ordersData = data['orders'] as List<dynamic>?;
-          } else if (data.containsKey('data')) {
-            ordersData = data['data'] as List<dynamic>?;
-          } else if (data.containsKey('previousBookings')) {
-            ordersData = data['previousBookings'] as List<dynamic>?;
-          } else {
-            // If the entire response is a single order (as a map)
-            ordersData = [data];
-          }
-        } else if (responseData is List) {
-          ordersData = responseData;
-        }
+  //       if (responseData is Map<String, dynamic>) {
+  //         final data = responseData;
+  //         if (data.containsKey('orders')) {
+  //           ordersData = data['orders'] as List<dynamic>?;
+  //         } else if (data.containsKey('data')) {
+  //           ordersData = data['data'] as List<dynamic>?;
+  //         } else if (data.containsKey('previousBookings')) {
+  //           ordersData = data['previousBookings'] as List<dynamic>?;
+  //         } else {
+  //           // If the entire response is a single order (as a map)
+  //           ordersData = [data];
+  //         }
+  //       } else if (responseData is List) {
+  //         ordersData = responseData;
+  //       }
 
-        if (ordersData != null) {
-          final List<OrderModel> orders = [];
+  //       if (ordersData != null) {
+  //         final List<OrderModel> orders = [];
           
-          for (var orderJson in ordersData) {
-            try {
-              // Ensure orderJson is a Map
-              if (orderJson is Map<String, dynamic>) {
-                final order = OrderModel.fromJson(orderJson);
-                orders.add(order);
-              } else {
-                print('$_logTag: Skipping invalid order data: $orderJson');
-              }
-            } catch (e) {
-              print('$_logTag: Error parsing individual previous order: $e');
-              print('$_logTag: Order JSON: $orderJson');
-              // Continue with other orders instead of failing completely
-              continue;
-            }
-          }
+  //         for (var orderJson in ordersData) {
+  //           try {
+  //             // Ensure orderJson is a Map
+  //             if (orderJson is Map<String, dynamic>) {
+  //               final order = OrderModel.fromJson(orderJson);
+  //               orders.add(order);
+  //             } else {
+  //               print('$_logTag: Skipping invalid order data: $orderJson');
+  //             }
+  //           } catch (e) {
+  //             print('$_logTag: Error parsing individual previous order: $e');
+  //             print('$_logTag: Order JSON: $orderJson');
+  //             // Continue with other orders instead of failing completely
+  //             continue;
+  //           }
+  //         }
           
-          print('$_logTag: Found ${orders.length} previous orders');
-          return orders;
-        } else {
-          print('$_logTag: No previous orders data found in response');
-          return [];
-        }
-      } else {
-        print('$_logTag: Failed to fetch previous orders - Status: ${response.statusCode}');
-        return [];
-      }
-    } catch (e, stackTrace) {
-      print('$_logTag: Error fetching previous orders: $e');
-      print('$_logTag: Stack trace: $stackTrace');
+  //         print('$_logTag: Found ${orders.length} previous orders');
+  //         return orders;
+  //       } else {
+  //         print('$_logTag: No previous orders data found in response');
+  //         return [];
+  //       }
+  //     } else {
+  //       print('$_logTag: Failed to fetch previous orders - Status: ${response.statusCode}');
+  //       return [];
+  //     }
+  //   } catch (e, stackTrace) {
+  //     print('$_logTag: Error fetching previous orders: $e');
+  //     print('$_logTag: Stack trace: $stackTrace');
+  //     return [];
+  //   }
+  // }
+
+
+
+
+  static Future<List<OrderModel>> getPreviousOrders(String userId) async {
+  try {
+    print('$_logTag: Fetching previous orders for user: $userId');
+
+    final token = await SharedPreferencesHelper.getToken();
+    if (token == null || token.isEmpty) {
+      print('$_logTag: No auth token found');
       return [];
     }
+
+    // Use the same mybookings endpoint as getCurrentOrders
+    final url = ApiConstants.getmyOrder.replaceAll(':userId', userId);
+    print('$_logTag: API URL: $url');
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('$_logTag: Response status: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      final dynamic responseData = json.decode(response.body);
+      List<dynamic>? ordersData;
+
+      if (responseData is Map<String, dynamic>) {
+        final data = responseData;
+        if (data.containsKey('bookings')) {
+          ordersData = data['bookings'] as List<dynamic>?;
+        } else if (data.containsKey('orders')) {
+          ordersData = data['orders'] as List<dynamic>?;
+        } else if (data.containsKey('data')) {
+          ordersData = data['data'] as List<dynamic>?;
+        } else {
+          ordersData = [data];
+        }
+      } else if (responseData is List) {
+        ordersData = responseData;
+      }
+
+      if (ordersData != null) {
+        final List<OrderModel> orders = [];
+        for (var orderJson in ordersData) {
+          try {
+            if (orderJson is Map<String, dynamic>) {
+              final order = OrderModel.fromJson(orderJson);
+              orders.add(order);
+            }
+          } catch (e) {
+            print('$_logTag: Error parsing individual previous order: $e');
+            continue;
+          }
+        }
+
+        // Return orders that are NOT ongoing (completed, cancelled, etc.)
+        final previousOrders = orders.where((order) => !order.isOngoing).toList();
+        print('$_logTag: Found ${previousOrders.length} previous orders');
+        return previousOrders;
+      }
+      return [];
+    } else {
+      print('$_logTag: Failed to fetch previous orders - Status: ${response.statusCode}');
+      return [];
+    }
+  } catch (e, stackTrace) {
+    print('$_logTag: Error fetching previous orders: $e');
+    print('$_logTag: Stack trace: $stackTrace');
+    return [];
   }
+}
 
   // Delete a previous order
   static Future<bool> deletePreviousOrder({

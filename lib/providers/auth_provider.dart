@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medical_user_app/firebase/fcm_service.dart';
 import 'package:medical_user_app/models/auth_response.dart';
 import 'package:medical_user_app/providers/profile_provider.dart';
 import 'package:medical_user_app/services/auth_service.dart';
@@ -33,8 +34,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response =
-          await AuthService.register(name: name, mobile: mobile, email: email);
+      final fcmToken = await FCMService().getFCMTokenSafe();
+
+      print("FCMMMMMMMMMMMMMMM Tokennnnnnnnnnnnnnnnnnnnn for registerrrrrr: $fcmToken");
+
+      final response = await AuthService.register(
+          name: name, mobile: mobile, email: email, fcmToken: fcmToken);
       _authResponse = response;
 
       // Save token to shared preferences if needed
@@ -57,7 +62,13 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await AuthService.login(mobile: mobile);
+      final fcmToken = await FCMService().getFCMTokenSafe();
+
+      print(
+          "FCMMMMMMMMMMMMMMM Tokennnnnnnnnnnnnnnnnnnnn for loginnnnnnnnnnn: $fcmToken");
+
+      final response =
+          await AuthService.login(mobile: mobile, fcmToken: fcmToken);
       _authResponse = response;
 
       if (response.token != null) {

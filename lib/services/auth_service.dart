@@ -100,6 +100,7 @@ class AuthService {
     required String name,
     required String mobile,
     required String email,
+    String? fcmToken,  
   }) async {
     try {
       print('[$_tag] Starting registration for $mobile');
@@ -122,6 +123,7 @@ class AuthService {
           'name': name.trim(),
           'mobile': mobile.trim(),
           'email':email.trim(),
+            if (fcmToken != null) 'fcmToken': fcmToken, 
         }),
       ).timeout(const Duration(seconds: 30));
 
@@ -170,6 +172,7 @@ class AuthService {
   // Login user
   static Future<AuthResponse> login({
     required String mobile,
+    String? fcmToken, 
   }) async {
     try {
       print('[$_tag] Starting login for $mobile');
@@ -190,6 +193,7 @@ class AuthService {
         },
         body: json.encode({
           'mobile': mobile.trim(),
+           if (fcmToken != null) 'fcmToken': fcmToken,
         }),
       ).timeout(const Duration(seconds: 30));
 

@@ -1,4 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:medical_user_app/firebase/fcm_service.dart';
+import 'package:medical_user_app/firebase/local_notification_service.dart';
 import 'package:medical_user_app/providers/add_query_provider.dart';
 import 'package:medical_user_app/providers/address_provider.dart';
 import 'package:medical_user_app/providers/cart_provider.dart';
@@ -23,18 +27,37 @@ import 'package:provider/provider.dart';
 import 'package:medical_user_app/view/splash_screen.dart';
 import 'package:medical_user_app/providers/auth_provider.dart';
 
-// Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
-//   await Firebase.initializeApp();
-//   print("Background message: ${message.messageId}");
-// }
+@pragma('vm:entry-point')
+Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+
+  print('🔔 Background message received!');
+  print('📌 Message ID: ${message.messageId}');
+  print('📦 Data payload: ${message.data}');
+  print('🕐 Sent time: ${message.sentTime}');
+
+  if (message.notification != null) {
+    print('📣 Notification Title: ${message.notification!.title}');
+    print('📣 Notification Body: ${message.notification!.body}');
+  } else {
+    print('⚠️ No notification payload (data-only message)');
+  }
+  print("Background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //   await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
-  // // Background handler
-  // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+  await LocalNotificationService.init();
+
+  await FCMService().initialize();
+
+  print('✅ Firebase & FCM initialized successfully');
+
+  // Background handler
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
 
   runApp(const MyApp());
 }
@@ -68,8 +91,6 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ChatProvider()),
         ChangeNotifierProvider(
             create: (context) => PrescriptionPreviewProvider()),
-
-        // Add more providers here as needed
       ],
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, themeProvider, languageProvider, child) {
@@ -86,7 +107,6 @@ class MyApp extends StatelessWidget {
             ),
             themeMode: themeProvider.themeMode,
             home: SplashScreen(),
-            // home: NavbarScreen(),
           );
         },
       ),
