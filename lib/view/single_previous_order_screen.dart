@@ -349,6 +349,11 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
 
       final response = await http.get(Uri.parse(url));
 
+      print(
+          'Response status code for single previous orderrrrrrrr ${response.statusCode}');
+      print(
+          'Response bodyyyyyyyyyyyyyyyyy for single previous orderrrrrrrr ${response.body}');
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
@@ -519,32 +524,41 @@ class _SinglePreviousOrderScreenState extends State<SinglePreviousOrderScreen>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64,
-                        color: Colors.red[300],
-                      ),
-                      const SizedBox(height: 16),
+                      // Icon(
+                      //   Icons.error_outline,
+                      //   size: 64,
+                      //   color: Colors.red[300],
+                      // ),
+                      // const SizedBox(height: 16),
+                      // Text(
+                      //   errorMessage!,
+                      //   style: const TextStyle(
+                      //     color: Colors.red,
+                      //     fontSize: 16,
+                      //   ),
+                      //   textAlign: TextAlign.center,
+                      // ),
+
                       Text(
-                        errorMessage!,
+                        'No orders found',
                         style: const TextStyle(
-                          color: Colors.red,
+                          color: Colors.black,
                           fontSize: 16,
                         ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: fetchOrder,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1565C0),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text("Retry"),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: fetchOrder,
+                      //   style: ElevatedButton.styleFrom(
+                      //     backgroundColor: const Color(0xFF1565C0),
+                      //     foregroundColor: Colors.white,
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //     ),
+                      //   ),
+                      //   child: const Text("Retry"),
+                      // ),
                     ],
                   ),
                 )
